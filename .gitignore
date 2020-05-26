@@ -23,3 +23,7 @@ _ReSharper*/
 **/packages/*
 *.nuget.props
 *.nuget.targets
+
+# other file extensions
+*.zip
+*.rar
