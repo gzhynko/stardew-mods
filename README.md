@@ -1,2 +1,2 @@
 # StardewMods
-Mods for Stardew Valley
+My mod(s) for Stardew Valley
