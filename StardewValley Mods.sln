@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PufferEggsToMayonnaise", "Pufferfish Chickens\PufferEggsToMayonnaise\PufferEggsToMayonnaise.csproj", "{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalsNeedWater", "AnimalsNeedWater\AnimalsNeedWater\AnimalsNeedWater.csproj", "{944C8530-211B-4660-BE73-6E883A12BD9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{944C8530-211B-4660-BE73-6E883A12BD9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{944C8530-211B-4660-BE73-6E883A12BD9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{944C8530-211B-4660-BE73-6E883A12BD9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{944C8530-211B-4660-BE73-6E883A12BD9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
