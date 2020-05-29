@@ -191,7 +191,7 @@ namespace AnimalsNeedWater
                     {
                         if (ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false)
                         {
-                            if (!animalsLeftThirsty.Any(item => item.displayName == animal.displayName))
+                            if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
                                 animal.friendshipTowardFarmer.Value -= 20;
                                 animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
@@ -205,7 +205,7 @@ namespace AnimalsNeedWater
                     {
                         if (ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false)
                         {
-                            if (!animalsLeftThirsty.Any(item => item.displayName == animal.displayName))
+                            if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
                                 animal.friendshipTowardFarmer.Value -= 20;
                                 animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
@@ -215,14 +215,14 @@ namespace AnimalsNeedWater
                 }
             }
 
-            // Checking for animals outside their buildings
+            // Check for animals outside their buildings
             foreach (FarmAnimal animal in Game1.getFarm().animals.Values)
             {
                 if (animal.home.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
                 {
                     if (ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false || animal.home.animalDoorOpen.Value == false)
                     {
-                        if (!animalsLeftThirsty.Any(item => item.displayName == animal.displayName))
+                        if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
                             animal.friendshipTowardFarmer.Value -= 20;
                             animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
@@ -233,7 +233,7 @@ namespace AnimalsNeedWater
                 {
                     if (ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false || animal.home.animalDoorOpen.Value == false)
                     {
-                        if (!animalsLeftThirsty.Any(item => item.displayName == animal.displayName))
+                        if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
                             animal.friendshipTowardFarmer.Value -= 20;
                             animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
@@ -246,30 +246,30 @@ namespace AnimalsNeedWater
             {                
                 if (animalsLeftThirsty.Count() == 1)
                 {
-                    if (animalsLeftThirsty[0].gender == "male")
+                    if (animalsLeftThirsty[0].Gender == "male")
                     {
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male", new { firstAnimalName = animalsLeftThirsty[0].displayName }));
+                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
                     } 
-                    else if (animalsLeftThirsty[0].gender == "female")
+                    else if (animalsLeftThirsty[0].Gender == "female")
                     {
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female", new { firstAnimalName = animalsLeftThirsty[0].displayName }));
+                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
                     }
                     else 
                     {
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender", new { firstAnimalName = animalsLeftThirsty[0].displayName }));
+                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
                     }
                 }
                 else if (animalsLeftThirsty.Count() == 2)
                 {
-                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals", new { firstAnimalName = animalsLeftThirsty[0].displayName, secondAnimalName = animalsLeftThirsty[1].displayName }));
+                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName }));
                 }
                 else if (animalsLeftThirsty.Count() == 3)
                 {
-                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals", new { firstAnimalName = animalsLeftThirsty[0].displayName, secondAnimalName = animalsLeftThirsty[1].displayName, thirdAnimalName = animalsLeftThirsty[2].displayName }));
+                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName, thirdAnimalName = animalsLeftThirsty[2].DisplayName }));
                 }
                 else
                 {
-                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals", new { firstAnimalName = animalsLeftThirsty[0].displayName, secondAnimalName = animalsLeftThirsty[1].displayName, thirdAnimalName = animalsLeftThirsty[2].displayName, totalAmountExcludingFirstThree = animalsLeftThirsty.Count() - 3 }));
+                    Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName, thirdAnimalName = animalsLeftThirsty[2].DisplayName, totalAmountExcludingFirstThree = animalsLeftThirsty.Count() - 3 }));
                 }
             }
 
@@ -295,7 +295,7 @@ namespace AnimalsNeedWater
             }
         }
 
-        /// <summary>Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations.</summary>
+        /// <summary> Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -437,12 +437,12 @@ namespace AnimalsNeedWater
         {
             public AnimalLeftThirsty(string displayName, string gender)
             {
-                this.displayName = displayName;
-                this.gender = gender;
+                this.DisplayName = displayName;
+                this.Gender = gender;
             }
 
-            public string displayName { get; set; }
-            public string gender { get; set; }
+            public string DisplayName { get; set; }
+            public string Gender { get; set; }
         }
         #endregion
     }
