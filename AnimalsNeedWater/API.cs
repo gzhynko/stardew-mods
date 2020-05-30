@@ -2,7 +2,7 @@
 
 namespace AnimalsNeedWater
 {
-    public interface IAPI
+    public interface IAnimalsNeedWaterAPI
     {
         List<ModEntry.AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday();
 
@@ -10,7 +10,7 @@ namespace AnimalsNeedWater
         List<string> GetBarnsWithWateredTrough();
     }
 
-    public class API : IAPI
+    public class API : IAnimalsNeedWaterAPI
     {
         public List<ModEntry.AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday()
         {
