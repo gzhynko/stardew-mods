@@ -1,12 +1,5 @@
-﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Harmony;
+﻿using Harmony;
 using Microsoft.Xna.Framework;
-using Netcode;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Network;
 

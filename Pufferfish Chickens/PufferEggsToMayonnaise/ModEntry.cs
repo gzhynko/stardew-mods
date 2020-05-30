@@ -68,11 +68,11 @@ namespace PufferEggsToMayonnaise
              * -1 = Json Assets can't provide IDs of the new objects. The user has not copied the [JA] folder to the Mods folder.
             */
 
-            if(mayoID == -2)
+            if (mayoID == -2)
             {
                 Monitor.Log("Unable to get IDs of the new items. Make sure you have Json Assets installed.", LogLevel.Warn);
-            } 
-            else if(mayoID == -1)
+            }
+            else if (mayoID == -1)
             {
                 Monitor.Log("Unable to get IDs of the new items. Make sure you have extracted all the folders from the .zip file.", LogLevel.Warn);
             }

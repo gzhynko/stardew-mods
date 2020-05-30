@@ -8,7 +8,6 @@ using StardewValley.Buildings;
 using StardewValley.Locations;
 using StardewValley.TerrainFeatures;
 using System;
-using System.Threading;
 using SObject = StardewValley.Object;
 
 namespace PEMAutomate
@@ -38,8 +37,8 @@ namespace PEMAutomate
 
         public VanillaProducerMachine(IMachine originalMachine)
         {
-            this.Location = ((IAutomatable) originalMachine).Location;
-            this.TileArea = ((IAutomatable) originalMachine).TileArea;
+            this.Location = ((IAutomatable)originalMachine).Location;
+            this.TileArea = ((IAutomatable)originalMachine).TileArea;
             this.OriginalMachine = originalMachine;
             SObject machine = ((IReflectedProperty<SObject>)ModEntry.instance.Helper.Reflection.GetProperty<SObject>((object)originalMachine, "Machine", true)).GetValue();
             this.CustomMachine = (IMachine)new CustomProducerMachine(machine, ((IAutomatable)originalMachine).Location, machine.TileLocation);

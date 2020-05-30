@@ -4,5 +4,5 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} осталась(-ся) вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} и {{secondAnimalName}} остались вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} и {{thirdAnimalName}} остались вчера без воды.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} и ещё {{totalAmountExcludingFirstThree}} животных остались вчера без воды."
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} и ещё {{totalAmountExcludingFirstThree}} животных остались вчера без воды.",
 }
