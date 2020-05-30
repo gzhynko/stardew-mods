@@ -26,6 +26,7 @@ namespace AnimalsNeedWater
         public static IModHelper ModHelper;
         public static ModEntry instance;
         public ModConfig Config;
+        public List<AnimalLeftThirsty> AnimalsLeftThirstyYesterday;
 
         /*********
         ** Public methods
@@ -39,10 +40,17 @@ namespace AnimalsNeedWater
             ModMonitor = Monitor;
             instance = this;
 
-            this.Config = this.Helper.ReadConfig<ModConfig>();
+            AnimalsLeftThirstyYesterday = new List<AnimalLeftThirsty>();
+
+            this.Config = Helper.ReadConfig<ModConfig>();
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayEnding += HandleDayUpdate;
+        }
+
+        public override object GetApi()
+        {
+            return new API();
         }
 
         public void EmptyWaterTroughs()
@@ -283,6 +291,8 @@ namespace AnimalsNeedWater
                     Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName, thirdAnimalName = animalsLeftThirsty[2].DisplayName, totalAmountExcludingFirstThree = animalsLeftThirsty.Count() - 3 }));
                 }
             }
+
+            AnimalsLeftThirstyYesterday = animalsLeftThirsty;
 
             List<object> nextDayAndSeasonList = GetNextDayAndSeason(Game1.dayOfMonth, Game1.currentSeason);
 
