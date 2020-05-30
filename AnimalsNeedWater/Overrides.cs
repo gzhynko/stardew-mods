@@ -1,14 +1,10 @@
-﻿using System;
-using Harmony;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Harmony;
 using Microsoft.Xna.Framework.Graphics;
-using Netcode;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
-using StardewValley.Network;
 using StardewValley.Tools;
+using System;
 using xTile.Layers;
 using xTile.Tiles;
 
@@ -27,8 +23,8 @@ namespace AnimalsNeedWater
                     {
                         __instance.friendshipTowardFarmer.Value += 15;
                     }
-                } 
-                else if(__instance.home.nameOfIndoors.ToLower().Contains("barn"))
+                }
+                else if (__instance.home.nameOfIndoors.ToLower().Contains("barn"))
                 {
                     if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()))
                     {
@@ -42,8 +38,6 @@ namespace AnimalsNeedWater
         public static bool AnimalHouseToolAction(ref AnimalHouse __instance, ref Tool t, ref int tileX, ref int tileY)
         {
             GameLocation gameLocation = Game1.currentLocation;
-            ModEntry.ModMonitor.Log(Game1.getLocationFromName(__instance.NameOrUniqueName).ToString(), LogLevel.Info);
-            ModEntry.ModMonitor.Log("Action on tile (" + tileX.ToString() + ", " + tileY.ToString() + ") by " + t.BaseName + ", location: " + __instance.NameOrUniqueName, LogLevel.Info);
 
             if (t.BaseName == "Watering Can" && (t as WateringCan).WaterLeft > 0)
             {
@@ -103,7 +97,7 @@ namespace AnimalsNeedWater
                             layer.Tiles[1, 6] = new StaticTile(layer, tilesheet, BlendMode.Alpha, tileIndex: 3);
                             ModData.CoopsWithWateredTrough.Add(__instance.NameOrUniqueName.ToLower());
 
-                            foreach(FarmAnimal animal in __instance.animals.Values)
+                            foreach (FarmAnimal animal in __instance.animals.Values)
                             {
                                 if (ModEntry.instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                                 {
@@ -255,8 +249,8 @@ namespace AnimalsNeedWater
                         layer.Tiles[20, 3] = new StaticTile(layer, tilesheet, BlendMode.Alpha, tileIndex: 3);
                         layer.Tiles[1, 6] = new StaticTile(layer, tilesheet, BlendMode.Alpha, tileIndex: 3);
                     }
-                } 
-                else if(locationNameWithoutUnique.Contains("Barn"))
+                }
+                else if (locationNameWithoutUnique.Contains("Barn"))
                 {
                     if (building.nameOfIndoorsWithoutUnique.ToLower() == "barn")
                     {
@@ -317,7 +311,7 @@ namespace AnimalsNeedWater
                         buildingsLayer.Tiles[1, 7] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: 3);
                     }
                 }
-            } 
+            }
             else
             {
                 if (locationNameWithoutUnique.Contains("Coop"))

@@ -1,19 +1,14 @@
 ﻿using Harmony;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Buildings;
-using StardewValley.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using xTile.Layers;
 using xTile.Tiles;
-using SObject = StardewValley.Object;
 
 namespace AnimalsNeedWater
 {
@@ -21,6 +16,7 @@ namespace AnimalsNeedWater
     public class ModConfig
     {
         public bool ShowLoveBubblesOverAnimalsWhenWateredTrough { get; set; } = true;
+        public bool WateringSystemInDeluxeBuildings { get; set; } = true;
     }
 
     /// <summary> The mod entry class loaded by SMAPI. </summary>
@@ -61,6 +57,21 @@ namespace AnimalsNeedWater
                 foreach (FarmAnimal animal in Game1.getFarm().getAllFarmAnimals())
                 {
                     if (animal.home.nameOfIndoors.ToLower().Equals(building.nameOfIndoors.ToLower())) animalCount++;
+                }
+
+                if(building.nameOfIndoorsWithoutUnique.ToLower().Contains("3") && Config.WateringSystemInDeluxeBuildings)
+                {
+                    if (building.nameOfIndoorsWithoutUnique.ToLower() == "barn3") 
+                    { 
+                        if (!ModData.BarnsWithWateredTrough.Contains(building.nameOfIndoors.ToLower()))
+                            ModData.BarnsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
+                    }
+                    else if (building.nameOfIndoorsWithoutUnique.ToLower() == "coop3")
+                    {
+                        if (!ModData.CoopsWithWateredTrough.Contains(building.nameOfIndoors.ToLower()))
+                            ModData.CoopsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
+                    }
+                    continue;
                 }
 
                 if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop") && animalCount > 0)
@@ -337,12 +348,34 @@ namespace AnimalsNeedWater
                       id: "z_waterTroughTilesheet", 
                       map: coopMap,
                       imageSource: ModEntry.instance.Helper.Content.GetActualAssetKey("assets/waterTroughTilesheet.xnb", ContentSource.ModFolder),
-                      sheetSize: new xTile.Dimensions.Size(48, 16), 
+                      sheetSize: new xTile.Dimensions.Size(160, 16), 
                       tileSize: new xTile.Dimensions.Size(16, 16)
                    );
 
                     coopMap.AddTileSheet(tileSheet);
                     coopMap.LoadTileSheets(Game1.mapDisplayDevice);
+
+                    if (building.nameOfIndoorsWithoutUnique.ToLower() == "coop3" && Config.WateringSystemInDeluxeBuildings)
+                    {
+                        var coop3Map = ((GameLocation)building.indoors.Value).map;
+                        var gameLocation = building.indoors.Value;
+
+                        TileSheet tileSheet3 = new TileSheet(
+                            id: "z_wateringSystemTilesheet",
+                            map: coop3Map,
+                            imageSource: ModEntry.instance.Helper.Content.GetActualAssetKey("assets/wateringSystemTilesheet.xnb", ContentSource.ModFolder),
+                            sheetSize: new xTile.Dimensions.Size(32, 16),
+                            tileSize: new xTile.Dimensions.Size(16, 16)
+                        );
+
+                        coop3Map.AddTileSheet(tileSheet3);
+                        coop3Map.LoadTileSheets(Game1.mapDisplayDevice);
+
+                        gameLocation.removeTile(20, 2, "Front");
+                        Layer frontLayer = coop3Map.GetLayer("Front");
+                        TileSheet tilesheet = coop3Map.GetTileSheet("z_wateringSystemTilesheet");
+                        frontLayer.Tiles[20, 2] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: 1);
+                    }
                 } 
                 else if(building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
                 {
@@ -352,12 +385,35 @@ namespace AnimalsNeedWater
                         id: "z_waterTroughTilesheet",
                         map: barnMap,
                         imageSource: ModEntry.instance.Helper.Content.GetActualAssetKey("assets/waterTroughTilesheet.xnb", ContentSource.ModFolder),
-                        sheetSize: new xTile.Dimensions.Size(48, 16),
+                        sheetSize: new xTile.Dimensions.Size(160, 16),
                         tileSize: new xTile.Dimensions.Size(16, 16)
                     );
 
                     barnMap.AddTileSheet(tileSheet);
                     barnMap.LoadTileSheets(Game1.mapDisplayDevice);
+
+                    if(building.nameOfIndoorsWithoutUnique.ToLower() == "barn3" && Config.WateringSystemInDeluxeBuildings)
+                    {
+                        var barn3Map = ((GameLocation)building.indoors.Value).map;
+                        var gameLocation = building.indoors.Value;
+
+                        TileSheet tileSheet3 = new TileSheet(
+                            id: "z_wateringSystemTilesheet",
+                            map: barn3Map,
+                            imageSource: ModEntry.instance.Helper.Content.GetActualAssetKey("assets/wateringSystemTilesheet.xnb", ContentSource.ModFolder),
+                            sheetSize: new xTile.Dimensions.Size(32, 16),
+                            tileSize: new xTile.Dimensions.Size(16, 16)
+                        );
+
+                        barn3Map.AddTileSheet(tileSheet3);
+                        barn3Map.LoadTileSheets(Game1.mapDisplayDevice);
+
+                        gameLocation.removeTile(23, 3, "Buildings");
+                        gameLocation.removeTile(23, 2, "Front");
+                        Layer buildingsLayer = barn3Map.GetLayer("Buildings");
+                        TileSheet tilesheet = barn3Map.GetTileSheet("z_wateringSystemTilesheet");
+                        buildingsLayer.Tiles[23, 3] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: 0);
+                    }
                 }
             }
 
