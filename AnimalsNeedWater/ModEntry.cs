@@ -17,6 +17,9 @@ namespace AnimalsNeedWater
     {
         public bool ShowLoveBubblesOverAnimalsWhenWateredTrough { get; set; } = true;
         public bool WateringSystemInDeluxeBuildings { get; set; } = true;
+        public int FriendshipPointsForWateredTrough { get; set; } = 15;
+        public int AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding { get; set; } = 15;
+        public int NegativeFriendshipPointsForNotWateredTrough { get; set; } = 20;
     }
 
     /// <summary> The mod entry class loaded by SMAPI. </summary>
@@ -212,7 +215,7 @@ namespace AnimalsNeedWater
                         {
                             if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
-                                animal.friendshipTowardFarmer.Value -= 20;
+                                animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
                                 animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
                             }
                         }
@@ -226,7 +229,7 @@ namespace AnimalsNeedWater
                         {
                             if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
-                                animal.friendshipTowardFarmer.Value -= 20;
+                                animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
                                 animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
                             }
                         }
@@ -243,7 +246,7 @@ namespace AnimalsNeedWater
                     {
                         if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
-                            animal.friendshipTowardFarmer.Value -= 20;
+                            animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
                             animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
                         }
                     }
@@ -254,7 +257,7 @@ namespace AnimalsNeedWater
                     {
                         if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
-                            animal.friendshipTowardFarmer.Value -= 20;
+                            animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
                             animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
                         }
                     }

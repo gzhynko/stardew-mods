@@ -21,14 +21,14 @@ namespace AnimalsNeedWater
                 {
                     if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()))
                     {
-                        __instance.friendshipTowardFarmer.Value += 15;
+                        __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.FriendshipPointsForWateredTrough);
                     }
                 }
                 else if (__instance.home.nameOfIndoors.ToLower().Contains("barn"))
                 {
                     if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()))
                     {
-                        __instance.friendshipTowardFarmer.Value += 15;
+                        __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.FriendshipPointsForWateredTrough);
                     }
                 }
             }
@@ -60,7 +60,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -81,7 +81,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -103,7 +103,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -136,7 +136,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -168,7 +168,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -200,7 +200,7 @@ namespace AnimalsNeedWater
                                 {
                                     animal.doEmote(20, true);
                                 }
-                                animal.friendshipTowardFarmer.Value += 15;
+                                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                             }
                         }
                     }
@@ -214,9 +214,12 @@ namespace AnimalsNeedWater
         public static void WarpFarmer(Game1 __instance, ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
         {
             string locationNameWithoutUnique = Game1.getLocationFromName(locationName, isStructure).Name;
-            Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
+            Building building = null;
 
-            if (ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || ModData.CoopsWithWateredTrough.Contains(locationName.ToLower()))
+            if (locationName.ToLower().Contains("coop") || locationName.ToLower().Contains("barn"))
+                building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
+
+            if ((ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
@@ -312,7 +315,7 @@ namespace AnimalsNeedWater
                     }
                 }
             }
-            else
+            else if((!ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || !ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
