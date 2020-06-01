@@ -10,5 +10,5 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} were left thirsty yesterday.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} and {{secondAnimalName}} were left thirsty yesterday.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} and {{thirdAnimalName}} were left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday."
 }
