@@ -47,6 +47,7 @@
     <Compile Include="ModData.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Overrides.cs" />
+    <Compile Include="Profiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

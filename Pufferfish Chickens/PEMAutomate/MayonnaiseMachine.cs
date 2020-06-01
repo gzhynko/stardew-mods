@@ -1,5 +1,4 @@
-﻿
-using Harmony;
+﻿using Harmony;
 using Microsoft.Xna.Framework;
 using Pathoschild.Stardew.Automate;
 using StardewModdingAPI;
