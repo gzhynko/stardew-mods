@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -21,6 +22,9 @@ namespace AnimalsNeedWater
         // whether to enable the watering system in Deluxe Coops and Deluxe Barns
         public bool WateringSystemInDeluxeBuildings { get; set; } = true;
 
+        // whether to replace coop's and big coop's textures when troughs inside them are empty
+        public bool ReplaceCoopTextureIfTroughIsEmpty { get; set; } = true;
+
         // the amount of friendship points player gets for watering the trough
         public int FriendshipPointsForWateredTrough { get; set; } = 15;
 
@@ -29,6 +33,12 @@ namespace AnimalsNeedWater
 
         // the amount of friendship points player loses for not watering the trough
         public int NegativeFriendshipPointsForNotWateredTrough { get; set; } = 20;
+
+        // whether animals can drink outside
+        public bool AnimalsCanDrinkOutside { get; set; } = true;
+
+        // whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.)
+        public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = true;
     }
 
     /// <summary> The mod entry class loaded by SMAPI. </summary>
@@ -137,7 +147,7 @@ namespace AnimalsNeedWater
                     {
                         GameLocation gameLocation = building.indoors.Value;
 
-                        building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop_emptyWaterTrough.png", ContentSource.ModFolder));
+                        ChangeCoopTexture(building, true);
 
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.coopTroughTiles)
                         {
@@ -160,7 +170,7 @@ namespace AnimalsNeedWater
                     {
                         GameLocation gameLocation = building.indoors.Value;
 
-                        building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop2_emptyWaterTrough.png", ContentSource.ModFolder));
+                        ChangeBigCoopTexture(building, true);
 
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.coop2TroughTiles)
                         {
@@ -298,7 +308,7 @@ namespace AnimalsNeedWater
                 {
                     foreach (FarmAnimal animal in ((AnimalHouse)building.indoors.Value).animals.Values)
                     {
-                        if (ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false)
+                        if (ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false && ModData.FullAnimals.Contains(((Character)animal).displayName) == false)
                         {
                             if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
@@ -312,7 +322,7 @@ namespace AnimalsNeedWater
                 {
                     foreach(FarmAnimal animal in ((AnimalHouse)building.indoors.Value).animals.Values)
                     {
-                        if (ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false)
+                        if (ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false && ModData.FullAnimals.Contains(((Character)animal).displayName) == false)
                         {
                             if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                             {
@@ -329,7 +339,7 @@ namespace AnimalsNeedWater
             {
                 if (animal.home.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
                 {
-                    if (ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false || animal.home.animalDoorOpen.Value == false)
+                    if ((ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false && ModData.FullAnimals.Contains(((Character)animal).displayName) == false) || animal.home.animalDoorOpen.Value == false)
                     {
                         if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
@@ -340,7 +350,7 @@ namespace AnimalsNeedWater
                 } 
                 else if(animal.home.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
                 {
-                    if (ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false || animal.home.animalDoorOpen.Value == false)
+                    if ((ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false && ModData.FullAnimals.Contains(((Character)animal).displayName) == false) || animal.home.animalDoorOpen.Value == false)
                     {
                         if (!animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName))
                         {
@@ -384,6 +394,8 @@ namespace AnimalsNeedWater
 
             AnimalsLeftThirstyYesterday = animalsLeftThirsty;
 
+            ModData.FullAnimals = new List<string>();
+
             List<object> nextDayAndSeasonList = GetNextDayAndSeason(Game1.dayOfMonth, Game1.currentSeason);
 
             if (!Utility.isFestivalDay((int)nextDayAndSeasonList[0], (string)nextDayAndSeasonList[1]))
@@ -421,6 +433,14 @@ namespace AnimalsNeedWater
             harmony.Patch(
                 original: AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.dayUpdate)),
                 prefix: new HarmonyMethod(typeof(Overrides), nameof(Overrides.AnimalDayUpdate))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(FarmAnimal), "behaviors", new Type[] {
+                    typeof(GameTime),
+                    typeof(GameLocation)
+                }),
+                prefix: new HarmonyMethod(typeof(Overrides), nameof(Overrides.AnimalBehaviors))
             );
 
             harmony.Patch(
@@ -553,14 +573,8 @@ namespace AnimalsNeedWater
                     {
                         ModData.CoopsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
 
-                        if (building.nameOfIndoorsWithoutUnique.ToLower() == "coop")
-                        {
-                            building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop_fullWaterTrough.png", ContentSource.ModFolder));
-                        } 
-                        else if(building.nameOfIndoorsWithoutUnique.ToLower() == "coop2")
-                        {
-                            building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop2_fullWaterTrough.png", ContentSource.ModFolder));
-                        }
+                        ChangeCoopTexture(building, false);
+                        ChangeBigCoopTexture(building, false);
                     }
                     else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
                     {
@@ -595,6 +609,36 @@ namespace AnimalsNeedWater
                     NextSeason(currSeason)
                 };
                 return returnList;
+            }
+        }
+
+        public void ChangeCoopTexture(Building building, bool empty)
+        {
+            if (Config.ReplaceCoopTextureIfTroughIsEmpty)
+            {
+                if (empty)
+                {
+                    building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop_emptyWaterTrough.png", ContentSource.ModFolder));
+                }
+                else
+                {
+                    building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop_fullWaterTrough.png", ContentSource.ModFolder));
+                }
+            }
+        }
+
+        public void ChangeBigCoopTexture(Building building, bool empty)
+        {
+            if (Config.ReplaceCoopTextureIfTroughIsEmpty)
+            {
+                if (empty)
+                {
+                    building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop2_emptyWaterTrough.png", ContentSource.ModFolder));
+                }
+                else
+                {
+                    building.texture = new Lazy<Texture2D>(() => Helper.Content.Load<Texture2D>("assets/Coop2_fullWaterTrough.png", ContentSource.ModFolder));
+                }
             }
         }
 

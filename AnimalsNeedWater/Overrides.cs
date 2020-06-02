@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -32,6 +33,51 @@ namespace AnimalsNeedWater
                     }
                 }
             }
+        }
+
+        [HarmonyPriority(600)]
+        public static bool AnimalBehaviors(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
+        {
+            if (__instance.home == null)
+                __result = false;
+
+            if (!Game1.IsClient)
+            {
+                if (__instance.controller != null)
+                    __result = true;
+                if (location.IsOutdoors && !ModData.FullAnimals.Contains(((Character)__instance).displayName) && __instance.controller == null && (Game1.random.NextDouble() < 0.001 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick) && ModEntry.instance.Config.AnimalsCanDrinkOutside)
+                {
+                    ++FarmAnimal.NumPathfindingThisTick;
+                    __instance.controller = new PathFindController((Character)__instance, location, new PathFindController.isAtEnd(WaterEndPointFunction), -1, false, new PathFindController.endBehavior(BehaviorAfterFindingWater), 200, Point.Zero, true);
+                }
+            }
+
+            return true;
+        }
+
+        public static bool WaterEndPointFunction(
+          PathNode currentPoint,
+          Point endPoint,
+          GameLocation location,
+          Character c)
+        {
+            if (!ModEntry.instance.Config.AnimalsCanOnlyDrinkFromWaterBodies)
+            {
+                return location.CanRefillWateringCanOnTile(currentPoint.x - 1, currentPoint.y) || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y - 1) || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y + 1) || location.CanRefillWateringCanOnTile(currentPoint.x + 1, currentPoint.y);
+            } 
+            else
+            {
+                return location.isOpenWater(currentPoint.x - 1, currentPoint.y) || location.isOpenWater(currentPoint.x, currentPoint.y - 1) || location.isOpenWater(currentPoint.x, currentPoint.y + 1) || location.isOpenWater(currentPoint.x + 1, currentPoint.y);
+            }
+        }
+
+        public static void BehaviorAfterFindingWater(Character c, GameLocation environment)
+        {
+            if (ModData.FullAnimals.Contains(c.displayName))
+                return;
+
+            c.doEmote(32);
+            ModData.FullAnimals.Add(c.displayName);
         }
 
         [HarmonyPriority(500)]
