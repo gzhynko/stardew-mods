@@ -9,6 +9,9 @@ Here's what ANW's API interface looks like:
 
         List<string> GetCoopsWithWateredTrough();
         List<string> GetBarnsWithWateredTrough();
+
+        bool IsAnimalFull(string displayName);
+        List<string> GetFullAnimals();
     }
 ```
 ## Methods
@@ -36,6 +39,18 @@ Returns a ```List<string>```  containing a list of Coops with watered trough.
 *No parameters*
 
 Returns a ```List<string>```  containing a list of Barns with watered trough.
+
+**IsAnimalFull**
+
+Requires a ```string``` - animal's display name.
+
+Returns a ```bool``` defining whether the animal was able to drink outside today or not.
+
+**GetCoopsWithWateredTrough**
+
+*No parameters*
+
+Returns a ```List<string>```  containing a list of animals that were able to drink outside today.
 ## Accessing API
 See [Modder Guide/APIs/Integrations](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) on the official SDV wiki.
 
