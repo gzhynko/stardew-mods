@@ -73,11 +73,14 @@ namespace AnimalsNeedWater
             DetermineTroughPlacementProfile();
         }
 
+        /// <summary> Get ANW's API </summary>
+        /// <returns> API instance </returns>
         public override object GetApi()
         {
             return new API();
         }
 
+        /// <summary> Look for known mods that modify coop's/barn's interiors and load corresponding profiles. </summary>
         public void DetermineTroughPlacementProfile()
         {
             if (Helper.ModRegistry.IsLoaded("AairTheGreat.MoreBarnCoopAnimals"))
@@ -112,6 +115,7 @@ namespace AnimalsNeedWater
             }
         }
 
+        /// <summary> Empty water troughs in animal houses. </summary>
         public void EmptyWaterTroughs()
         {
             ModData.BarnsWithWateredTrough = new List<string>();

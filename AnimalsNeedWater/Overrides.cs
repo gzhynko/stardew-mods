@@ -13,6 +13,7 @@ namespace AnimalsNeedWater
 {
     internal class Overrides
     {
+        /// <summary> Patch for the FarmAnimal.dayUpdate method. </summary>
         [HarmonyPriority(500)]
         public static void AnimalDayUpdate(ref FarmAnimal __instance, ref GameLocation environtment)
         {
@@ -20,24 +21,30 @@ namespace AnimalsNeedWater
             {
                 if (__instance.home.nameOfIndoors.ToLower().Contains("coop"))
                 {
-                    if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()))
+                    // checking whether CoopsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
+                    if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(((Character)__instance).displayName))
                     {
+                        // increasing friendship points if any of the conditions above is met
                         __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.FriendshipPointsForWateredTrough);
                     }
                 }
                 else if (__instance.home.nameOfIndoors.ToLower().Contains("barn"))
                 {
-                    if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()))
+                    // checking whether BarnsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
+                    if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(((Character)__instance).displayName))
                     {
+                        // increasing friendship points if any of the conditions above is met
                         __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.instance.Config.FriendshipPointsForWateredTrough);
                     }
                 }
             }
         }
 
+        /// <summary> Patch for the FarmAnimal.behaviors method. </summary>
         [HarmonyPriority(600)]
         public static bool AnimalBehaviors(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
         {
+            // return false if the animal's home is null
             if (__instance.home == null)
                 __result = false;
 
@@ -47,6 +54,7 @@ namespace AnimalsNeedWater
                     __result = true;
                 if (location.IsOutdoors && !ModData.FullAnimals.Contains(((Character)__instance).displayName) && __instance.controller == null && (Game1.random.NextDouble() < 0.001 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick) && ModEntry.instance.Config.AnimalsCanDrinkOutside)
                 {
+                    // pathfind to the closest water tile
                     ++FarmAnimal.NumPathfindingThisTick;
                     __instance.controller = new PathFindController((Character)__instance, location, new PathFindController.isAtEnd(WaterEndPointFunction), -1, false, new PathFindController.endBehavior(BehaviorAfterFindingWater), 200, Point.Zero, true);
                 }
@@ -55,6 +63,7 @@ namespace AnimalsNeedWater
             return true;
         }
 
+        /// <summary> Search for water tiles. </summary>
         public static bool WaterEndPointFunction(
           PathNode currentPoint,
           Point endPoint,
@@ -71,15 +80,19 @@ namespace AnimalsNeedWater
             }
         }
 
+        /// <summary> Animal behavior after finding water tile. </summary>
         public static void BehaviorAfterFindingWater(Character c, GameLocation environment)
         {
+            // return if the animal is already on the list
             if (ModData.FullAnimals.Contains(c.displayName))
                 return;
 
+            // do the 'happy' emote and add the animal to the Full Animals list
             c.doEmote(32);
             ModData.FullAnimals.Add(c.displayName);
         }
 
+        /// <summary> Patch for the AnimalHouse.performToolAction method. </summary>
         [HarmonyPriority(500)]
         public static bool AnimalHouseToolAction(ref AnimalHouse __instance, ref Tool t, ref int tileX, ref int tileY)
         {
@@ -113,7 +126,7 @@ namespace AnimalsNeedWater
                                 }
 
                                 ModData.CoopsWithWateredTrough.Add(__instance.NameOrUniqueName.ToLower());
-                                __instance.getBuilding().texture = new Lazy<Texture2D>(() => ModEntry.instance.Helper.Content.Load<Texture2D>("assets/Coop_fullWaterTrough.png", ContentSource.ModFolder));
+                                ModEntry.instance.ChangeCoopTexture(__instance.getBuilding(), false);
 
                                 foreach (FarmAnimal animal in __instance.animals.Values)
                                 {
@@ -150,7 +163,7 @@ namespace AnimalsNeedWater
                                 }
 
                                 ModData.CoopsWithWateredTrough.Add(__instance.NameOrUniqueName.ToLower());
-                                __instance.getBuilding().texture = new Lazy<Texture2D>(() => ModEntry.instance.Helper.Content.Load<Texture2D>("assets/Coop2_fullWaterTrough.png", ContentSource.ModFolder));
+                                ModEntry.instance.ChangeBigCoopTexture(__instance.getBuilding(), false);
 
                                 foreach (FarmAnimal animal in __instance.animals.Values)
                                 {
@@ -316,6 +329,7 @@ namespace AnimalsNeedWater
             return false;
         }
 
+        /// <summary> Patch for the warpFarmer method. </summary>
         [HarmonyPriority(500)]
         public static void WarpFarmer(Game1 __instance, ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
         {
