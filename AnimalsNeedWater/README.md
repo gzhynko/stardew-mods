@@ -16,7 +16,7 @@ See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWat
 ## Translating
 | Language | Status |
 |--|--|
-| Chinese | ✕ |
+| Chinese | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam)) |
 | French | ✕ |
 | German | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [Makytar](https://www.nexusmods.com/stardewvalley/users/51740796)) |
 | Hungarian | ✕ |

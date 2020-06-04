@@ -46,7 +46,7 @@ Requires a ```string``` - animal's display name.
 
 Returns a ```bool``` defining whether the animal was able to drink outside today or not.
 
-**GetCoopsWithWateredTrough**
+**GetFullAnimals**
 
 *No parameters*
 
