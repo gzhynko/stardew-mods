@@ -34,7 +34,7 @@ Returns an ```AnimalLeftThirsty``` class containing display name and gender of e
 
 Returns a ```List<string>```  containing a list of Coops with watered trough.
 
-**GetCoopsWithWateredTrough**
+**GetBarnsWithWateredTrough**
 
 *No parameters*
 
