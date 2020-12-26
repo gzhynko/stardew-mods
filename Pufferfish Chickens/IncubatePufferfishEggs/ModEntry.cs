@@ -3,14 +3,13 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using SObject = StardewValley.Object;
 
-namespace PufferEggsToMayonnaise
+namespace IncubatePufferfishEggs
 {
     /// <summary> The mod entry class loaded by SMAPI. </summary>
     public class ModEntry : Mod
     {
         public static IMonitor ModMonitor;
         public static ModEntry instance;
-        public int mayoID = -2; // Pufferfish Mayonnaise ID
         public int eggID = -2; // Pufferfish Egg ID
         public int lEggID = -2; // Large Pufferfish Egg ID
 
@@ -34,7 +33,6 @@ namespace PufferEggsToMayonnaise
             object api = Helper.ModRegistry.GetApi("spacechase0.JsonAssets");
             if (api != null)
             {
-                mayoID = Helper.Reflection.GetMethod(api, "GetObjectId").Invoke<int>("Pufferfish Mayonnaise");
                 eggID = Helper.Reflection.GetMethod(api, "GetObjectId").Invoke<int>("Pufferfish Egg");
                 lEggID = Helper.Reflection.GetMethod(api, "GetObjectId").Invoke<int>("Large Pufferfish Egg");
             }
@@ -48,7 +46,7 @@ namespace PufferEggsToMayonnaise
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            var harmony = HarmonyInstance.Create("GZhynko.PufferEggsToMayonnaise");
+            var harmony = HarmonyInstance.Create("GZhynko.IncubatePufferfishEggs");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
@@ -68,11 +66,11 @@ namespace PufferEggsToMayonnaise
              * -1 = Json Assets can't provide IDs of the new objects. The user has not copied the [JA] folder to the Mods folder.
             */
 
-            if (mayoID == -2)
+            if (eggID == -2)
             {
                 Monitor.Log("Unable to get IDs of the new items. Make sure you have Json Assets installed.", LogLevel.Warn);
             }
-            else if (mayoID == -1)
+            else if (eggID == -1)
             {
                 Monitor.Log("Unable to get IDs of the new items. Make sure you have extracted all the folders from the .zip file.", LogLevel.Warn);
             }

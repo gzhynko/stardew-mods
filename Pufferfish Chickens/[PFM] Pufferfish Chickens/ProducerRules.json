@@ -1,0 +1,19 @@
+[
+  {
+    "ProducerName": "Mayonnaise Machine",
+    "InputIdentifier": "Pufferfish Egg",
+    "MinutesUntilReady": 180,
+    "OutputQuality": 0,
+    "OutputIdentifier": "Pufferfish Mayonnaise",
+    "Sounds": [ "Ship" ]
+  },
+
+  {
+    "ProducerName": "Mayonnaise Machine",
+    "InputIdentifier": "Large Pufferfish Egg",
+    "MinutesUntilReady": 180,
+    "OutputQuality": 2,
+    "OutputIdentifier": "Pufferfish Mayonnaise",
+    "Sounds": [ "Ship" ]
+  },
+]

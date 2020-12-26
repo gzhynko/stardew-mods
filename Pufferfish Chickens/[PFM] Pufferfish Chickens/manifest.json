@@ -1,0 +1,21 @@
+﻿{
+  "Name": "[PFM] Pufferfish Chickens",
+  "Author": "6480",
+  "Version": "1.0.0",
+  "Description": "Allows pufferfish eggs to be made into mayo",
+  "UniqueID": "6480.PFM.Pufferfish_Chickens",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [ "Nexus:???" ],
+  "Dependencies": [
+    {
+      "UniqueID": "Digus.ProducerFrameworkMod",
+      "MinimumVersion": "1.4.0"
+    },
+    {
+      "UniqueID": "GZhynko.JsonAssets.Pufferfish_Chickens"
+    }
+  ],
+  "ContentPackFor": {
+    "UniqueID": "Digus.ProducerFrameworkMod"
+  }
+}

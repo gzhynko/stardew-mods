@@ -1,10 +1,10 @@
 ﻿{
-  "Name": "PufferEggsToMayonnaise",
+  "Name": "IncubatePufferfishEggs",
   "Author": "GZhynko",
   "Version": "1.0.2",
   "Description": "Provides logic for the Pufferfish Chickens mod.",
-  "UniqueID": "GZhynko.PufferEggsToMayonnaise",
-  "EntryDll": "PufferEggsToMayonnaise.dll",
+  "UniqueID": "GZhynko.IncubatePufferfishEggs",
+  "EntryDll": "IncubatePufferfishEggs.dll",
   "MinimumApiVersion": "3.0.0",
   "UpdateKeys": [ "Nexus:???" ],
   "Dependencies": [

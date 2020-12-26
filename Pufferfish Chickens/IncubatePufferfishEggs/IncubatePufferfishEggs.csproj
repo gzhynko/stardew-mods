@@ -7,8 +7,8 @@
     <ProjectGuid>{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PufferEggsToMayonnaise</RootNamespace>
-    <AssemblyName>PufferEggsToMayonnaise</AssemblyName>
+    <RootNamespace>IncubatePufferfishEggs</RootNamespace>
+    <AssemblyName>IncubatePufferfishEggs</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
