@@ -6,7 +6,7 @@
   "UniqueID": "GZhynko.IncubatePufferfishEggs",
   "EntryDll": "IncubatePufferfishEggs.dll",
   "MinimumApiVersion": "3.0.0",
-  "UpdateKeys": [ "Nexus:???" ],
+  "UpdateKeys": [ "Nexus:6162" ],
   "Dependencies": [
     {
       "UniqueID": "spacechase0.JsonAssets"
