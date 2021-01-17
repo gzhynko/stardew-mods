@@ -17,7 +17,7 @@ namespace AnimalsNeedWater
     {
         public List<ModEntry.AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday()
         {
-            return ModEntry.instance.AnimalsLeftThirstyYesterday;
+            return ModEntry.Instance.AnimalsLeftThirstyYesterday;
         }
 
         public List<string> GetCoopsWithWateredTrough()
