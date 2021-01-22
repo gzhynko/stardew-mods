@@ -6,6 +6,7 @@ using StardewValley;
 
 namespace GrapesAllYearRound
 {
+    /// <summary> The mod entry class loaded by SMAPI. </summary>
     public class ModEntry : Mod, IAssetEditor
     {
         #region Public methods
