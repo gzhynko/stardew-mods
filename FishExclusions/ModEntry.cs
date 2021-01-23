@@ -55,7 +55,7 @@ namespace FishExclusions
         /// <returns>Whether the conversion went successfully.</returns>
         private bool TryConvertConfig(string directoryPath)
         {
-            var legacyConfig = new LegacyModConfig();
+            LegacyModConfig legacyConfig;
             var newConfig = new ModConfig();
             
             using (var reader = new StreamReader(Path.Combine(directoryPath, "config.json")))
