@@ -35,10 +35,12 @@ namespace FishExclusions
         public List<ConditionalExclusion> ConditionalExclusions { get; set; } = new List<ConditionalExclusion>();
     }
 
-    public abstract class ConditionalExclusion
+    public class ConditionalExclusion
     {
         public string Season { get; set; } = "";
         
+        public string Weather { get; set; } = "";
+
         public string Location { get; set; } = "";
         
         public int[] FishToExclude { get; set; } = { };

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using Harmony;
+using Newtonsoft.Json;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -29,10 +31,16 @@ namespace FishExclusions
             }
             catch (Exception exception)
             {
-                // Notify user and exit.
-                ModMonitor.Log($"Config file is formatted incorrectly, exiting. Details: { exception.Message }", LogLevel.Warn);
-                
-                return;
+                if (!TryConvertConfig(Helper.DirectoryPath))
+                {
+                    // Notify user and exit.
+                    ModMonitor.Log($"Config file is formatted incorrectly, exiting. Details: {exception.Message}",
+                        LogLevel.Warn);
+
+                    return;
+                }
+
+                ModMonitor.Log("Converted legacy config to the new format successfully.", LogLevel.Debug);
             }
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
@@ -40,6 +48,40 @@ namespace FishExclusions
 
         #endregion
         #region Private methods
+        
+        /// <summary>
+        /// Try to convert legacy config from v1.0.0 to the new format.
+        /// </summary>
+        /// <returns>Whether the conversion went successfully.</returns>
+        private bool TryConvertConfig(string directoryPath)
+        {
+            var legacyConfig = new LegacyModConfig();
+            var newConfig = new ModConfig();
+            
+            using (var reader = new StreamReader(Path.Combine(directoryPath, "config.json")))
+            {
+                var json = reader.ReadToEnd();
+
+                try
+                {
+                    legacyConfig = JsonConvert.DeserializeObject<LegacyModConfig>(json);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            if (legacyConfig.ItemsToExclude is null) return false;
+
+            newConfig.ItemsToExclude.CommonExclusions = legacyConfig.ItemsToExclude;
+            newConfig.TimesToRetry = legacyConfig.TimesToRetry;
+            newConfig.ItemToCatchIfAllFishIsExcluded = legacyConfig.ItemToCatchIfAllFishIsExcluded;
+            
+            Helper.WriteConfig(newConfig);
+
+            return true;
+        }
         
         private void ApplyHarmonyPatches()
         {
