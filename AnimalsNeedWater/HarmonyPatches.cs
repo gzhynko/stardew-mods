@@ -6,6 +6,7 @@ using StardewValley.Tools;
 using System;
 using xTile.Layers;
 using xTile.Tiles;
+// ReSharper disable InconsistentNaming
 
 namespace AnimalsNeedWater
 {

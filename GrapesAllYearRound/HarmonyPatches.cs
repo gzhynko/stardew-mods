@@ -1,6 +1,5 @@
-using System;
-using StardewModdingAPI;
 using StardewValley;
+// ReSharper disable InconsistentNaming
 
 namespace GrapesAllYearRound
 {
