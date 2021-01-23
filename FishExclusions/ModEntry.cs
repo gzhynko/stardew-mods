@@ -15,7 +15,9 @@ namespace FishExclusions
 
         public static IMonitor ModMonitor;
         public static ModConfig Config;
-
+        
+        public static bool ExclusionsEnabled = true;
+        
         #endregion
         #region Public methods
         
@@ -42,7 +44,8 @@ namespace FishExclusions
 
                 ModMonitor.Log("Converted legacy config to the new format successfully.", LogLevel.Debug);
             }
-
+            
+            CommandManager.RegisterCommands(helper);
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 

@@ -49,6 +49,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="CommandManager.cs" />
         <Compile Include="HarmonyPatches.cs" />
         <Compile Include="LegacyModConfig.cs" />
         <Compile Include="ModConfig.cs" />
