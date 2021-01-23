@@ -11,7 +11,7 @@ namespace FishExclusions
         public static void GetFish(GameLocation __instance, float millisecondsAfterNibble, int bait, int waterDepth, Farmer who,
             double baitPotency, Vector2 bobberTile, ref Object __result, string locationName = null)
         {
-            int[] bannedIds = ModEntry.Config.ItemsToExclude;
+            int[] bannedIds = Utils.GetExcludedFish(ModEntry.Config, Game1.currentSeason, __instance.Name);
             
             // This method has a neat unused (yet?) parameter 'baitPotency'. Why not to use it to avoid recursion?
             if ((int) baitPotency == 909 || !bannedIds.Contains(__result.parentSheetIndex)) return;

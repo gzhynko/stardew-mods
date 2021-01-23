@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using System;
+using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -21,9 +22,19 @@ namespace FishExclusions
         public override void Entry(IModHelper helper)
         {
             ModMonitor = Monitor;
-            
-            Config = Helper.ReadConfig<ModConfig>();
-            
+
+            try
+            {
+                Config = Helper.ReadConfig<ModConfig>();
+            }
+            catch (Exception exception)
+            {
+                // Notify user and exit.
+                ModMonitor.Log($"Config file is formatted incorrectly, exiting. Details: { exception.Message }", LogLevel.Warn);
+                
+                return;
+            }
+
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
