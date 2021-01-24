@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewValley;
 using Object = StardewValley.Object;
 // ReSharper disable InconsistentNaming
@@ -13,6 +14,12 @@ namespace FishExclusions
             double baitPotency, Vector2 bobberTile, ref Object __result, string locationName = null)
         {
             if (!ModEntry.ExclusionsEnabled) return;
+            
+#if DEBUG
+            ModEntry.ModMonitor.Log(
+                $"Get Fish: locationName: {__instance.Name}, season: {Game1.currentSeason}, raining: {Game1.IsRainingHere(__instance)}",
+                LogLevel.Debug);
+#endif
             
             var bannedIds = Utils.GetExcludedFish(ModEntry.Config, Game1.currentSeason, __instance.Name, Game1.IsRainingHere(__instance));
             

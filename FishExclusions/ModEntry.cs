@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Locations;
+using StardewValley.Tools;
 
 namespace FishExclusions
 {
@@ -92,6 +94,11 @@ namespace FishExclusions
 
             harmony.Patch(
                 AccessTools.Method(typeof(GameLocation), nameof(GameLocation.getFish)),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.GetFish))
+            );
+            
+            harmony.Patch(
+                AccessTools.Method(typeof(MineShaft), nameof(MineShaft.getFish)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.GetFish))
             );
         }
