@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Harmony;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -16,20 +18,33 @@ namespace GrapesAllYearRound
         public override void Entry(IModHelper helper)
         {
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.DayStarted += HandleDayStart;
         }
-        
+
         /// <summary>Get whether this instance can edit the given asset.</summary>
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
         public bool CanEdit<T>(IAssetInfo asset)
         {
-            return asset.AssetNameEquals("Data/Crops");
+            return asset.AssetNameEquals("Data/Crops") || asset.AssetNameEquals("TileSheets/crops");
         }
 
         /// <summary>Edit crop data to make grapes grow all year round.</summary>
         /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
         public void Edit<T>(IAssetData asset)
         {
-            if (!asset.AssetNameEquals("Data/Crops")) return;
+            if (!asset.AssetNameEquals("Data/Crops") && !asset.AssetNameEquals("TileSheets/crops")) return;
+
+            if (asset.AssetNameEquals("TileSheets/crops"))
+            {
+                if (Game1.currentSeason != "winter") return;
+
+                var editor = asset.AsImage();
+                var sourceImage = Helper.Content.Load<Texture2D>("assets/grape_winter.png");
+                
+                editor.PatchImage(sourceImage, targetArea: new Rectangle(0, 610, 128, 32));
+
+                return;
+            }
             
             IDictionary<int, string> data = asset.AsDictionary<int, string>().Data;
             foreach (var itemId in data.Keys)
@@ -55,6 +70,11 @@ namespace GrapesAllYearRound
                 AccessTools.Method(typeof(Crop), nameof(Crop.newDay)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.CropNewDay))
             );
+        }
+
+        private void HandleDayStart(object sender, DayStartedEventArgs e)
+        {
+            Helper.Content.InvalidateCache("TileSheets/crops");
         }
 
         /// <summary> Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations. </summary>
