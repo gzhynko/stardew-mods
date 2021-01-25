@@ -4,6 +4,7 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Tools;
 using System;
+using StardewModdingAPI;
 using xTile.Layers;
 using xTile.Tiles;
 // ReSharper disable InconsistentNaming
@@ -111,9 +112,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                         {
@@ -147,9 +148,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop2TroughTiles)
                         {
@@ -183,9 +184,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop3TroughTiles)
                         {
@@ -221,9 +222,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                         {
@@ -256,9 +257,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn2TroughTiles)
                         {
@@ -291,9 +292,9 @@ namespace AnimalsNeedWater
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
 
-                        Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                        Layer frontLayer = gameLocation.map.GetLayer("Front");
-                        TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                        Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                        Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                        TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn3TroughTiles)
                         {
@@ -345,9 +346,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                             {
@@ -368,9 +369,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop2TroughTiles)
                             {
@@ -391,9 +392,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop3TroughTiles)
                             {
@@ -420,9 +421,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                             {
@@ -443,9 +444,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn2TroughTiles)
                             {
@@ -466,9 +467,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn3TroughTiles)
                             {
@@ -483,7 +484,8 @@ namespace AnimalsNeedWater
                     }
                 }
             }
-            else if((!ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || !ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
+            else if ((!ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) ||
+                      !ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
@@ -498,9 +500,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                             {
@@ -521,9 +523,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop2TroughTiles)
                             {
@@ -544,9 +546,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop3TroughTiles)
                             {
@@ -573,9 +575,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                             {
@@ -596,9 +598,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn2TroughTiles)
                             {
@@ -619,9 +621,9 @@ namespace AnimalsNeedWater
                                 gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                             }
 
-                            Layer buildingsLayer = gameLocation.map.GetLayer("Buildings");
-                            Layer frontLayer = gameLocation.map.GetLayer("Front");
-                            TileSheet tilesheet = gameLocation.map.GetTileSheet("z_waterTroughTilesheet");
+                            Layer buildingsLayer = gameLocation.Map.GetLayer("Buildings");
+                            Layer frontLayer = gameLocation.Map.GetLayer("Front");
+                            TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
                             foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn3TroughTiles)
                             {
