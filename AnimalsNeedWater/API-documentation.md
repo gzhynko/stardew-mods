@@ -5,13 +5,14 @@ Here's what ANW's API interface looks like:
 ```csharp
     public interface IAnimalsNeedWaterAPI
     {
-        List<FarmAnimal> GetAnimalsLeftThirstyYesterday();
-
+        List<long> GetAnimalsLeftThirstyYesterday();
+        bool WasAnimalLeftThirstyYesterday(FarmAnimal animal);
+    
         List<string> GetCoopsWithWateredTrough();
         List<string> GetBarnsWithWateredTrough();
-
+    
         bool IsAnimalFull(FarmAnimal animal);
-        List<FarmAnimal> GetFullAnimals();
+        List<long> GetFullAnimals();
     }
 ```
 ## Methods
@@ -19,7 +20,14 @@ Here's what ANW's API interface looks like:
 
 *No parameters*
 
-Returns a ```FarmAnimal``` instance of each animal left without a watered trough yesterday.
+Returns a ```long``` myID of each animal left without a watered trough yesterday. 
+You can get the actual FarmAnimal instance with ```Utility.getAnimal(id)```.
+
+**WasAnimalLeftThirstyYesterday**
+
+Requires a ```FarmAnimal``` instance.
+
+Returns a ```bool``` defining whether the animal was left thirsty yesterday.
 
 **GetCoopsWithWateredTrough**
 
@@ -43,7 +51,8 @@ Returns a ```bool``` defining whether the animal was able to drink outside today
 
 *No parameters*
 
-Returns a ```List<FarmAnimal>```  containing a list of animals that were able to drink outside today.
+Returns a ```long``` myID of each animal that was able to drink outside today.
+You can get the actual FarmAnimal instance with ```Utility.getAnimal(id)```.
 ## Accessing API
 See [Modder Guide/APIs/Integrations](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) on the official SDV wiki.
 
