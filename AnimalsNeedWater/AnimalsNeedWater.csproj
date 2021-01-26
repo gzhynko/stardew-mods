@@ -52,7 +52,8 @@
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModData.cs" />
     <Compile Include="ModEntry.cs" />
-    <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="Patching\HarmonyPatches.cs" />
+    <Compile Include="Patching\HarmonyPatchExecutors.cs" />
     <Compile Include="Profiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

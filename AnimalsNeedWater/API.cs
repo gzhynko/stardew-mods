@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using StardewValley;
 
 namespace AnimalsNeedWater
 {
     public interface IAnimalsNeedWaterAPI
     {
-        List<ModEntry.AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday();
+        List<FarmAnimal> GetAnimalsLeftThirstyYesterday();
 
         List<string> GetCoopsWithWateredTrough();
         List<string> GetBarnsWithWateredTrough();
 
-        bool IsAnimalFull(string displayName);
-        List<string> GetFullAnimals();
+        bool IsAnimalFull(FarmAnimal animal);
+        List<FarmAnimal> GetFullAnimals();
     }
 
     public class API : IAnimalsNeedWaterAPI
     {
-        public List<ModEntry.AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday()
+        public List<FarmAnimal> GetAnimalsLeftThirstyYesterday()
         {
             return ModEntry.Instance.AnimalsLeftThirstyYesterday;
         }
@@ -30,15 +31,12 @@ namespace AnimalsNeedWater
             return ModData.BarnsWithWateredTrough;
         }
 
-        public bool IsAnimalFull(string displayName)
+        public bool IsAnimalFull(FarmAnimal animal)
         {
-            // just to make this stuff non-case-sensitive
-            List<string> LowerFullAnimals = ModData.FullAnimals.ConvertAll(s => s.ToLower());
-
-            return LowerFullAnimals.Contains(displayName.ToLower());
+            return ModData.FullAnimals.Contains(animal);
         }
 
-        public List<string> GetFullAnimals()
+        public List<FarmAnimal> GetFullAnimals()
         {
             return ModData.FullAnimals;
         }

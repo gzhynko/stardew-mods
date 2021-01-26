@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnimalsNeedWater.Patching;
 using Harmony;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,7 +25,7 @@ namespace AnimalsNeedWater
         public static ModEntry Instance;
         public ModConfig Config;
         public Profile CurrentTroughPlacementProfile;
-        public List<AnimalLeftThirsty> AnimalsLeftThirstyYesterday;
+        public List<FarmAnimal> AnimalsLeftThirstyYesterday;
         
         #endregion
         #region Public methods
@@ -37,13 +38,13 @@ namespace AnimalsNeedWater
             ModMonitor = Monitor;
             Instance = this;
 
-            AnimalsLeftThirstyYesterday = new List<AnimalLeftThirsty>();
+            AnimalsLeftThirstyYesterday = new List<FarmAnimal>();
 
             Config = Helper.ReadConfig<ModConfig>();
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.Saved += HandleDayUpdate;
+            helper.Events.GameLoop.DayEnding += OnDayEnding;
 
             DetermineTroughPlacementProfile();
         }
@@ -142,7 +143,7 @@ namespace AnimalsNeedWater
                 if (animal.home.nameOfIndoors.ToLower().Equals(building.nameOfIndoors.ToLower())) animalCount++;
             }
 
-            if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop") && animalCount > 0)
+            if (building is Coop && animalCount > 0)
             {
                 switch (building.nameOfIndoorsWithoutUnique.ToLower())
                 {
@@ -215,7 +216,7 @@ namespace AnimalsNeedWater
                     }
                 }
             }
-            else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn") && animalCount > 0)
+            else if (building is Barn && animalCount > 0)
             {
                 switch (building.nameOfIndoorsWithoutUnique.ToLower())
                 {
@@ -286,25 +287,20 @@ namespace AnimalsNeedWater
             }
             else if (animalCount == 0)
             {
-                if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
+                if (building is Coop)
                 {
                     ModData.CoopsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
                 }
-                else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
+                else if (building is Barn)
                 {
                     ModData.BarnsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
                 }
             }
         }
 
-        /// <summary> Looks for animals left thirsty, notifies player of them and loads new tilesheets if needed. </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
-        private void HandleDayUpdate(object sender, SavedEventArgs e)
-        {
-            LoadNewTileSheets();
-
-            List<AnimalLeftThirsty> animalsLeftThirsty = new List<AnimalLeftThirsty>();
+        private List<FarmAnimal> FindThirstyAnimals()
+        { 
+            List<FarmAnimal> animalsLeftThirsty = new List<FarmAnimal>();
             
             // Look for all animals inside buildings and check whether their troughs are watered.
             foreach (Building building in Game1.getFarm().buildings)
@@ -314,11 +310,11 @@ namespace AnimalsNeedWater
                     foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
                         .Where(animal =>
                             ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false &&
-                            ModData.FullAnimals.Contains(animal.displayName) == false).Where(animal =>
-                            animalsLeftThirsty.All(item => item.DisplayName != animal.displayName)))
+                            ModData.FullAnimals.Contains(animal) == false).Where(animal =>
+                            !animalsLeftThirsty.Contains(animal)))
                     {
                         animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                        animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
+                        animalsLeftThirsty.Add(animal);
                     }
                 } 
                 else if (building.nameOfIndoors.ToLower().Contains("barn"))
@@ -326,70 +322,106 @@ namespace AnimalsNeedWater
                     foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
                         .Where(animal =>
                             ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) == false &&
-                            ModData.FullAnimals.Contains(animal.displayName) == false).Where(animal =>
-                            animalsLeftThirsty.All(item => item.DisplayName != animal.displayName)))
+                            ModData.FullAnimals.Contains(animal) == false).Where(animal =>
+                            !animalsLeftThirsty.Contains(animal)))
                     {
                         animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                        animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
+                        animalsLeftThirsty.Add(animal);
                     }
                 }
             }
 
             // Check for animals outside their buildings as well.
-            foreach (FarmAnimal animal in Game1.getFarm().animals.Values)
+            foreach (var animal in Game1.getFarm().animals.Values)
             {
-                if (animal.home.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
+                if (animal.home is Coop)
                 {
                     if ((ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) ||
-                         ModData.FullAnimals.Contains((animal).displayName)) &&
+                         ModData.FullAnimals.Contains(animal)) &&
                         animal.home.animalDoorOpen.Value) continue;
                     
-                    if (animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName)) continue;
+                    if (animalsLeftThirsty.Contains(animal)) continue;
                         
                     animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                    animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
+                    animalsLeftThirsty.Add(animal);
                 } 
-                else if(animal.home.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
+                else if(animal.home is Barn)
                 {
-                    if ((ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) != false ||
-                         ModData.FullAnimals.Contains(animal.displayName) != false) &&
-                        animal.home.animalDoorOpen.Value != false) continue;
-                    if (animalsLeftThirsty.Any(item => item.DisplayName == animal.displayName)) continue;
+                    if ((ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) ||
+                         ModData.FullAnimals.Contains(animal)) &&
+                        animal.home.animalDoorOpen.Value) continue;
+                    
+                    if (animalsLeftThirsty.Contains(animal)) continue;
                     
                     animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                    animalsLeftThirsty.Add(new AnimalLeftThirsty(animal.displayName, (animal.isMale() ? "male" : "female")));
+                    animalsLeftThirsty.Add(animal);
+                }
+            }
+
+            return animalsLeftThirsty;
+        }
+
+        /// <summary> Looks for animals left thirsty, notifies player of them and loads new tilesheets if needed. </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+        private void HandleDayUpdate(object sender, SavedEventArgs e)
+        {
+            LoadNewTileSheets();
+            
+            // Notify player of animals left thirsty, if any.
+            if (AnimalsLeftThirstyYesterday.Any())
+            {
+                switch (AnimalsLeftThirstyYesterday.Count)
+                {
+                    case 1 when Helper.ModRegistry.IsLoaded("Paritee.GenderNeutralFarmAnimals"):
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender",
+                            new { firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName }));
+                        break;
+                    case 1 when AnimalsLeftThirstyYesterday[0].isMale():
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male",
+                            new { firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName }));
+                        break;
+                    case 1 when !AnimalsLeftThirstyYesterday[0].isMale():
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female",
+                            new { firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName }));
+                        break;
+                    case 2:
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals",
+                            new
+                            {
+                                firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName,
+                                secondAnimalName = AnimalsLeftThirstyYesterday[1].displayName
+                            }));
+                        break;
+                    case 3:
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals",
+                            new
+                            {
+                                firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName,
+                                secondAnimalName = AnimalsLeftThirstyYesterday[1].displayName,
+                                thirdAnimalName = AnimalsLeftThirstyYesterday[2].displayName
+                            }));
+                        break;
+                    default:
+                        Game1.showGlobalMessage(ModHelper.Translation.Get(
+                            "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals",
+                            new
+                            {
+                                firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName,
+                                secondAnimalName = AnimalsLeftThirstyYesterday[1].displayName,
+                                thirdAnimalName = AnimalsLeftThirstyYesterday[2].displayName,
+                                totalAmountExcludingFirstThree = AnimalsLeftThirstyYesterday.Count - 3
+                            }));
+                        break;
                 }
             }
             
-            // Notify player of animals left thirsty, if any.
-            if (animalsLeftThirsty.Any())
-            {
-                switch (animalsLeftThirsty.Count())
-                {
-                    case 1 when animalsLeftThirsty[0].Gender == "male":
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
-                        break;
-                    case 1 when animalsLeftThirsty[0].Gender == "female":
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
-                        break;
-                    case 1:
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender", new { firstAnimalName = animalsLeftThirsty[0].DisplayName }));
-                        break;
-                    case 2:
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName }));
-                        break;
-                    case 3:
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName, thirdAnimalName = animalsLeftThirsty[2].DisplayName }));
-                        break;
-                    default:
-                        Game1.showGlobalMessage(ModHelper.Translation.Get("AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals", new { firstAnimalName = animalsLeftThirsty[0].DisplayName, secondAnimalName = animalsLeftThirsty[1].DisplayName, thirdAnimalName = animalsLeftThirsty[2].DisplayName, totalAmountExcludingFirstThree = animalsLeftThirsty.Count() - 3 }));
-                        break;
-                }
-            }
-
-            AnimalsLeftThirstyYesterday = animalsLeftThirsty;
-
-            ModData.FullAnimals = new List<string>();
+            ModData.FullAnimals = new List<FarmAnimal>();
 
             List<object> nextDayAndSeasonList = GetNextDayAndSeason(Game1.dayOfMonth, Game1.currentSeason);
             
@@ -402,11 +434,11 @@ namespace AnimalsNeedWater
             {
                 foreach (Building building in Game1.getFarm().buildings)
                 {
-                    if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
+                    if (building is Coop)
                     {
                         ModData.CoopsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
                     }
-                    else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
+                    else if (building is Barn)
                     {
                         ModData.BarnsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
                     }
@@ -422,17 +454,20 @@ namespace AnimalsNeedWater
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             var harmony = HarmonyInstance.Create("GZhynko.AnimalsNeedWater");
-
+            
+            ModMonitor.VerboseLog("Patching AnimalHouse.performToolAction.");
             harmony.Patch(
                 AccessTools.Method(typeof(AnimalHouse), nameof(AnimalHouse.performToolAction)),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalHouseToolAction))
             );
-
+            
+            ModMonitor.VerboseLog("Patching FarmAnimal.dayUpdate.");
             harmony.Patch(
                 AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.dayUpdate)),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalDayUpdate))
             );
 
+            ModMonitor.VerboseLog("Patching FarmAnimal.behaviors.");
             harmony.Patch(
                 AccessTools.Method(typeof(FarmAnimal), "behaviors", new[] {
                     typeof(GameTime),
@@ -441,6 +476,7 @@ namespace AnimalsNeedWater
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalBehaviors))
             );
 
+            ModMonitor.VerboseLog("Patching Game1.warpFarmer.");
             harmony.Patch(
                 AccessTools.Method(typeof(Game1), nameof(Game1.warpFarmer), new[] {
                     typeof(string),
@@ -451,6 +487,8 @@ namespace AnimalsNeedWater
                 }),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.WarpFarmer))
             );
+            
+            ModMonitor.VerboseLog("Done patching.");
         }
 
         /// <summary> Raised after the save is loaded. </summary>
@@ -458,17 +496,16 @@ namespace AnimalsNeedWater
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            CheckHomeStatus();
             LoadNewTileSheets();
             PlaceWateringSystems();
 
             HandleDayStart();
         }
         
-        private void OnDayStarted(object sender, DayStartedEventArgs e)
+        private void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            if (Helper.Multiplayer.GetConnectedPlayers().Count() <= 1) return;
-            
-            OnSaveLoaded(null, null);
+            AnimalsLeftThirstyYesterday = FindThirstyAnimals();
         }
 
         private void HandleDayStart()
@@ -481,7 +518,7 @@ namespace AnimalsNeedWater
             {
                 foreach (Building building in Game1.getFarm().buildings)
                 {
-                    if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
+                    if (building is Coop)
                     {
                         ModData.CoopsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
 
@@ -494,11 +531,19 @@ namespace AnimalsNeedWater
                             ChangeBigCoopTexture(building, false);
                         }
                     }
-                    else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
+                    else if (building is Barn)
                     {
                         ModData.BarnsWithWateredTrough.Add(building.nameOfIndoors.ToLower());
                     }
                 }
+            }
+        }
+        
+        private void CheckHomeStatus()
+        {
+            if (Game1.getFarm().getAllFarmAnimals().Any(animal => animal.home == null))
+            {
+                Utility.fixAllAnimals();
             }
         }
 
@@ -527,16 +572,16 @@ namespace AnimalsNeedWater
         {
             foreach (Building building in Game1.getFarm().buildings)
             {
-                if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("coop"))
+                if (building is Coop)
                 {
                     var coopMap = building.indoors.Value.Map;
                     
-                    if (coopMap.TileSheets.All((ts) => !ts.Id.Equals("z_waterTroughTilesheet")))
+                    if (coopMap.TileSheets.All(ts => !ts.Id.Equals("z_waterTroughTilesheet")))
                     {
                         var tileSheet = new TileSheet(
                             "z_waterTroughTilesheet",
                             coopMap,
-                            Instance.Helper.Content.GetActualAssetKey("assets/waterTroughTilesheet.xnb"),
+                            Instance.Helper.Content.GetActualAssetKey($"assets/waterTroughTilesheet{ (Config.CleanerTroughs ? "_clean" : "") }.xnb"),
                             new Size(160, 16),
                             new Size(16, 16)
                         );
@@ -562,16 +607,16 @@ namespace AnimalsNeedWater
                     coop3Map.AddTileSheet(tileSheet3);
                     coop3Map.LoadTileSheets(Game1.mapDisplayDevice);
                 }
-                else if (building.nameOfIndoorsWithoutUnique.ToLower().Contains("barn"))
+                else if (building is Barn)
                 {
                     var barnMap = building.indoors.Value.Map;
 
-                    if (barnMap.TileSheets.All((ts) => !ts.Id.Equals("z_waterTroughTilesheet")))
+                    if (barnMap.TileSheets.All(ts => !ts.Id.Equals("z_waterTroughTilesheet")))
                     {
                         var tileSheet = new TileSheet(
                             "z_waterTroughTilesheet",
                             barnMap,
-                            Instance.Helper.Content.GetActualAssetKey("assets/waterTroughTilesheet.xnb"),
+                            Instance.Helper.Content.GetActualAssetKey($"assets/waterTroughTilesheet{ (Config.CleanerTroughs ? "_clean" : "") }.xnb"),
                             new Size(160, 16),
                             new Size(16, 16)
                         );
@@ -691,18 +736,6 @@ namespace AnimalsNeedWater
                 };
                 return returnList;
             }
-        }
-
-        public class AnimalLeftThirsty
-        {
-            public AnimalLeftThirsty(string displayName, string gender)
-            {
-                DisplayName = displayName;
-                Gender = gender;
-            }
-
-            public string DisplayName { get; }
-            public string Gender { get; }
         }
         
         #endregion

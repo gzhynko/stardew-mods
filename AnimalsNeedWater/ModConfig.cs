@@ -42,5 +42,10 @@ namespace AnimalsNeedWater
         /// Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).
         /// </summary>
         public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = true;
+        
+        /// <summary>
+        /// Whether troughs should have a cleaner texture.
+        /// </summary>
+        public bool CleanerTroughs { get; set; } = false;
     }
 }

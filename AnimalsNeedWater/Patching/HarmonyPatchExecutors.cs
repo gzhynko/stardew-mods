@@ -1,21 +1,16 @@
-﻿using Harmony;
+using System;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Tools;
-using System;
-using StardewModdingAPI;
 using xTile.Layers;
 using xTile.Tiles;
-// ReSharper disable InconsistentNaming
 
-namespace AnimalsNeedWater
+namespace AnimalsNeedWater.Patching
 {
-    internal class HarmonyPatches
+    public static class HarmonyPatchExecutors
     {
-        /// <summary> Patch for the FarmAnimal.dayUpdate method. </summary>
-        [HarmonyPriority(500)]
-        public static void AnimalDayUpdate(ref FarmAnimal __instance, ref GameLocation environtment)
+        public static void AnimalDayUpdateExecutor(ref FarmAnimal __instance, ref GameLocation environtment)
         {
             if (__instance.home != null &&
                 !((AnimalHouse) __instance.home.indoors.Value).animals.ContainsKey(__instance.myID.Value) &&
@@ -24,7 +19,7 @@ namespace AnimalsNeedWater
             if (__instance.home != null && __instance.home.nameOfIndoors.ToLower().Contains("coop"))
             {
                 // check whether CoopsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
-                if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance.displayName))
+                if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance))
                 {
                     // increase friendship points if any of the conditions above is met
                     __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.FriendshipPointsForWateredTrough);
@@ -33,17 +28,15 @@ namespace AnimalsNeedWater
             else if (__instance.home != null && __instance.home.nameOfIndoors.ToLower().Contains("barn"))
             {
                 // check whether BarnsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
-                if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance.displayName))
+                if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance))
                 {
                     // increase friendship points if any of the conditions above is met
                     __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.FriendshipPointsForWateredTrough);
                 }
             }
         }
-
-        /// <summary> Patch for the FarmAnimal.behaviors method. </summary>
-        [HarmonyPriority(600)]
-        public static bool AnimalBehaviors(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
+        
+        public static bool AnimalBehaviorsExecutor(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
         {
             // return false if the animal's home is null
             if (__instance.home == null)
@@ -53,7 +46,7 @@ namespace AnimalsNeedWater
             {
                 if (__instance.controller != null)
                     __result = true;
-                if (location.IsOutdoors && !ModData.FullAnimals.Contains(__instance.displayName) && __instance.controller == null && (Game1.random.NextDouble() < 0.001 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick) && ModEntry.Instance.Config.AnimalsCanDrinkOutside)
+                if (location.IsOutdoors && !ModData.FullAnimals.Contains(__instance) && __instance.controller == null && (Game1.random.NextDouble() < 0.001 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick) && ModEntry.Instance.Config.AnimalsCanDrinkOutside)
                 {
                     // pathfind to the closest water tile
                     ++FarmAnimal.NumPathfindingThisTick;
@@ -63,13 +56,13 @@ namespace AnimalsNeedWater
 
             return true;
         }
-
+        
         /// <summary> Search for water tiles. </summary>
-        public static bool WaterEndPointFunction(
-          PathNode currentPoint,
-          Point endPoint,
-          GameLocation location,
-          Character c)
+        private static bool WaterEndPointFunction(
+            PathNode currentPoint,
+            Point endPoint,
+            GameLocation location,
+            Character c)
         {
             if (!ModEntry.Instance.Config.AnimalsCanOnlyDrinkFromWaterBodies)
             {
@@ -80,20 +73,18 @@ namespace AnimalsNeedWater
         }
 
         /// <summary> Animal behavior after finding water tile. </summary>
-        public static void BehaviorAfterFindingWater(Character c, GameLocation environment)
+        private static void BehaviorAfterFindingWater(Character c, GameLocation environment)
         {
             // return if the animal is already on the list
-            if (ModData.FullAnimals.Contains(c.displayName))
+            if (ModData.FullAnimals.Contains(c as FarmAnimal))
                 return;
 
             // do the 'happy' emote and add the animal to the Full Animals list
             c.doEmote(32);
-            ModData.FullAnimals.Add(c.displayName);
+            ModData.FullAnimals.Add(c as FarmAnimal);
         }
-
-        /// <summary> Patch for the AnimalHouse.performToolAction method. </summary>
-        [HarmonyPriority(500)]
-        public static bool AnimalHouseToolAction(ref AnimalHouse __instance, ref Tool t, ref int tileX, ref int tileY)
+        
+        public static bool AnimalHouseToolActionExecutor(ref AnimalHouse __instance, ref Tool t, ref int tileX, ref int tileY)
         {
             GameLocation gameLocation = Game1.currentLocation;
 
@@ -320,10 +311,8 @@ namespace AnimalsNeedWater
 
             return false;
         }
-
-        /// <summary> Patch for the warpFarmer method. </summary>
-        [HarmonyPriority(500)]
-        public static void WarpFarmer(Game1 __instance, ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
+        
+        public static void WarpFarmerExecutor(Game1 __instance, ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
         {
             string locationNameWithoutUnique = Game1.getLocationFromName(locationName, isStructure).Name;
             Building building = null;

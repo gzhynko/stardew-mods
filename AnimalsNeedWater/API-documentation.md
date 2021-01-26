@@ -5,13 +5,13 @@ Here's what ANW's API interface looks like:
 ```csharp
     public interface IAnimalsNeedWaterAPI
     {
-        List<AnimalLeftThirsty> GetAnimalsLeftThirstyYesterday();
+        List<FarmAnimal> GetAnimalsLeftThirstyYesterday();
 
         List<string> GetCoopsWithWateredTrough();
         List<string> GetBarnsWithWateredTrough();
 
-        bool IsAnimalFull(string displayName);
-        List<string> GetFullAnimals();
+        bool IsAnimalFull(FarmAnimal animal);
+        List<FarmAnimal> GetFullAnimals();
     }
 ```
 ## Methods
@@ -19,14 +19,7 @@ Here's what ANW's API interface looks like:
 
 *No parameters*
 
-Returns an ```AnimalLeftThirsty``` class containing display name and gender of each animal left without a watered trough yesterday.
-```csharp
-  public class AnimalLeftThirsty
-  {
-      public string DisplayName { get; set; }
-      public string Gender { get; set; }
-  }
-```
+Returns a ```FarmAnimal``` instance of each animal left without a watered trough yesterday.
 
 **GetCoopsWithWateredTrough**
 
@@ -42,7 +35,7 @@ Returns a ```List<string>```  containing a list of Barns with watered trough.
 
 **IsAnimalFull**
 
-Requires a ```string``` - animal's display name.
+Requires a ```FarmAnimal``` instance.
 
 Returns a ```bool``` defining whether the animal was able to drink outside today or not.
 
@@ -50,7 +43,7 @@ Returns a ```bool``` defining whether the animal was able to drink outside today
 
 *No parameters*
 
-Returns a ```List<string>```  containing a list of animals that were able to drink outside today.
+Returns a ```List<FarmAnimal>```  containing a list of animals that were able to drink outside today.
 ## Accessing API
 See [Modder Guide/APIs/Integrations](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) on the official SDV wiki.
 
