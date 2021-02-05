@@ -6,18 +6,18 @@ namespace EventBlackBars
 {
     public class HarmonyPatches
     {
+        /// <summary> Patch for the Game1.eventFinished method. </summary>
         public static void EventEnd()
         {
             ModEntry.Instance.StartMovingBars(false);
-            ModEntry.ModMonitor.Log("evtEnd", LogLevel.Alert);
         }
         
+        /// <summary> Patch for the GameLocation.startEvent method. </summary>
         public static void EventStart(Event evt)
         {
             if (evt.isFestival) return;
             
             ModEntry.Instance.StartMovingBars(true);
-            ModEntry.ModMonitor.Log("evtStart", LogLevel.Alert);
         }
     }
 }

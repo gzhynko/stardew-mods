@@ -20,6 +20,7 @@ namespace EventBlackBars
         
         private Texture2D _blackRectangle;
         private GraphicsDevice _graphicsDevice;
+        private ModConfig _config;
 
         private float _barHeight;
 
@@ -29,12 +30,13 @@ namespace EventBlackBars
         {
             ModMonitor = Monitor;
             Instance = this;
-            
-            helper.Events.Display.RenderingHud += OnRenderingHud;
+
+            helper.Events.Display.RenderedWorld += OnRenderedWorld;
             helper.Events.Display.WindowResized += OnWindowResized;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             
+            _config = Helper.ReadConfig<ModConfig>();
             _graphicsDevice = Game1.graphics.GraphicsDevice;
             PrepareAssets(_graphicsDevice);
         }
@@ -45,10 +47,17 @@ namespace EventBlackBars
         /// <param name="direction">The direction. True for up, false for down.</param>
         public void StartMovingBars(bool direction)
         {
-            _barHeight = direction ? 0 : GetMaxBarHeight(_graphicsDevice);
-            
-            _barsMovingIn = direction;
-            _barsMovingOut = !direction;
+            if (_config.MoveBarsInSmoothly)
+            {
+                _barHeight = direction ? 0 : GetMaxBarHeight(_graphicsDevice);
+
+                _barsMovingIn = direction;
+                _barsMovingOut = !direction;
+            }
+            else
+            {
+                _barHeight = direction ? GetMaxBarHeight(_graphicsDevice) : 0;
+            }
         }
         
         /// <summary>
@@ -61,9 +70,9 @@ namespace EventBlackBars
         }
 
         /// <summary>
-        /// Draw bars.
+        /// Draw the bars.
         /// </summary>
-        private void OnRenderingHud(object sender, RenderingHudEventArgs e)
+        private void OnRenderedWorld(object sender, RenderedWorldEventArgs e)
         {
             if (!Game1.eventUp) return;
             
@@ -78,7 +87,7 @@ namespace EventBlackBars
             // Bottom bar
             e.SpriteBatch.Draw(_blackRectangle, new Vector2(0, viewportHeight - _barHeight), null,
                 Color.White, 0f, Vector2.Zero, new Vector2(viewportWidth, _barHeight),
-                SpriteEffects.None, 0.95f);
+                SpriteEffects.None, 0f);
         }
         
         /// <summary>
@@ -86,7 +95,7 @@ namespace EventBlackBars
         /// </summary>
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if (!_barsMovingIn && !_barsMovingOut) return;
+            if (!_barsMovingIn && !_barsMovingOut || !_config.MoveBarsInSmoothly) return;
 
             var maxBarHeight = GetMaxBarHeight(_graphicsDevice);
             var desiredBarHeight = _barsMovingIn ? maxBarHeight : 0;
@@ -143,7 +152,8 @@ namespace EventBlackBars
         /// </summary>
         private int GetMaxBarHeight(GraphicsDevice graphicsDevice)
         {
-            return Convert.ToInt16(graphicsDevice.Viewport.Height * 0.10);
+            return Convert.ToInt16(graphicsDevice.Viewport.Height *
+                                   MathHelper.Clamp((float) (_config.BarHeightPercentage / 100), 0f, 1f));
         }
     }
 }
