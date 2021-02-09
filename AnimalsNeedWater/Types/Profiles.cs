@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using xTile.Tiles;
 
-namespace AnimalsNeedWater
+namespace AnimalsNeedWater.Types
 {
     /// <summary> Profiles for mods that modify interiors of Barns/Coops. </summary>
     public static class Profiles

@@ -1,4 +1,4 @@
-namespace AnimalsNeedWater
+namespace AnimalsNeedWater.Types
 {
     /// <summary> The mod config class. More info here: https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Config </summary>
     public class ModConfig

@@ -1,4 +1,5 @@
 using System;
+using AnimalsNeedWater.Types;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
@@ -92,11 +93,15 @@ namespace AnimalsNeedWater.Patching
             
             if (Game1.currentLocation.Name.ToLower().Contains("coop") && !ModData.CoopsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
+                Type buildingType = typeof(Coop);
+                
                 if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "coop")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
+                        
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
                         
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                         {
@@ -122,7 +127,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -134,6 +139,8 @@ namespace AnimalsNeedWater.Patching
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
                         
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
+
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop2TroughTiles)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
@@ -158,7 +165,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -170,6 +177,8 @@ namespace AnimalsNeedWater.Patching
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
                         
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
+
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.coop3TroughTiles)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
@@ -193,7 +202,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -202,12 +211,16 @@ namespace AnimalsNeedWater.Patching
             }
             else if (Game1.currentLocation.Name.ToLower().Contains("barn") && !ModData.BarnsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
+                Type buildingType = typeof(Barn);
+
                 if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "barn")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
                         
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
+
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
@@ -231,7 +244,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -243,6 +256,8 @@ namespace AnimalsNeedWater.Patching
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
                         
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
+
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn2TroughTiles)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
@@ -266,7 +281,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -278,6 +293,8 @@ namespace AnimalsNeedWater.Patching
                     {
                         if (troughTile.TileX != tileX || troughTile.TileY != tileY) continue;
                         
+                        ModEntry.Instance.SendTroughWateredMessage(buildingType, __instance.NameOrUniqueName.ToLower());
+
                         foreach (TroughTile tile in ModEntry.Instance.CurrentTroughPlacementProfile.barn3TroughTiles)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
@@ -301,7 +318,7 @@ namespace AnimalsNeedWater.Patching
                         {
                             if (ModEntry.Instance.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                             {
-                                animal.doEmote(20);
+                                animal.doEmote(ModData.LoveEmote);
                             }
                             animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
                         }
@@ -312,15 +329,19 @@ namespace AnimalsNeedWater.Patching
             return false;
         }
         
-        public static void WarpFarmerExecutor(Game1 __instance, ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
+        public static void WarpFarmerExecutor(ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
         {
-            string locationNameWithoutUnique = Game1.getLocationFromName(locationName, isStructure).Name;
-            Building building = null;
+            if (!locationName.ToLower().Contains("coop") && !locationName.ToLower().Contains("barn")) return;
+            
+            string locationNameWithoutUnique = Game1.getLocationFromName(locationName).Name;
+            Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
+            
+            CheckForWateredTroughs(building, locationName, locationNameWithoutUnique);
+        }
 
-            if (locationName.ToLower().Contains("coop") || locationName.ToLower().Contains("barn"))
-                building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
-
-            if ((ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
+        public static void CheckForWateredTroughs(Building building, string locationName, string locationNameWithoutUnique)
+        {
+            if (ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) || ModData.CoopsWithWateredTrough.Contains(locationName.ToLower()))
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
@@ -473,8 +494,8 @@ namespace AnimalsNeedWater.Patching
                     }
                 }
             }
-            else if ((!ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) ||
-                      !ModData.CoopsWithWateredTrough.Contains(locationName.ToLower())) && building != null)
+            else if (!ModData.BarnsWithWateredTrough.Contains(locationName.ToLower()) ||
+                      !ModData.CoopsWithWateredTrough.Contains(locationName.ToLower()))
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
