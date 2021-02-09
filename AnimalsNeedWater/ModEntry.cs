@@ -517,8 +517,16 @@ namespace AnimalsNeedWater
             string locationNameWithoutUnique = Game1.getLocationFromName(locationName).Name;
             Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
 
-            ChangeCoopTexture(building, false);
-
+            switch (building.nameOfIndoorsWithoutUnique.ToLower())
+            {
+                case "coop":
+                    ChangeCoopTexture(building, false);
+                    break;
+                case "coop2":
+                    ChangeBigCoopTexture(building, false);
+                    break;
+            }
+                
             if (string.Equals(Game1.currentLocation.NameOrUniqueName, message.BuildingUniqueName,
                 StringComparison.CurrentCultureIgnoreCase))
             {
