@@ -10,6 +10,9 @@ namespace GrapesAllYearRound
         /// <summary> Patch for the HoeDirt.dayUpdate </summary>
         public static bool HoeDirtDayUpdate(HoeDirt __instance)
         {
+            // Avoid running if no crop is planted.
+            if (__instance.crop == null) return true;
+            
             // Skip the original method if the planted crop is grape and the current season is winter to prevent it from dying.
             if (__instance.crop.indexOfHarvest == 398 && Game1.currentSeason == "winter") return false;
 
