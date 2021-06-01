@@ -1,7 +1,7 @@
 using StardewValley;
 using StardewValley.Menus;
 
-namespace DialogueBoxRedesign
+namespace DialogueBoxRedesign.Utility
 {
     public static class Utility
     {

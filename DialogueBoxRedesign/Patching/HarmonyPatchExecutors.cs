@@ -1,8 +1,6 @@
 using System;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
@@ -28,23 +26,28 @@ namespace DialogueBoxRedesign.Patching
 		    
 		    if (!portraitTexture.Bounds.Contains(portraitSource)) portraitSource = new Rectangle(0, 0, 64, 64);
 
-		    var xOffset = Utility.ShouldPortraitShake(dialogueBox, dialogueBox.characterDialogue)
+		    var xOffset = Utility.Utility.ShouldPortraitShake(dialogueBox, dialogueBox.characterDialogue)
 			    ? Game1.random.Next(-1, 2)
 			    : 0;
 		    
+		    /* Portrait */
 		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, StardewValley.Utility.ModifyCoordinateForUIScale(Game1.viewport.Height - portraitSource.Height * 4f)),
 				    portraitSource, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0.88f);
-		    
+
+		    var speakerNameX = xPositionOfPortraitArea + widthOfPortraitArea / 2;
+		    var speakerNameY = portraitBoxY + 50;
+
+		    /* Speaker name */
 		    // shadow
 		    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch, dialogueBox.characterDialogue.speaker.getName(),
-			    xPositionOfPortraitArea + widthOfPortraitArea / 2 - 4, portraitBoxY + 4, color: 8);
+			    speakerNameX - 4, speakerNameY + 4, color: 8);
 		    // actual text
 		    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch, dialogueBox.characterDialogue.speaker.getName(),
-			    xPositionOfPortraitArea + widthOfPortraitArea / 2, portraitBoxY, color: 4);
+			    speakerNameX, speakerNameY, color: 4);
 
 		    if (dialogueBox.shouldDrawFriendshipJewel())
 		    {
-			    // draw the friendship jewel
+			    /* Friendship jewel */
 			    spriteBatch.Draw(Game1.mouseCursors,
 				    new Vector2(dialogueBox.friendshipJewel.X, dialogueBox.friendshipJewel.Y),
 				    Game1.player.getFriendshipHeartLevelForNPC(dialogueBox.characterDialogue.speaker.Name) >= 10
@@ -67,7 +70,7 @@ namespace DialogueBoxRedesign.Patching
 		    if (!dialogueBox.isPortraitBox()) return true;
 		    if (dialogueBox.isQuestion) return true;
 
-		    dialogueBox.height = 200;
+		    dialogueBox.height = 250;
 		    dialogueBox.y = Game1.uiViewport.Height - dialogueBox.height - 64;
 			    
 		    spriteBatch.Draw(ModEntry.GradientSample, new Rectangle(0, yPos, Game1.viewport.Width, Game1.viewport.Height - yPos), Color.White);
@@ -88,7 +91,7 @@ namespace DialogueBoxRedesign.Patching
 				dialogueBox.drawPortrait(spriteBatch);
 
 				var textX = dialogueBox.x + 8;
-				var textY = dialogueBox.y + 8;
+				var textY = dialogueBox.y + 58;
 				
 				// shadow
 				SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 8);
