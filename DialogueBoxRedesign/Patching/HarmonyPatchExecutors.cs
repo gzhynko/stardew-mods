@@ -31,7 +31,7 @@ namespace DialogueBoxRedesign.Patching
 			    : 0;
 		    
 		    /* Portrait */
-		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, StardewValley.Utility.ModifyCoordinateForUIScale(Game1.viewport.Height - portraitSource.Height * 4f)),
+		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, Game1.uiViewport.Height - portraitSource.Height * 4f),
 				    portraitSource, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0.88f);
 
 		    var speakerNameX = xPositionOfPortraitArea + widthOfPortraitArea / 2;
@@ -48,6 +48,9 @@ namespace DialogueBoxRedesign.Patching
 		    if (dialogueBox.shouldDrawFriendshipJewel())
 		    {
 			    /* Friendship jewel */
+			    var jewelBottomOffset = 80;
+			    dialogueBox.friendshipJewel.Y = Game1.uiViewport.Height - jewelBottomOffset;
+
 			    spriteBatch.Draw(Game1.mouseCursors,
 				    new Vector2(dialogueBox.friendshipJewel.X, dialogueBox.friendshipJewel.Y),
 				    Game1.player.getFriendshipHeartLevelForNPC(dialogueBox.characterDialogue.speaker.Name) >= 10
@@ -84,32 +87,29 @@ namespace DialogueBoxRedesign.Patching
 			{
 				return true;
 			}
+		    if (!dialogueBox.isPortraitBox() || dialogueBox.isQuestion) return true;
+		    
+		    dialogueBox.drawBox(spriteBatch, dialogueBox.x, dialogueBox.y, dialogueBox.width, dialogueBox.height);
+			dialogueBox.drawPortrait(spriteBatch);
 
-			if (dialogueBox.isPortraitBox() && !dialogueBox.isQuestion)
+			var textX = dialogueBox.x + 8;
+			var textY = dialogueBox.y + 58;
+				
+			// shadow
+			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 8);
+			// actual text
+			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX, textY, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 4);
+
+			var hoverText = ModEntry.ModHelper.Reflection.GetField<string>(dialogueBox, "hoverText").GetValue();
+			if (hoverText.Length > 0)
 			{
-				dialogueBox.drawBox(spriteBatch, dialogueBox.x, dialogueBox.y, dialogueBox.width, dialogueBox.height);
-				dialogueBox.drawPortrait(spriteBatch);
-
-				var textX = dialogueBox.x + 8;
-				var textY = dialogueBox.y + 58;
-				
-				// shadow
-				SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 8);
-				// actual text
-				SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX, textY, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 4);
-
-				var hoverText = ModEntry.ModHelper.Reflection.GetField<string>(dialogueBox, "hoverText").GetValue();
-				if (hoverText.Length > 0)
-				{
-					SpriteText.drawStringWithScrollBackground(spriteBatch, hoverText, dialogueBox.friendshipJewel.Center.X - SpriteText.getWidthOfString(hoverText) / 2, dialogueBox.friendshipJewel.Y - 64);
-				}
-				
-				dialogueBox.drawMouse(spriteBatch);
-				
-				return false;
+				SpriteText.drawStringWithScrollBackground(spriteBatch, hoverText, dialogueBox.friendshipJewel.Center.X - SpriteText.getWidthOfString(hoverText) / 2, dialogueBox.friendshipJewel.Y - 64);
 			}
+				
+			dialogueBox.drawMouse(spriteBatch);
+				
+			return false;
 
-			return true;
 	    }
     }
 }
