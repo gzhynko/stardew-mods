@@ -9,17 +9,20 @@ namespace DialogueBoxRedesign.Patching
 {
     public static class HarmonyPatchExecutors
     {
+	    private static int widthOfPortraitArea = 444;
+	    
 	    public static void DrawPortrait(DialogueBox dialogueBox, SpriteBatch spriteBatch)
 	    {
 		    if (dialogueBox.width < 642) return;
-
-		    var xPositionOfPortraitArea = dialogueBox.x + dialogueBox.width - 448 + 4;
-		    var widthOfPortraitArea = dialogueBox.x + dialogueBox.width - xPositionOfPortraitArea;
+		    
+		    var xPositionOfPortraitArea = dialogueBox.x + dialogueBox.width - widthOfPortraitArea;
 		    
 		    var portraitBoxX = xPositionOfPortraitArea + 76;
 		    var portraitBoxY = dialogueBox.y + dialogueBox.height / 2 - 148 - 36;
 
 		    var portraitTexture = dialogueBox.characterDialogue.overridePortrait ?? dialogueBox.characterDialogue.speaker.Portrait;
+
+		    var portraitScale = 4f;
 
 		    var portraitSource = Game1.getSourceRectForStandardTileSheet(portraitTexture,
 			    dialogueBox.characterDialogue.getPortraitIndex(), 64, 64);
@@ -31,8 +34,8 @@ namespace DialogueBoxRedesign.Patching
 			    : 0;
 		    
 		    /* Portrait */
-		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, Game1.uiViewport.Height - portraitSource.Height * 4f),
-				    portraitSource, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0.88f);
+		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, Game1.uiViewport.Height - portraitSource.Height * portraitScale),
+				    portraitSource, Color.White, 0f, Vector2.Zero, portraitScale, SpriteEffects.None, 0.88f);
 
 		    var speakerNameX = xPositionOfPortraitArea + widthOfPortraitArea / 2;
 		    var speakerNameY = portraitBoxY + 50;
@@ -49,7 +52,10 @@ namespace DialogueBoxRedesign.Patching
 		    {
 			    /* Friendship jewel */
 			    var jewelBottomOffset = 80;
+			    var jewelLeftOffset = 40;
+			    
 			    dialogueBox.friendshipJewel.Y = Game1.uiViewport.Height - jewelBottomOffset;
+			    dialogueBox.friendshipJewel.X = (int)(portraitBoxX + 64 * portraitScale + jewelLeftOffset);
 
 			    spriteBatch.Draw(Game1.mouseCursors,
 				    new Vector2(dialogueBox.friendshipJewel.X, dialogueBox.friendshipJewel.Y),
@@ -75,8 +81,12 @@ namespace DialogueBoxRedesign.Patching
 
 		    dialogueBox.height = 250;
 		    dialogueBox.y = Game1.uiViewport.Height - dialogueBox.height - 64;
-			    
-		    spriteBatch.Draw(ModEntry.GradientSample, new Rectangle(0, yPos, Game1.viewport.Width, Game1.viewport.Height - yPos), Color.White);
+
+		    var gradientBackground = Game1.currentSeason == "winter" && ModEntry.Config.DarkerBackgroundInWinter
+			    ? ModEntry.DarkerGradientSample
+			    : ModEntry.GradientSample;
+		    
+		    spriteBatch.Draw(gradientBackground, new Rectangle(0, yPos, Game1.viewport.Width, Game1.viewport.Height - yPos), Color.White);
 
 		    return false;
 	    }
@@ -89,16 +99,23 @@ namespace DialogueBoxRedesign.Patching
 			}
 		    if (!dialogueBox.isPortraitBox() || dialogueBox.isQuestion) return true;
 		    
+		    var viewportWidth = Game1.uiViewport.Width;
+		    
+		    dialogueBox.width = viewportWidth > 1600 ? 1500 : 1200;
+		    dialogueBox.x = (viewportWidth - dialogueBox.width) / 2;
+		    
 		    dialogueBox.drawBox(spriteBatch, dialogueBox.x, dialogueBox.y, dialogueBox.width, dialogueBox.height);
 			dialogueBox.drawPortrait(spriteBatch);
-
-			var textX = dialogueBox.x + 8;
+			
+			var textX = dialogueBox.x;
 			var textY = dialogueBox.y + 58;
+
+			var textWidth = dialogueBox.width - widthOfPortraitArea;
 				
 			// shadow
-			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 8);
+			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, textWidth, color: 8);
 			// actual text
-			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX, textY, dialogueBox.characterIndexInDialogue, dialogueBox.width - 460 - 24, color: 4);
+			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX, textY, dialogueBox.characterIndexInDialogue, textWidth, color: 4);
 
 			var hoverText = ModEntry.ModHelper.Reflection.GetField<string>(dialogueBox, "hoverText").GetValue();
 			if (hoverText.Length > 0)

@@ -14,9 +14,11 @@ namespace DialogueBoxRedesign
         
         public static IMonitor ModMonitor;
         public static IModHelper ModHelper;
+        public static ModConfig Config;
 
         public static Texture2D GradientSample;
-        
+        public static Texture2D DarkerGradientSample;
+
         #endregion
         #region Public methods
         
@@ -26,6 +28,8 @@ namespace DialogueBoxRedesign
         {
             ModMonitor = Monitor;
             ModHelper = Helper;
+            
+            Config = Helper.ReadConfig<ModConfig>();
             
             PrepareAssets();
             
@@ -38,6 +42,7 @@ namespace DialogueBoxRedesign
         private void PrepareAssets()
         {
             GradientSample = Helper.Content.Load<Texture2D>("assets/gradientSample.png");
+            DarkerGradientSample = Helper.Content.Load<Texture2D>("assets/darkerGradientSample.png");
         }
         
         private void ApplyHarmonyPatches()

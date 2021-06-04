@@ -46,6 +46,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ModConfig.cs" />
         <Compile Include="ModEntry.cs" />
         <Compile Include="Patching\HarmonyPatches.cs" />
         <Compile Include="Patching\HarmonyPatchExecutors.cs" />
