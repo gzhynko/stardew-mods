@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBlackBars", "EventBlac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueBoxRedesign", "DialogueBoxRedesign\DialogueBoxRedesign.csproj", "{03C1DD48-D61A-451D-8780-A87E78BB401D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasierUiNavigation", "EasierUiNavigation\EasierUiNavigation.csproj", "{415AF446-9C2E-46C3-9027-10F25FD1571F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{03C1DD48-D61A-451D-8780-A87E78BB401D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03C1DD48-D61A-451D-8780-A87E78BB401D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03C1DD48-D61A-451D-8780-A87E78BB401D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{415AF446-9C2E-46C3-9027-10F25FD1571F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{415AF446-9C2E-46C3-9027-10F25FD1571F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{415AF446-9C2E-46C3-9027-10F25FD1571F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{415AF446-9C2E-46C3-9027-10F25FD1571F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

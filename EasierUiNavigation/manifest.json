@@ -1,0 +1,10 @@
+{
+  "Name": "EasierUINavigation",
+  "Author": "GZhynko",
+  "Version": "1.0.0",
+  "Description": "Adds several new keyboard bindings for easier UI navigation.",
+  "UniqueID": "GZhynko.EasierUINavigation",
+  "EntryDll": "EasierUiNavigation.dll",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [ "Nexus:???" ]
+}
