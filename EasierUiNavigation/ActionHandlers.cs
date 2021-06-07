@@ -114,5 +114,49 @@ namespace EasierUiNavigation
                     break;
             }
         }
+
+        public static void SortItems(IClickableMenu activeMenu)
+        {
+            switch (activeMenu)
+            {
+                case ItemGrabMenu chestMenu:
+                    ItemGrabMenu.organizeItemsInList(chestMenu.ItemsToGrabMenu.actualInventory);
+                    break;
+                
+                case GameMenu _:
+                    ItemGrabMenu.organizeItemsInList(Game1.player.items);
+                    break;
+            }
+        }
+        
+        public static void StackToChest(IClickableMenu activeMenu)
+        {
+            switch (activeMenu)
+            {
+                case ItemGrabMenu chestMenu:
+                    chestMenu.FillOutStacks();
+                    break;
+            }
+        }
+
+        public static void NextMenuTab(IClickableMenu activeMenu)
+        {
+            switch (activeMenu)
+            {
+                case GameMenu gameMenu:
+                    Utility.MenuNextTab(gameMenu);
+                    break;
+            }
+        }
+        
+        public static void PreviousMenuTab(IClickableMenu activeMenu)
+        {
+            switch (activeMenu)
+            {
+                case GameMenu gameMenu:
+                    Utility.MenuPreviousTab(gameMenu);
+                    break;
+            }
+        }
     }
 }

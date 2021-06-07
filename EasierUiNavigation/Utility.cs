@@ -75,6 +75,27 @@ namespace EasierUiNavigation
                 letterMenu.OnPageChange();
             }
         }
+        
+        public static void MenuPreviousTab(GameMenu gameMenu)
+        {
+            var currentTab = gameMenu.currentTab;
+
+            if (currentTab > 0)
+            {
+                gameMenu.changeTab(--currentTab);
+            }
+        }
+        
+        public static void MenuNextTab(GameMenu gameMenu)
+        {
+            var currentTab = gameMenu.currentTab;
+            var tabsCount = gameMenu.tabs.Count;
+
+            if (currentTab < tabsCount - 1)
+            {
+                gameMenu.changeTab(++currentTab);
+            }
+        }
 
         public static void AnswerDialogue(DialogueBox dialogueBox, Response response)
         {

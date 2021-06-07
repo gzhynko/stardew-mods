@@ -50,5 +50,11 @@ namespace EasierUiNavigation
         /// Stack items to chest.
         /// </summary>
         public KeybindList StackToChest { get; set; } = KeybindList.Parse("K");
+
+        /// <summary>
+        /// The additional key (or a combination of) that needs to be pressed with either the NextPage or the PreviousPage keys
+        /// simultaneously to switch the GameMenu tabs.
+        /// </summary>
+        public KeybindList AdditionalCombinationForMenuTabs { get; set; } = KeybindList.Parse("LeftShift");
     }
 }

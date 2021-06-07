@@ -1,5 +1,6 @@
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
 
@@ -89,12 +90,26 @@ namespace EasierUiNavigation
 
             if (Config.SortItems.JustPressed())
             {
-                
+                ActionHandlers.SortItems(activeMenu);
             }
             
             if (Config.StackToChest.JustPressed())
             {
-                
+                ActionHandlers.StackToChest(activeMenu);
+            }
+            
+            if (KeybindList
+                .Parse($"{Config.AdditionalCombinationForMenuTabs} + {Config.NextPage}")
+                .JustPressed())
+            {
+                ActionHandlers.NextMenuTab(activeMenu);
+            }
+            
+            if (KeybindList
+                .Parse($"{Config.AdditionalCombinationForMenuTabs} + {Config.PreviousPage}")
+                .JustPressed())
+            {
+                ActionHandlers.PreviousMenuTab(activeMenu);
             }
         }
         
