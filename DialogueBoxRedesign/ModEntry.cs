@@ -1,5 +1,6 @@
 using DialogueBoxRedesign.Patching;
 using Harmony;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -8,7 +9,7 @@ using StardewValley.Menus;
 namespace DialogueBoxRedesign
 {
     /// <summary> The mod entry class loaded by SMAPI. </summary>
-    public class ModEntry : Mod
+    public class ModEntry : Mod, IAssetEditor
     {
         #region Variables
         
@@ -34,6 +35,35 @@ namespace DialogueBoxRedesign
             PrepareAssets();
             
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        }
+        
+        /// <summary>Get whether this instance can edit the given asset.</summary>
+        /// <param name="asset">Basic metadata about the asset being loaded.</param>
+        public bool CanEdit<T>(IAssetInfo asset)
+        {
+            return asset.AssetNameEquals("LooseSprites/Cursors");
+        }
+
+        /// <summary>Edit the friendship jewel textures to make them transparent.</summary>
+        /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
+        public void Edit<T>(IAssetData asset)
+        {
+            if (!asset.AssetNameEquals("LooseSprites/Cursors")) return;
+
+            var editor = asset.AsImage();
+            Texture2D sourceImage;
+
+            try
+            {
+                sourceImage = Helper.Content.Load<Texture2D>("assets/friendshipJewel.png");
+            }
+            catch (Microsoft.Xna.Framework.Content.ContentLoadException)
+            {
+                return;
+            }
+
+            editor.PatchImage(sourceImage, new Rectangle(0, 0, 44, 55), new Rectangle(140, 532, 44, 55));
+            editor.PatchImage(sourceImage, new Rectangle(44, 0, 11, 11), new Rectangle(269, 495, 11, 11));
         }
 
         #endregion
