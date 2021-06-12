@@ -1,7 +1,7 @@
 {
   "Name": "DialogueBoxRedesign",
   "Author": "GZhynko",
-  "Version": "1.0.2",
+  "Version": "1.0.3",
   "Description": "Makes the dialogue box a bit lighter.",
   "UniqueID": "GZhynko.DialogueBoxRedesign",
   "EntryDll": "DialogueBoxRedesign.dll",

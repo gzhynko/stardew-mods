@@ -48,6 +48,7 @@ namespace FishExclusions
             }
             
             CommandManager.RegisterCommands(helper);
+            
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
@@ -109,6 +110,7 @@ namespace FishExclusions
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             ApplyHarmonyPatches();
+            ModConfig.SetUpModConfigMenu(Config, this);
         }
         
         #endregion

@@ -101,6 +101,7 @@ namespace DialogueBoxRedesign
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             ApplyHarmonyPatches();
+            ModConfig.SetUpModConfigMenu(Config, this);
         }
         
         #endregion

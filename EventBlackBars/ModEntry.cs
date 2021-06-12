@@ -145,6 +145,7 @@ namespace EventBlackBars
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             ApplyHarmonyPatches();
+            ModConfig.SetUpModConfigMenu(_config, this);
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace EventBlackBars
         private int GetMaxBarHeight(GraphicsDevice graphicsDevice)
         {
             return Convert.ToInt16(graphicsDevice.Viewport.Height *
-                                   MathHelper.Clamp((float) (_config.BarHeightPercentage / 100), 0f, 1f));
+                                   MathHelper.Clamp((float)_config.BarHeightPercentage / 100f, 0f, 1f));
         }
     }
 }

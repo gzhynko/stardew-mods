@@ -505,6 +505,8 @@ namespace AnimalsNeedWater
             );
             
             ModMonitor.VerboseLog("Done patching.");
+            
+            ModConfig.SetUpModConfigMenu(Config, this);
         }
 
         private void OnModMessageReceived(object sender, ModMessageReceivedEventArgs e)

@@ -15,7 +15,7 @@ namespace EventBlackBars
         /// <summary> Patch for the GameLocation.startEvent method. </summary>
         public static void EventStart(Event evt)
         {
-            if (evt.isFestival) return;
+            if (evt.isFestival || evt.isWedding) return;
             
             ModEntry.Instance.StartMovingBars(true);
         }
