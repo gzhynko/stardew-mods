@@ -48,7 +48,12 @@ namespace FishExclusions
 
             var manifest = mod.ModManifest;
 
-            api.RegisterModConfig(manifest, () => config = new ModConfig(), delegate { mod.Helper.WriteConfig(config); });
+            api.RegisterModConfig(manifest, () =>
+            {
+                config = new ModConfig();
+                mod.SaveConfig(config);
+            }, () => mod.SaveConfig(config));
+            
             api.SetDefaultIngameOptinValue(manifest, true);
 
             api.RegisterLabel(manifest, "General", null);

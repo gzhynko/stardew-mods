@@ -50,6 +50,12 @@ namespace AnimalsNeedWater
 
             DetermineTroughPlacementProfile();
         }
+        
+        public void SaveConfig(ModConfig newConfig)
+        {
+            Config = newConfig;
+            Helper.WriteConfig(newConfig);
+        }
 
         /// <summary> Get ANW's API </summary>
         /// <returns> API instance </returns>

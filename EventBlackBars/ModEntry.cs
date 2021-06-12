@@ -20,7 +20,7 @@ namespace EventBlackBars
         
         private Texture2D _blackRectangle;
         private GraphicsDevice _graphicsDevice;
-        private ModConfig _config;
+        public ModConfig Config;
 
         private float _barHeight;
 
@@ -36,9 +36,15 @@ namespace EventBlackBars
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             
-            _config = Helper.ReadConfig<ModConfig>();
+            Config = Helper.ReadConfig<ModConfig>();
             _graphicsDevice = Game1.graphics.GraphicsDevice;
             PrepareAssets(_graphicsDevice);
+        }
+
+        public void SaveConfig(ModConfig newConfig)
+        {
+            Config = newConfig;
+            Helper.WriteConfig(newConfig);
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace EventBlackBars
         /// <param name="direction">The direction. True for up, false for down.</param>
         public void StartMovingBars(bool direction)
         {
-            if (_config.MoveBarsInSmoothly)
+            if (Config.MoveBarsInSmoothly)
             {
                 _barHeight = direction ? 0 : GetMaxBarHeight(_graphicsDevice);
 
@@ -95,7 +101,7 @@ namespace EventBlackBars
         /// </summary>
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if (!_barsMovingIn && !_barsMovingOut || !_config.MoveBarsInSmoothly) return;
+            if (!_barsMovingIn && !_barsMovingOut || !Config.MoveBarsInSmoothly) return;
 
             var maxBarHeight = GetMaxBarHeight(_graphicsDevice);
             var desiredBarHeight = _barsMovingIn ? maxBarHeight : 0;
@@ -145,7 +151,7 @@ namespace EventBlackBars
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             ApplyHarmonyPatches();
-            ModConfig.SetUpModConfigMenu(_config, this);
+            ModConfig.SetUpModConfigMenu(Config, this);
         }
 
         /// <summary>
@@ -154,7 +160,7 @@ namespace EventBlackBars
         private int GetMaxBarHeight(GraphicsDevice graphicsDevice)
         {
             return Convert.ToInt16(graphicsDevice.Viewport.Height *
-                                   MathHelper.Clamp((float)_config.BarHeightPercentage / 100f, 0f, 1f));
+                                   MathHelper.Clamp((float)Config.BarHeightPercentage / 100f, 0f, 1f));
         }
     }
 }

@@ -37,6 +37,12 @@ namespace DialogueBoxRedesign
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
         
+        public void SaveConfig(ModConfig newConfig)
+        {
+            Config = newConfig;
+            Helper.WriteConfig(newConfig);
+        }
+        
         /// <summary>Get whether this instance can edit the given asset.</summary>
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
         public bool CanEdit<T>(IAssetInfo asset)

@@ -51,6 +51,12 @@ namespace FishExclusions
             
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
+        
+        public void SaveConfig(ModConfig newConfig)
+        {
+            Config = newConfig;
+            Helper.WriteConfig(newConfig);
+        }
 
         #endregion
         #region Private methods
