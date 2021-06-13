@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using StardewModdingAPI;
 
-namespace FishExclusions
+namespace FishExclusions.Types
 {
     public interface IGenericModConfigMenuApi
     {
@@ -70,7 +70,7 @@ namespace FishExclusions
         /// <summary>
         /// Season- and location-independent exclusions.
         /// </summary>
-        public int[] CommonExclusions { get; set; } = { };
+        public object[] CommonExclusions { get; set; } = { };
         
         /// <summary>
         /// Season- and/or location-dependent exclusions.
@@ -86,6 +86,6 @@ namespace FishExclusions
 
         public string Location { get; set; } = "";
         
-        public int[] FishToExclude { get; set; } = { };
+        public object[] FishToExclude { get; set; } = { };
     }
 }
