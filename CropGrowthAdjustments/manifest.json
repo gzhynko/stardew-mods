@@ -1,0 +1,10 @@
+{
+  "Name": "CropGrowthAdjustments",
+  "Author": "GZhynko",
+  "Version": "1.0.0",
+  "Description": ".",
+  "UniqueID": "GZhynko.CropGrowthAdjustments",
+  "EntryDll": "CropGrowthAdjustments.dll",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [ "Nexus:???" ]
+}
