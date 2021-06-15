@@ -83,7 +83,7 @@ namespace CropGrowthAdjustments
                             // Abort adding special sprites if JsonAssets has custom crops loaded and the limit of 100 rows is reached.
                             if (Utility.JsonAssetsHasCropsLoaded(_jsonAssetsApi) && currentRowInSpriteSheet >= 99)
                             {
-                                Monitor.Log($"Special sprites for {adjustments.ContentPack.Manifest.Name} ({specialSprite.Season}) cannot be fully loaded, as the limit of 100 rows (set by JsonAssets) in the crops tilesheet is reached. The content pack will continue to work correctly, though you won't see the special sprites.", LogLevel.Warn);
+                                Monitor.Log($"Special sprites for {adjustments.ContentPack.Manifest.Name} ({specialSprite.Season}) cannot be fully loaded, since the limit of 100 rows (set by JsonAssets) in the crops tilesheet is reached. The content pack will continue to work correctly, though you won't see the special sprites.", LogLevel.Warn);
                                 return;
                             }
                             

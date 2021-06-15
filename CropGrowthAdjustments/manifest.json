@@ -2,7 +2,7 @@
   "Name": "CropGrowthAdjustments",
   "Author": "GZhynko",
   "Version": "1.0.0",
-  "Description": ".",
+  "Description": "Allows adjusting the seasons the crops grow and produce in.",
   "UniqueID": "GZhynko.CropGrowthAdjustments",
   "EntryDll": "CropGrowthAdjustments.dll",
   "MinimumApiVersion": "3.0.0",
