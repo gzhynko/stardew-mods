@@ -1,11 +1,10 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Locations;
 
 namespace EventBlackBars
 {
@@ -17,6 +16,7 @@ namespace EventBlackBars
 
         private bool _barsMovingIn;
         private bool _barsMovingOut;
+        private bool _renderBars;
         
         private Texture2D _blackRectangle;
         private GraphicsDevice _graphicsDevice;
@@ -53,6 +53,8 @@ namespace EventBlackBars
         /// <param name="direction">The direction. True for up, false for down.</param>
         public void StartMovingBars(bool direction)
         {
+            _renderBars = true;
+            
             if (Config.MoveBarsInSmoothly)
             {
                 _barHeight = direction ? 0 : GetMaxBarHeight(_graphicsDevice);
@@ -80,7 +82,7 @@ namespace EventBlackBars
         /// </summary>
         private void OnRenderedWorld(object sender, RenderedWorldEventArgs e)
         {
-            if (!Game1.eventUp) return;
+            if (!_renderBars) return;
             
             var viewportWidth = _graphicsDevice.Viewport.Width;
             var viewportHeight = _graphicsDevice.Viewport.Height;
@@ -112,6 +114,8 @@ namespace EventBlackBars
             {
                 _barsMovingIn = _barsMovingOut = false;
                 _barHeight = desiredBarHeight;
+
+                _renderBars = desiredBarHeight != 0;
                 
                 return;
             }
@@ -132,7 +136,7 @@ namespace EventBlackBars
         
         private void ApplyHarmonyPatches()
         {
-            var harmony = HarmonyInstance.Create(ModManifest.UniqueID);
+            var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
                 AccessTools.Method(typeof(Game1), nameof(Game1.eventFinished)),
