@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using SObject = StardewValley.Object;
@@ -47,7 +47,7 @@ namespace IncubatePufferfishEggs
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            var harmony = HarmonyInstance.Create("GZhynko.IncubatePufferfishEggs");
+            var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
                 AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),

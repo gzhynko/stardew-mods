@@ -1,6 +1,6 @@
 ﻿using System;
 using FishExclusions.Types;
-using Harmony;
+using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -56,7 +56,7 @@ namespace FishExclusions
 
         private void ApplyHarmonyPatches()
         {
-            var harmony = HarmonyInstance.Create("GZhynko.FishExclusions");
+            var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
                 AccessTools.Method(typeof(GameLocation), nameof(GameLocation.getFish)),
