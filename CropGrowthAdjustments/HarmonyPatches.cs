@@ -27,7 +27,7 @@ namespace CropGrowthAdjustments
                     // run the original method if this crop is supposed to die in winter.
                     if (adjustment.GetSeasonsToGrowIn().All(season => season != "winter")) return true;
                     
-                    // Skip the original method if the current season is winter to prevent the crop from dying (since all crops die in the winter).
+                    // Skip the original method if the current season is winter and the crop is not supposed to die.
                     if (Game1.GetSeasonForLocation(environment) == "winter")
                     {
                         __instance.crop.newDay((int) __instance.state, (int) __instance.fertilizer, (int) tileLocation.X, (int) tileLocation.Y, environment);
@@ -85,10 +85,9 @@ namespace CropGrowthAdjustments
         public static void CropNewDay(Crop __instance, int state, int fertilizer, int xTile, int yTile,
             GameLocation environment)
         {
-            // Return if this crop is still growing,
-            // its hoe dirt is not watered or this crop is fiber.
+            // return if this crop is still growing or its hoe dirt is not watered.
             if ((!__instance.fullyGrown && (__instance.dayOfCurrentPhase != 0 && __instance.currentPhase != 5)) ||
-                state != 1 || __instance.indexOfHarvest == 771) return;
+                state != 1) return;
 
             foreach (var contentPack in ModEntry.ContentPackManager.ContentPacks)
             {
@@ -97,7 +96,7 @@ namespace CropGrowthAdjustments
                     // skip if this crop is not the desired one.
                     if (__instance.indexOfHarvest != adjustment.CropProduceItemId) continue;
 
-                    ModEntry.ModMonitor.Log($"crop: {adjustment.CropProduceName}, regrowAfterHarvest: {__instance.regrowAfterHarvest}, currentPhase: {__instance.currentPhase}, dayOfCurrentPhase: {__instance.dayOfCurrentPhase}, fullyGrown: {__instance.fullyGrown}, phaseDays: {JsonConvert.SerializeObject(__instance.phaseDays)}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"[cropNewDay] crop: {adjustment.CropProduceName}, regrowAfterHarvest: {__instance.regrowAfterHarvest}, currentPhase: {__instance.currentPhase}, dayOfCurrentPhase: {__instance.dayOfCurrentPhase}, fullyGrown: {__instance.fullyGrown}, phaseDays: {JsonConvert.SerializeObject(__instance.phaseDays)}", LogLevel.Info);
 
                     // return if the crop is planted in any of the locations where it grows all year round.
                     if (adjustment.GetLocationsToGrowAllYearRoundIn().Any(location => Utility.CompareTwoStringsCaseAndSpaceIndependently(location, environment.name))) return;
@@ -112,7 +111,7 @@ namespace CropGrowthAdjustments
                         return;
                     }
 
-                    // If the crop is about to finish its regrowth period in any season other than the produce seasons,
+                    // if the crop is about to finish its regrowth period in any season other than the produce seasons,
                     // prevent it from producing.
                     if (__instance.currentPhase == 5 && __instance.dayOfCurrentPhase == 0)
                     {

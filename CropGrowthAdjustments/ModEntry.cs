@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using CropGrowthAdjustments.Types;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -143,7 +142,7 @@ namespace CropGrowthAdjustments
         
         private void ApplyHarmonyPatches()
         {
-            var harmony = HarmonyInstance.Create("GZhynko.CropGrowthAdjustments");
+            var harmony = new Harmony("GZhynko.CropGrowthAdjustments");
             
             harmony.Patch(
                 AccessTools.Method(typeof(HoeDirt), nameof(HoeDirt.dayUpdate)),

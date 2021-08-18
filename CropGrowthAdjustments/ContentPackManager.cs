@@ -19,14 +19,14 @@ namespace CropGrowthAdjustments
                 if (!contentPack.HasFile(ContentJsonName))
                 {
                     monitor.Log(
-                        $"[{contentPack.Manifest.Name}] - Incorrect content pack structure. Expected {ContentJsonName} to be present in the folder.");
+                        $"[{contentPack.Manifest.Name}] - Incorrect content pack folder structure. Expected {ContentJsonName} to be present in the folder.", LogLevel.Error);
                     continue;
                 }
 
                 var content = contentPack.ReadJsonFile<Adjustments>(ContentJsonName);
                 content.ContentPack = contentPack;
 
-                monitor.Log(content.CropAdjustments[0].CropProduceName, LogLevel.Info);
+                // monitor.Log(content.CropAdjustments[0].CropProduceName, LogLevel.Info);
 
                 ContentPacks.Add(content);
                 monitor.VerboseLog($"Loaded {contentPack.Manifest.Name} by {contentPack.Manifest.Author}.");
@@ -75,7 +75,7 @@ namespace CropGrowthAdjustments
                 }
             }
 
-            ModEntry.ModMonitor.Log("assignCropOriginalRowsInSpritesheet", LogLevel.Info);
+            // ModEntry.ModMonitor.Log("assignCropOriginalRowsInSpritesheet", LogLevel.Info);
         }
     }
 }
