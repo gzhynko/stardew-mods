@@ -5,11 +5,11 @@ using StardewValley.Locations;
 
 namespace StardewElectricity.Utility
 {
-    public class Utility
-    {
-        public static bool CheckIfAbleToBuild(BluePrint structureForPlacement, BuildableGameLocation gameLocation, Vector2 tileLocation, Farmer player)
-        {
-	        for (int y5 = 0; y5 < structureForPlacement.tilesHeight; y5++)
+	public class Utility
+	{
+		public static bool CheckIfAbleToBuild(BluePrint structureForPlacement, BuildableGameLocation gameLocation, Vector2 tileLocation, Farmer player)
+		{
+		    for (int y5 = 0; y5 < structureForPlacement.tilesHeight; y5++)
 			{
 				for (int x2 = 0; x2 < structureForPlacement.tilesWidth; x2++)
 				{
@@ -67,18 +67,18 @@ namespace StardewElectricity.Utility
 			}
 
 			return true;
-        }
+		}
 
-        public static void DrawWireWithWidth(SpriteBatch spriteBatch, Vector2 originPoint, Vector2 destinationPoint, int widthInPixels)
-        {
-	        var lastPosition = originPoint;
-	        
-	        //var destinationPoint = Game1.GlobalToLocal(Game1.player.Position);
-	        var curvaturePoint1 = new Vector2(originPoint.X + (destinationPoint.X - originPoint.X) / 3f, originPoint.Y + (destinationPoint.Y - originPoint.Y) / 3f + 70f);
-	        var curvaturePoint2 = new Vector2(originPoint.X + (destinationPoint.X - originPoint.X) * 2f / 3f, originPoint.Y + (destinationPoint.Y - originPoint.Y) * 2f / 3f + 70f);
+		public static void DrawWireWithWidth(SpriteBatch spriteBatch, Vector2 originPoint, Vector2 destinationPoint, int widthInPixels)
+		{
+		    var lastPosition = originPoint;
+		    
+		    //var destinationPoint = Game1.GlobalToLocal(Game1.player.Position);
+		    var curvaturePoint1 = new Vector2(originPoint.X + (destinationPoint.X - originPoint.X) / 3f, originPoint.Y + (destinationPoint.Y - originPoint.Y) / 3f + 70f);
+		    var curvaturePoint2 = new Vector2(originPoint.X + (destinationPoint.X - originPoint.X) * 2f / 3f, originPoint.Y + (destinationPoint.Y - originPoint.Y) * 2f / 3f + 70f);
 
-	        for (float i = 0f; i < 1f; i += 0.025f)
-	        {
+		    for (float i = 0f; i < 1f; i += 0.025f)
+		    {
 		        Vector2 currentCurvePoint = StardewValley.Utility.GetCurvePoint(i, originPoint, curvaturePoint1, curvaturePoint2, destinationPoint);
 
 		        for (int j = 0; j <= widthInPixels; j++)
@@ -87,12 +87,12 @@ namespace StardewElectricity.Utility
 		        }
 		        
 		        lastPosition = currentCurvePoint;
-	        }
-        }
+		    }
+		}
 
-        public static int GetTileDistanceBetweenTilePoints(Vector2 tileOne, Vector2 tileTwo)
-        {
-	        return (int)Vector2.Distance(tileOne, tileTwo);
-        }
-    }
+		public static int GetTileDistanceBetweenTilePoints(Vector2 tileOne, Vector2 tileTwo)
+		{
+			return (int)Vector2.Distance(tileOne, tileTwo);
+		}
+	}
 }
