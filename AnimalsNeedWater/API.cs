@@ -46,8 +46,8 @@ namespace AnimalsNeedWater
         
         public bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
         {
-            var houseTroughFull = ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors) ||
-                                  ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors);
+            var houseTroughFull = ModData.CoopsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower()) ||
+                                  ModData.BarnsWithWateredTrough.Contains(animal.home.nameOfIndoors.ToLower());
             return houseTroughFull || ModData.FullAnimals.Contains(animal);
         }
 
