@@ -25,7 +25,7 @@ namespace AnimalsNeedWater
         public static IModHelper ModHelper;
         public static ModEntry Instance;
         public ModConfig Config;
-        public Profile CurrentTroughPlacementProfile;
+        public TroughPlacementProfile CurrentTroughPlacementProfile;
         public List<FarmAnimal> AnimalsLeftThirstyYesterday;
         
         #endregion
@@ -48,7 +48,7 @@ namespace AnimalsNeedWater
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
 
-            DetermineTroughPlacementProfile();
+            SetTroughPlacementProfile();
         }
         
         public void SaveConfig(ModConfig newConfig)
@@ -72,39 +72,34 @@ namespace AnimalsNeedWater
         #endregion
         #region Private methods
         
-        /// <summary> Look for known mods that modify coop/barn interiors and load corresponding profiles. </summary>
-        private void DetermineTroughPlacementProfile()
+        /// <summary> Look for known mods that modify coop/barn interiors and load the matching profile (if any). </summary>
+        private void SetTroughPlacementProfile()
         {
-            if (Helper.ModRegistry.IsLoaded("AairTheGreat.MoreBarnCoopAnimals"))
+            try
             {
-                CurrentTroughPlacementProfile = Profiles.MoreBarnAndCoopAnimalsByAair;
-                Monitor.Log("Loading trough placement profile for More Barn and Coop Animals mod by AairTheGreat.", LogLevel.Debug);
-            } 
-            else if (Helper.ModRegistry.IsLoaded("Froststar11.CleanBarnsCoops"))
-            {
-                CurrentTroughPlacementProfile = Profiles.CleanerBarnsAndCoopsByFroststar11;
-                Monitor.Log("Loading trough placement profile for Froststar11's Cleaner Barns & Coops mod.", LogLevel.Debug);
+                TroughPlacementProfiles.LoadProfiles(Helper);
             }
-            else if (Helper.ModRegistry.IsLoaded("DaisyNiko.CCBB"))
+            catch (Exception e)
             {
-                CurrentTroughPlacementProfile = Profiles.CuterCoopsAndBetterBarnsByDaisyNiko;
-                Monitor.Log("Loading trough placement profile for Cuter Coops and Better Barns mod by DaisyNiko.", LogLevel.Debug);
+                Monitor.Log($"Error while loading trough placement profiles: {e}", LogLevel.Warn);
             }
-            else if (Helper.ModRegistry.IsLoaded("nykachu.coopbarnfacelift"))
+
+            if (TroughPlacementProfiles.DefaultProfile == null)
             {
-                CurrentTroughPlacementProfile = Profiles.CoopAndBarnFaceliftByNykachu;
-                Monitor.Log("Loading trough placement profile for Coop and Barn Facelift mod by nykachu.", LogLevel.Debug);
+                Monitor.Log("The default trough placement profile was not loaded. Animals Need Water will not work correctly. Make sure all files in this mod's assets folder are in place.", LogLevel.Error);
+                return;
             }
-            else if (Helper.ModRegistry.IsLoaded("pepoluan.cleanblockbarncoop"))
+            
+            foreach (var modInfo in Helper.ModRegistry.GetAll())
             {
-                CurrentTroughPlacementProfile = Profiles.CleanAndBlockForBarnsAndCoopsByPepoluan;
-                Monitor.Log("Loading trough placement profile for Clean and Block for Barns and Coops mod by pepoluan.", LogLevel.Debug);
+                var profile = TroughPlacementProfiles.GetProfileByUniqueId(modInfo.Manifest.UniqueID);
+                if (profile != null)
+                {
+                    CurrentTroughPlacementProfile = profile;
+                }
             }
-            else
-            {
-                CurrentTroughPlacementProfile = Profiles.Default;
-                Monitor.Log("No known mods that affect trough placement in Barns and Coops found loaded. Loading the default trough placement profile.");
-            }
+
+            CurrentTroughPlacementProfile ??= TroughPlacementProfiles.DefaultProfile;
         }
 
         /// <summary> Empty water troughs in animal houses. </summary>
@@ -176,9 +171,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.coopTroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -199,9 +194,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.coop2TroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -220,9 +215,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.coop3TroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -247,9 +242,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.barnTroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -268,9 +263,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.barn2TroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -289,9 +284,9 @@ namespace AnimalsNeedWater
                         foreach (TroughTile tile in CurrentTroughPlacementProfile.barn3TroughTiles)
                         {
                             if (tile.Layer.Equals("Buildings"))
-                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                             else if (tile.Layer.Equals("Front"))
-                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyTroughTilesheetIndex);
+                                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                         }
 
                         break;
@@ -727,9 +722,9 @@ namespace AnimalsNeedWater
                         TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
 
                         if (CurrentTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Buildings"))
-                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemTilesheetIndex);
+                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemIndex);
                         else if (CurrentTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Front"))
-                            frontLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemTilesheetIndex);
+                            frontLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemIndex);
                         break;
                     }
                     case "barn3":
@@ -746,9 +741,9 @@ namespace AnimalsNeedWater
                         TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
 
                         if (CurrentTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Buildings"))
-                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemTilesheetIndex);
+                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemIndex);
                         else if (CurrentTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Front"))
-                            frontLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemTilesheetIndex);
+                            frontLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemIndex);
                         break;
                     }
                 }
