@@ -5,7 +5,7 @@ Released January 30, 2022.
 - Migrated to net5.0. SMAPI 3.13 or newer is now required.
 - Added an option to move the portrait to the left of the text.
 - Added an option to hide the speaker's name or the friendship jewel.
-- Fixed an issue where small gaps would appear around the black box if the UI scale is uneven.
+- Fixed an issue where small gaps would appear around the black box if the UI scale is odd.
 
 ## 1.0.4
 Released August 13, 2021.
