@@ -20,6 +20,8 @@ namespace DialogueBoxRedesign
         public static Texture2D GradientSample;
         public static Texture2D DarkerGradientSample;
 
+        internal static IHDPortraitsAPI HDPortraitsAPI;
+
         #endregion
         #region Public methods
         
@@ -108,6 +110,11 @@ namespace DialogueBoxRedesign
         {
             ApplyHarmonyPatches();
             ModConfig.SetUpModConfigMenu(Config, this);
+
+            if (Helper.ModRegistry.IsLoaded("tlitookilakin.HDPortraits"))
+            {
+                HDPortraitsAPI = Helper.ModRegistry.GetApi<IHDPortraitsAPI>("tlitookilakin.HDPortraits");
+            }
         }
         
         #endregion
