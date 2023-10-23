@@ -36,6 +36,7 @@ namespace DialogueBoxRedesign
             
             PrepareAssets();
             
+            helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
         
@@ -44,34 +45,30 @@ namespace DialogueBoxRedesign
             Config = newConfig;
             Helper.WriteConfig(newConfig);
         }
-        
-        /// <summary>Get whether this instance can edit the given asset.</summary>
-        /// <param name="asset">Basic metadata about the asset being loaded.</param>
-        public bool CanEdit(IAssetInfo asset)
+
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            return asset.Name.IsEquivalentTo("LooseSprites/Cursors");
-        }
-
-        /// <summary>Edit the friendship jewel textures to make them transparent.</summary>
-        /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
-        public void Edit(IAssetData asset)
-        {
-            if (!asset.Name.IsEquivalentTo("LooseSprites/Cursors")) return;
-
-            var editor = asset.AsImage();
-            Texture2D sourceImage;
-
-            try
+            if (e.Name.IsEquivalentTo("LooseSprites/Cursors"))
             {
-                sourceImage = Helper.ModContent.Load<Texture2D>("assets/friendshipJewel.png");
-            }
-            catch (Microsoft.Xna.Framework.Content.ContentLoadException)
-            {
-                return;
-            }
+                e.Edit(asset =>
+                {
+                    var editor = asset.AsImage();
+                    
+                    Texture2D sourceImage;
 
-            editor.PatchImage(sourceImage, new Rectangle(0, 0, 44, 55), new Rectangle(140, 532, 44, 55));
-            editor.PatchImage(sourceImage, new Rectangle(44, 0, 11, 11), new Rectangle(269, 495, 11, 11));
+                    try
+                    {
+                        sourceImage = Helper.ModContent.Load<Texture2D>("assets/friendshipJewel.png");
+                    }
+                    catch (Microsoft.Xna.Framework.Content.ContentLoadException)
+                    {
+                        return;
+                    }
+                    
+                    editor.PatchImage(sourceImage, new Rectangle(0, 0, 44, 55), new Rectangle(140, 532, 44, 55));
+                    editor.PatchImage(sourceImage, new Rectangle(44, 0, 11, 11), new Rectangle(269, 495, 11, 11));
+                });
+            }
         }
 
         #endregion
