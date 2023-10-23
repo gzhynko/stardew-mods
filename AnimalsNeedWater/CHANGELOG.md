@@ -2,6 +2,7 @@
 
 ## Upcoming
 - Updated to latest SMAPI version.
+- Replaced xnb tilesheets with PNGs.
 
 ## 1.4.0
 Released December 30, 2021.
