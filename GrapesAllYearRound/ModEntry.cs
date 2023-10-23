@@ -10,7 +10,7 @@ using StardewValley.TerrainFeatures;
 namespace GrapesAllYearRound
 {
     /// <summary> The mod entry class loaded by SMAPI. </summary>
-    public class ModEntry : Mod, IAssetEditor
+    public class ModEntry : Mod
     {
         #region Public methods
 
@@ -23,25 +23,25 @@ namespace GrapesAllYearRound
 
         /// <summary>Get whether this instance can edit the given asset.</summary>
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
-        public bool CanEdit<T>(IAssetInfo asset)
+        public bool CanEdit(IAssetInfo asset)
         {
-            return asset.AssetNameEquals("Data/Crops") || asset.AssetNameEquals("TileSheets/crops");
+            return asset.Name.IsEquivalentTo("Data/Crops") || asset.Name.IsEquivalentTo("TileSheets/crops");
         }
 
         /// <summary>Edit crop data to make grapes grow all year round and the crop spritesheet to add winter textures.</summary>
         /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
-        public void Edit<T>(IAssetData asset)
+        public void Edit(IAssetData asset)
         {
-            if (!asset.AssetNameEquals("Data/Crops") && !asset.AssetNameEquals("TileSheets/crops")) return;
+            if (!asset.Name.IsEquivalentTo("Data/Crops") && !asset.Name.IsEquivalentTo("TileSheets/crops")) return;
 
-            if (asset.AssetNameEquals("TileSheets/crops"))
+            if (asset.Name.IsEquivalentTo("TileSheets/crops"))
             {
                 var editor = asset.AsImage();
                 Texture2D sourceImage;
 
                 try
                 {
-                    sourceImage = Helper.Content.Load<Texture2D>("assets/grape_winter.png");
+                    sourceImage = Helper.ModContent.Load<Texture2D>("assets/grape_winter.png");
                 }
                 catch (Microsoft.Xna.Framework.Content.ContentLoadException)
                 {
