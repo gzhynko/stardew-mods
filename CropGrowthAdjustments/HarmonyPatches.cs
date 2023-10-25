@@ -22,7 +22,7 @@ namespace CropGrowthAdjustments
                 foreach (var adjustment in contentPack.CropAdjustments)
                 {
                     // skip if this crop is not the desired one.
-                    if (__instance.crop.indexOfHarvest != adjustment.CropProduceItemId) continue;
+                    if (__instance.crop.indexOfHarvest.Value != adjustment.CropProduceItemId) continue;
 
                     // run the original method if this crop is supposed to die in winter.
                     if (adjustment.GetSeasonsToGrowIn().All(season => season != "winter")) return true;
@@ -30,7 +30,7 @@ namespace CropGrowthAdjustments
                     // Skip the original method if the current season is winter and the crop is not supposed to die.
                     if (Game1.GetSeasonForLocation(environment) == "winter")
                     {
-                        __instance.crop.newDay((int) __instance.state, (int) __instance.fertilizer, (int) tileLocation.X, (int) tileLocation.Y, environment);
+                        __instance.crop.newDay((int) __instance.state.Value, (int) __instance.fertilizer.Value, (int) tileLocation.X, (int) tileLocation.Y, environment);
                         return false;
                     }
                 }
@@ -56,12 +56,12 @@ namespace CropGrowthAdjustments
                 foreach (var adjustment in contentPack.CropAdjustments)
                 {
                     // skip if this crop is not the desired one.
-                    if (__instance.crop.indexOfHarvest != adjustment.CropProduceItemId) continue;
+                    if (__instance.crop.indexOfHarvest.Value != adjustment.CropProduceItemId) continue;
 
                     foreach (var specialSprite in adjustment.SpecialSpritesForSeasons)
                     {
                         // skip if the crop is planted in any of the ignored locations.
-                        if (specialSprite.GetLocationsToIgnore().Any(location => Utility.CompareTwoStringsCaseAndSpaceIndependently(location,__instance.currentLocation.name))) continue;
+                        if (specialSprite.GetLocationsToIgnore().Any(location => Utility.CompareTwoStringsCaseAndSpaceIndependently(location, __instance.currentLocation.Name))) continue;
 
                         // skip if this special sprite is over the limit of 51.
                         if (specialSprite.RowInSpriteSheet == -1) continue;
@@ -86,7 +86,7 @@ namespace CropGrowthAdjustments
             GameLocation environment)
         {
             // return if this crop is still growing or its hoe dirt is not watered.
-            if ((!__instance.fullyGrown && (__instance.dayOfCurrentPhase != 0 && __instance.currentPhase != 5)) ||
+            if ((!__instance.fullyGrown.Value && (__instance.dayOfCurrentPhase.Value != 0 && __instance.currentPhase.Value != 5)) ||
                 state != 1) return;
 
             foreach (var contentPack in ModEntry.ContentPackManager.ContentPacks)
@@ -94,12 +94,15 @@ namespace CropGrowthAdjustments
                 foreach (var adjustment in contentPack.CropAdjustments)
                 {
                     // skip if this crop is not the desired one.
-                    if (__instance.indexOfHarvest != adjustment.CropProduceItemId) continue;
+                    if (__instance.indexOfHarvest.Value != adjustment.CropProduceItemId) continue;
 
-                    ModEntry.ModMonitor.Log($"[cropNewDay] crop: {adjustment.CropProduceName}, regrowAfterHarvest: {__instance.regrowAfterHarvest}, currentPhase: {__instance.currentPhase}, dayOfCurrentPhase: {__instance.dayOfCurrentPhase}, fullyGrown: {__instance.fullyGrown}, phaseDays: {JsonConvert.SerializeObject(__instance.phaseDays)}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log(
+                        $"[cropNewDay] crop: {adjustment.CropProduceName}, regrowAfterHarvest: {__instance.regrowAfterHarvest}, " +
+                        $"currentPhase: {__instance.currentPhase}, dayOfCurrentPhase: {__instance.dayOfCurrentPhase}, " +
+                        $"fullyGrown: {__instance.fullyGrown}, phaseDays: {JsonConvert.SerializeObject(__instance.phaseDays)}", LogLevel.Info);
 
                     // return if the crop is planted in any of the locations where it grows all year round.
-                    if (adjustment.GetLocationsToGrowAllYearRoundIn().Any(location => Utility.CompareTwoStringsCaseAndSpaceIndependently(location, environment.name))) return;
+                    if (adjustment.GetLocationsToGrowAllYearRoundIn().Any(location => Utility.CompareTwoStringsCaseAndSpaceIndependently(location, environment.Name))) return;
                     
                     // return if the crop is already in its produce season.
                     if (adjustment.GetSeasonsToProduceIn().Any(season => Game1.currentSeason == season)) return;
@@ -113,7 +116,7 @@ namespace CropGrowthAdjustments
 
                     // if the crop is about to finish its regrowth period in any season other than the produce seasons,
                     // prevent it from producing.
-                    if (__instance.currentPhase == 5 && __instance.dayOfCurrentPhase == 0)
+                    if (__instance.currentPhase.Value == 5 && __instance.dayOfCurrentPhase.Value == 0)
                     {
                         __instance.dayOfCurrentPhase.Value = 1;
                         __instance.fullyGrown.Value = true;

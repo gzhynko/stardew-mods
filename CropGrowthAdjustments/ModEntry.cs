@@ -12,7 +12,7 @@ using StardewValley.TerrainFeatures;
 namespace CropGrowthAdjustments
 {
     /// <summary> The mod entry class loaded by SMAPI. </summary>
-    public class ModEntry : Mod, IAssetEditor
+    public class ModEntry : Mod
     {
         public static ContentPackManager ContentPackManager = new ContentPackManager();
         public static IMonitor ModMonitor;
@@ -25,115 +25,113 @@ namespace CropGrowthAdjustments
         /// <param name="helper"> Provides simplified APIs for writing mods. </param>
         public override void Entry(IModHelper helper)
         {
+            helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            
             ContentPackManager.InitializeContentPacks(helper, Monitor);
 
             ModMonitor = Monitor;
         }
 
-        /// <summary>Get whether this instance can edit the given asset.</summary>
-        /// <param name="asset">Basic metadata about the asset being loaded.</param>
-        public bool CanEdit<T>(IAssetInfo asset)
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            return asset.AssetNameEquals("Data/Crops") || asset.AssetNameEquals("TileSheets/crops");
-        }
-
-        /// <summary>Edit crop data to adjust the growth seasons and the crop spritesheet to add special sprites.</summary>
-        /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
-        public void Edit<T>(IAssetData asset)
-        {
-            if (!asset.AssetNameEquals("Data/Crops") && !asset.AssetNameEquals("TileSheets/crops")) return;
-
-            if (asset.AssetNameEquals("TileSheets/crops"))
+            if (e.Name.IsEquivalentTo("TileSheets/crops"))
             {
-                var editor = asset.AsImage();
-
-                var totalNewSpritesCount = 0;
-                
-                foreach (var adjustments in ContentPackManager.ContentPacks)
+                e.Edit(asset =>
                 {
-                    foreach (var cropAdjustment in adjustments.CropAdjustments)
-                    {
-                        if(cropAdjustment.SpecialSpritesForSeasons.Count == 0) continue;
+                    var editor = asset.AsImage();
 
-                        foreach (var _ in cropAdjustment.SpecialSpritesForSeasons)
+                    // determine the total number of sprites that need to be loaded
+                    var totalNewSpritesCount = 0;
+                    foreach (var adjustments in ContentPackManager.ContentPacks)
+                    {
+                        foreach (var cropAdjustment in adjustments.CropAdjustments)
                         {
-                            totalNewSpritesCount++;
+                            if(cropAdjustment.SpecialSpritesForSeasons.Count == 0) continue;
+
+                            foreach (var _ in cropAdjustment.SpecialSpritesForSeasons)
+                            {
+                                totalNewSpritesCount++;
+                            }
                         }
                     }
-                }
 
-                int minHeight = (int) (768 + Math.Ceiling((decimal) (totalNewSpritesCount / 2f)) * 32);
+                    int minHeight = (int) (768 + Math.Ceiling((decimal) (totalNewSpritesCount / 2f)) * 32);
 
-                // Expand the spritesheet to the bottom to fit the special sprites.
-                editor.ExtendImage(0, minHeight);
-
-                // 48 is the first row unused by the game.
-                var currentRowInSpriteSheet = 48;
-                
-                foreach (var adjustments in ContentPackManager.ContentPacks)
-                {
-                    foreach (var cropAdjustment in adjustments.CropAdjustments)
-                    {
-                        if(cropAdjustment.SpecialSpritesForSeasons.Count == 0) continue;
-
-                        foreach (var specialSprite in cropAdjustment.SpecialSpritesForSeasons)
-                        {
-                            // Abort adding special sprites if JsonAssets has custom crops loaded and the limit of 100 rows is reached.
-                            if (Utility.JsonAssetsHasCropsLoaded(_jsonAssetsApi) && currentRowInSpriteSheet >= 99)
-                            {
-                                Monitor.Log($"Special sprites for {adjustments.ContentPack.Manifest.Name} ({specialSprite.Season}) cannot be fully loaded, since the limit of 100 rows (set by JsonAssets) in the crops tilesheet is reached. The content pack will continue to work correctly, though you won't see the special sprites.", LogLevel.Warn);
-                                return;
-                            }
-                            
-                            Texture2D sourceImage;
-                            
-                            try
-                            {
-                                sourceImage = adjustments.ContentPack.LoadAsset<Texture2D>(specialSprite.Sprites);
-                            }
-                            catch (Exception)
-                            {
-                                Monitor.Log($"[{adjustments.ContentPack.Manifest.Name}] - Couldn't load special sprites for {specialSprite.Season}. They will not be shown.", LogLevel.Error);
-                                continue;
-                            }
-
-                            int xCoordinate = currentRowInSpriteSheet % 2 == 0 ? 0 : 128;
-                            int yCoordinate = (int) (Math.Floor(currentRowInSpriteSheet / 2f) * 32);
-                            
-                            editor.PatchImage(sourceImage, targetArea: new Rectangle(xCoordinate, yCoordinate, 128, 32));
-
-                            specialSprite.RowInSpriteSheet = currentRowInSpriteSheet;
-                            currentRowInSpriteSheet++;
-                        }
-                    }
-                }
-
-                return;
-            }
-            
-            IDictionary<int, string> cropData = asset.AsDictionary<int, string>().Data;
-            
-            foreach (var adjustments in ContentPackManager.ContentPacks)
-            {
-                foreach (var cropAdjustment in adjustments.CropAdjustments)
-                {
-                    var cropProduceItemId = cropAdjustment.CropProduceItemId;
-                    if (cropProduceItemId == -1) continue;
+                    // expand the spritesheet to the bottom to fit the special sprites.
+                    editor.ExtendImage(0, minHeight);
                     
-                    foreach (var itemId in cropData.Keys)
+                    // 48 is the first row unused by the game.
+                    var currentRowInSpriteSheet = 48;
+                    
+                    // loop thru all loaded content packs
+                    foreach (var adjustments in ContentPackManager.ContentPacks)
                     {
-                        var itemData = cropData[itemId];
-                        var fields = itemData.Split('/');
-                        
-                        if(int.Parse(fields[3]) != cropProduceItemId) continue;
-                        
-                        fields[1] = cropAdjustment.GetSeasonsToGrowIn().Join(delimiter: " ");
-                        cropData[itemId] = string.Join("/", fields);
-                        
-                        break;
+                        // loop thru all crop adjustments within this pack
+                        foreach (var cropAdjustment in adjustments.CropAdjustments)
+                        {
+                            // load and add special sprites for this crop adjustment
+                            foreach (var specialSprite in cropAdjustment.SpecialSpritesForSeasons)
+                            {
+                                // Abort adding special sprites if JsonAssets has custom crops loaded and the limit of 100 rows is reached.
+                                if (Utility.JsonAssetsHasCropsLoaded(_jsonAssetsApi) && currentRowInSpriteSheet >= 99)
+                                {
+                                    Monitor.Log($"Special sprites for {adjustments.ContentPack.Manifest.Name} (season: {specialSprite.Season}) cannot be fully loaded as the limit of 100 rows (set by JsonAssets) in the crops tilesheet is reached. The content pack will continue to work correctly, though you won't see the special sprites.", LogLevel.Warn);
+                                    return;
+                                }
+                                
+                                Texture2D sourceImage;
+                                
+                                try
+                                {
+                                    sourceImage = adjustments.ContentPack.ModContent.Load<Texture2D>(specialSprite.Sprites);
+                                }
+                                catch (Exception)
+                                {
+                                    Monitor.Log($"[{adjustments.ContentPack.Manifest.Name}] - Couldn't load special sprites for {specialSprite.Season}. They will not be shown.", LogLevel.Error);
+                                    continue;
+                                }
+
+                                int xCoordinate = currentRowInSpriteSheet % 2 == 0 ? 0 : 128;
+                                int yCoordinate = (int) (Math.Floor(currentRowInSpriteSheet / 2f) * 32);
+                                
+                                editor.PatchImage(sourceImage, targetArea: new Rectangle(xCoordinate, yCoordinate, 128, 32));
+
+                                specialSprite.RowInSpriteSheet = currentRowInSpriteSheet;
+                                currentRowInSpriteSheet++;
+                            }
+                        }
                     }
-                }
+                });
+            }
+            else if (e.Name.IsEquivalentTo("Data/Crops"))
+            {
+                e.Edit(asset =>
+                {
+                    IDictionary<int, string> cropData = asset.AsDictionary<int, string>().Data;
+            
+                    foreach (var adjustments in ContentPackManager.ContentPacks)
+                    {
+                        foreach (var cropAdjustment in adjustments.CropAdjustments)
+                        {
+                            var cropProduceItemId = cropAdjustment.CropProduceItemId;
+                            if (cropProduceItemId == -1) continue;
+                    
+                            foreach (var itemId in cropData.Keys)
+                            {
+                                var itemData = cropData[itemId];
+                                var fields = itemData.Split('/');
+                        
+                                if(int.Parse(fields[3]) != cropProduceItemId) continue;
+                        
+                                fields[1] = cropAdjustment.GetSeasonsToGrowIn().Join(delimiter: " ");
+                                cropData[itemId] = string.Join("/", fields);
+                        
+                                break;
+                            }
+                        }
+                    }
+                });
             }
         }
         
@@ -184,7 +182,7 @@ namespace CropGrowthAdjustments
         private void OnJsonAssetsIdsAssigned(IJsonAssetsApi jsonAssetsApi)
         {
             ContentPackManager.AssignCropProduceItemIds(Helper, jsonAssetsApi);
-            Helper.Content.InvalidateCache("Data/Crops");
+            Helper.GameContent.InvalidateCache("Data/Crops");
             
             ContentPackManager.AssignCropOriginalRowsInSpritesheet(Helper);
         }

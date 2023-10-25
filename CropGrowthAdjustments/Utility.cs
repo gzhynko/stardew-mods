@@ -9,7 +9,7 @@ namespace CropGrowthAdjustments
     {
         public static int GetItemIdByName(string itemName, IModHelper helper)
         {
-            var objectData = helper.Content.Load<Dictionary<int, string>>("Data/ObjectInformation", ContentSource.GameContent);
+            var objectData = helper.GameContent.Load<Dictionary<int, string>>("Data/ObjectInformation");
 
             foreach (var objectEntry in objectData)
             {
@@ -24,7 +24,7 @@ namespace CropGrowthAdjustments
 
         public static string[] GetCropDataForProduceItemId(int produceId, IModHelper helper)
         {
-            var cropData = helper.Content.Load<Dictionary<int, string>>("Data/Crops", ContentSource.GameContent);
+            var cropData = helper.GameContent.Load<Dictionary<int, string>>("Data/Crops");
             
             foreach (var itemId in cropData.Keys)
             {
