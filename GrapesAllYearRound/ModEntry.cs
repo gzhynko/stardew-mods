@@ -10,7 +10,7 @@ using StardewValley.TerrainFeatures;
 namespace GrapesAllYearRound
 {
     /// <summary> The mod entry class loaded by SMAPI. </summary>
-    public class ModEntry : Mod, IAssetEditor
+    public class ModEntry : Mod
     {
         #region Public methods
 
@@ -18,54 +18,50 @@ namespace GrapesAllYearRound
         /// <param name="helper"> Provides simplified APIs for writing mods. </param>
         public override void Entry(IModHelper helper)
         {
+            helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
-        /// <summary>Get whether this instance can edit the given asset.</summary>
-        /// <param name="asset">Basic metadata about the asset being loaded.</param>
-        public bool CanEdit<T>(IAssetInfo asset)
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            return asset.AssetNameEquals("Data/Crops") || asset.AssetNameEquals("TileSheets/crops");
-        }
-
-        /// <summary>Edit crop data to make grapes grow all year round and the crop spritesheet to add winter textures.</summary>
-        /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
-        public void Edit<T>(IAssetData asset)
-        {
-            if (!asset.AssetNameEquals("Data/Crops") && !asset.AssetNameEquals("TileSheets/crops")) return;
-
-            if (asset.AssetNameEquals("TileSheets/crops"))
+            if (e.Name.IsEquivalentTo("TileSheets/crops"))
             {
-                var editor = asset.AsImage();
-                Texture2D sourceImage;
-
-                try
+                e.Edit(asset =>
                 {
-                    sourceImage = Helper.Content.Load<Texture2D>("assets/grape_winter.png");
-                }
-                catch (Microsoft.Xna.Framework.Content.ContentLoadException)
-                {
-                    Monitor.Log("Couldn't load the winter sprites. The mod will work incorrectly.", LogLevel.Error);
-                    return;
-                }
-                
-                // Expand the spritesheet to the bottom to fit the winter sprites. They should be on row 48.
-                editor.ExtendImage(0, 800);
-                editor.PatchImage(sourceImage, targetArea: new Rectangle(0, 768, 128, 32));
+                    var editor = asset.AsImage();
+                    Texture2D sourceImage;
 
-                return;
+                    try
+                    {
+                        sourceImage = Helper.ModContent.Load<Texture2D>("assets/grape_winter.png");
+                    }
+                    catch (Microsoft.Xna.Framework.Content.ContentLoadException)
+                    {
+                        Monitor.Log("Couldn't load the winter sprites. The mod will work incorrectly.", LogLevel.Error);
+                        return;
+                    }
+
+                    // Expand the spritesheet to the bottom to fit the winter sprites. They should be on row 48.
+                    editor.ExtendImage(0, 800);
+                    editor.PatchImage(sourceImage, targetArea: new Rectangle(0, 768, 128, 32));
+                });
             }
-            
-            IDictionary<int, string> data = asset.AsDictionary<int, string>().Data;
-            foreach (var itemId in data.Keys)
+            else if(e.Name.IsEquivalentTo("Data/Crops"))
             {
-                if (itemId != 301) continue;
+                e.Edit(asset =>
+                {
+                    IDictionary<int, string> data = asset.AsDictionary<int, string>().Data;
+                    foreach (var itemId in data.Keys)
+                    {
+                        if (itemId != 301) continue;
                     
-                var fields = data[itemId].Split('/');
-                fields[1] = "spring summer fall winter";
-                data[itemId] = string.Join("/", fields);
+                        var fields = data[itemId].Split('/');
+                        fields[1] = "spring summer fall winter";
+                        data[itemId] = string.Join("/", fields);
                 
-                break;
+                        break;
+                    }
+                });
             }
         }
         

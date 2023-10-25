@@ -50,21 +50,23 @@ namespace EventBlackBars
         /// <summary>
         /// "Move" bars in direction.
         /// </summary>
-        /// <param name="direction">The direction. True for up, false for down.</param>
-        public void StartMovingBars(bool direction)
+        public void StartMovingBars(Direction direction)
         {
+            // don't start to move out the bars if they are not moved in
+            if(direction == Direction.MoveOut && _barHeight <= 0) return;
+            
             _renderBars = true;
             
             if (Config.MoveBarsInSmoothly)
             {
-                _barHeight = direction ? 0 : GetMaxBarHeight(_graphicsDevice);
+                _barHeight = direction == Direction.MoveIn ? 0 : GetMaxBarHeight(_graphicsDevice);
 
-                _barsMovingIn = direction;
-                _barsMovingOut = !direction;
+                _barsMovingIn = direction == Direction.MoveIn;
+                _barsMovingOut = direction == Direction.MoveOut;
             }
             else
             {
-                _barHeight = direction ? GetMaxBarHeight(_graphicsDevice) : 0;
+                _barHeight = direction == Direction.MoveIn ? GetMaxBarHeight(_graphicsDevice) : 0;
             }
         }
         
@@ -129,7 +131,7 @@ namespace EventBlackBars
         /// </summary>
         private void OnWindowResized(object sender, WindowResizedEventArgs e)
         {
-            if(_barsMovingIn || _barsMovingOut) return;
+            if(_barsMovingIn || _barsMovingOut || _barHeight <= 0) return;
 
             _barHeight = GetMaxBarHeight(_graphicsDevice);
         }
@@ -139,8 +141,8 @@ namespace EventBlackBars
             var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
-                AccessTools.Method(typeof(Game1), nameof(Game1.eventFinished)),
-                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.EventEnd))
+                AccessTools.Method(typeof(Event), nameof(Event.exitEvent)),
+                new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.EventEnd))
             );
             
             harmony.Patch(
@@ -166,5 +168,11 @@ namespace EventBlackBars
             return Convert.ToInt16(graphicsDevice.Viewport.Height *
                                    MathHelper.Clamp((float)Config.BarHeightPercentage / 100f, 0f, 1f));
         }
+    }
+
+    public enum Direction
+    {
+        MoveIn,
+        MoveOut
     }
 }

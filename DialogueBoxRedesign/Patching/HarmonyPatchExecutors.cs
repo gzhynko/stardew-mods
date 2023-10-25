@@ -9,23 +9,45 @@ namespace DialogueBoxRedesign.Patching
 {
     public static class HarmonyPatchExecutors
     {
-	    private static int widthOfPortraitArea = 444;
+	    private static int _widthOfPortraitArea = 444;
 	    
 	    public static void DrawPortrait(DialogueBox dialogueBox, SpriteBatch spriteBatch)
 	    {
 		    if (dialogueBox.width < 642) return;
 		    
-		    var xPositionOfPortraitArea = dialogueBox.x + dialogueBox.width - widthOfPortraitArea;
+		    int xPositionOfPortraitArea;
+		    if (ModEntry.Config.ShowPortraitOnTheLeft)
+		    {
+			    xPositionOfPortraitArea = dialogueBox.x;
+		    }
+		    else
+		    {
+			    xPositionOfPortraitArea = dialogueBox.x + dialogueBox.width - _widthOfPortraitArea;
+		    }
 		    
 		    var portraitBoxX = xPositionOfPortraitArea + 76;
 		    var portraitBoxY = dialogueBox.y + dialogueBox.height / 2 - 148 - 36;
-
-		    var portraitTexture = dialogueBox.characterDialogue.overridePortrait ?? dialogueBox.characterDialogue.speaker.Portrait;
-
 		    var portraitScale = 4f;
-
+		    
+		    var portraitTexture = dialogueBox.characterDialogue.overridePortrait ?? dialogueBox.characterDialogue.speaker.Portrait;
 		    var portraitSource = Game1.getSourceRectForStandardTileSheet(portraitTexture,
 			    dialogueBox.characterDialogue.getPortraitIndex(), 64, 64);
+
+			/* HD Portraits Compat */
+			if(ModEntry.HdPortraitsApi != null)
+            {
+				var data = ModEntry.HdPortraitsApi.GetTextureAndRegion(
+					dialogueBox.characterDialogue.speaker,
+					dialogueBox.characterDialogue.getPortraitIndex(),
+					Game1.currentGameTime.ElapsedGameTime.Milliseconds
+					); //no need to force reset, HD portraits auto-resets after dialogue box close
+
+				if (dialogueBox.characterDialogue.overridePortrait == null)
+                {
+					portraitTexture = data.Item2;
+					portraitSource = data.Item1;
+				}
+            }
 		    
 		    if (!portraitTexture.Bounds.Contains(portraitSource)) portraitSource = new Rectangle(0, 0, 64, 64);
 
@@ -34,29 +56,34 @@ namespace DialogueBoxRedesign.Patching
 			    : 0;
 		    
 		    /* Portrait */
-		    spriteBatch.Draw(portraitTexture, new Vector2(portraitBoxX + 16 + xOffset, Game1.uiViewport.Height - portraitSource.Height * portraitScale),
-				    portraitSource, Color.White, 0f, Vector2.Zero, portraitScale, SpriteEffects.None, 0.88f);
+			spriteBatch.Draw(portraitTexture, new Rectangle(portraitBoxX + 16 + xOffset, Game1.uiViewport.Height - 256, 256, 256), 
+				portraitSource, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.88f);
 
-		    var speakerNameX = xPositionOfPortraitArea + widthOfPortraitArea / 2;
+		    var speakerNameX = xPositionOfPortraitArea + _widthOfPortraitArea / 2;
 		    var speakerNameY = portraitBoxY + 50;
 
 		    /* Speaker name */
-		    // shadow
-		    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch, dialogueBox.characterDialogue.speaker.getName(),
-			    speakerNameX - 4, speakerNameY + 4, color: 8);
-		    // actual text
-		    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch, dialogueBox.characterDialogue.speaker.getName(),
-			    speakerNameX, speakerNameY, color: 4);
-
-		    if (dialogueBox.shouldDrawFriendshipJewel())
+		    if (ModEntry.Config.ShowSpeakerName)
 		    {
-			    /* Friendship jewel */
+			    // shadow
+			    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch,
+				    dialogueBox.characterDialogue.speaker.getName(),
+				    speakerNameX - 4, speakerNameY + 4, color: 8);
+			    // actual text
+			    SpriteText.drawStringHorizontallyCenteredAt(spriteBatch,
+				    dialogueBox.characterDialogue.speaker.getName(),
+				    speakerNameX, speakerNameY, color: 4);
+		    }
+
+		    /* Friendship jewel */
+		    if (dialogueBox.shouldDrawFriendshipJewel() && ModEntry.Config.ShowFriendshipJewel)
+		    {
 			    var jewelBottomOffset = 80;
 			    var jewelLeftOffset = 40;
 			    
 			    dialogueBox.friendshipJewel.Y = Game1.uiViewport.Height - jewelBottomOffset;
 			    dialogueBox.friendshipJewel.X = (int)(portraitBoxX + 64 * portraitScale + jewelLeftOffset);
-
+			    
 			    spriteBatch.Draw(Game1.mouseCursors,
 				    new Vector2(dialogueBox.friendshipJewel.X, dialogueBox.friendshipJewel.Y),
 				    Game1.player.getFriendshipHeartLevelForNPC(dialogueBox.characterDialogue.speaker.Name) >= 10
@@ -69,6 +96,13 @@ namespace DialogueBoxRedesign.Patching
 							    532 + Game1.player.getFriendshipHeartLevelForNPC(dialogueBox.characterDialogue.speaker
 								    .Name) / 2 * 11), 11, 11), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None,
 				    0.88f);
+			    
+			    // friendship jewel tooltip
+			    var hoverText = ModEntry.ModHelper.Reflection.GetField<string>(dialogueBox, "hoverText").GetValue();
+			    if (hoverText.Length > 0 && ModEntry.Config.ShowFriendshipJewel)
+			    {
+				    SpriteText.drawStringWithScrollBackground(spriteBatch, hoverText, dialogueBox.friendshipJewel.Center.X - SpriteText.getWidthOfString(hoverText) / 2, dialogueBox.friendshipJewel.Y - 64);
+			    }
 		    }
 	    }
 
@@ -79,8 +113,8 @@ namespace DialogueBoxRedesign.Patching
 		    if (!dialogueBox.isPortraitBox()) return true;
 		    if (dialogueBox.isQuestion) return true;
 
-		    var viewportWidth = (int) (Game1.viewport.Width / Game1.options.uiScale * Game1.options.zoomLevel);
-		    var viewportHeight = (int) (Game1.viewport.Height / Game1.options.uiScale * Game1.options.zoomLevel);
+		    var viewportWidth = (int) Math.Ceiling(Game1.viewport.Width / Game1.options.uiScale * Game1.options.zoomLevel);
+		    var viewportHeight = (int) Math.Ceiling(Game1.viewport.Height / Game1.options.uiScale * Game1.options.zoomLevel);
 		    
 		    dialogueBox.height = 250;
 		    dialogueBox.y = viewportHeight - dialogueBox.height - 64;
@@ -110,22 +144,25 @@ namespace DialogueBoxRedesign.Patching
 		    dialogueBox.drawBox(spriteBatch, dialogueBox.x, dialogueBox.y, dialogueBox.width, dialogueBox.height);
 			dialogueBox.drawPortrait(spriteBatch);
 			
-			var textX = dialogueBox.x;
+			int textX;
+			if (ModEntry.Config.ShowPortraitOnTheLeft)
+			{
+				textX = dialogueBox.x + _widthOfPortraitArea;
+			}
+			else
+			{
+				textX = dialogueBox.x;
+			}
+			
 			var textY = dialogueBox.y + 58;
 
-			var textWidth = dialogueBox.width - widthOfPortraitArea;
+			var textWidth = dialogueBox.width - _widthOfPortraitArea;
 				
 			// shadow
 			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX - 4, textY + 4, dialogueBox.characterIndexInDialogue, textWidth, color: 8);
 			// actual text
 			SpriteText.drawString(spriteBatch, dialogueBox.getCurrentString(), textX, textY, dialogueBox.characterIndexInDialogue, textWidth, color: 4);
 
-			var hoverText = ModEntry.ModHelper.Reflection.GetField<string>(dialogueBox, "hoverText").GetValue();
-			if (hoverText.Length > 0)
-			{
-				SpriteText.drawStringWithScrollBackground(spriteBatch, hoverText, dialogueBox.friendshipJewel.Center.X - SpriteText.getWidthOfString(hoverText) / 2, dialogueBox.friendshipJewel.Y - 64);
-			}
-				
 			dialogueBox.drawMouse(spriteBatch);
 				
 			return false;
