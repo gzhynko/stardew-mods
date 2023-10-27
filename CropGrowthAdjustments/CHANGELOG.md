@@ -1,4 +1,4 @@
 # Version history for CropGrowthAdjustments
 
-## Upcoming
+## 1.0.0
 - Initial release.
