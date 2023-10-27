@@ -9,7 +9,7 @@ namespace CropGrowthAdjustments.Types
         public string CropProduceName { get; set; }
         public string SeasonsToGrowIn { get; set; }
         public string SeasonsToProduceIn { get; set; }
-        public string LocationsToGrowAllYearRoundIn { get; set; }
+        public string LocationsWithDefaultSeasonBehavior { get; set; }
         public List<SpecialSpriteForSeason> SpecialSpritesForSeasons { get; set; } = null;
         
         [JsonIgnore]
@@ -28,10 +28,10 @@ namespace CropGrowthAdjustments.Types
             return SeasonsToProduceIn.Split(',').ToList().Select(e => e.Trim()).ToList();
         }
         
-        public List<string> GetLocationsToGrowAllYearRoundIn()
+        public List<string> GetLocationsWithDefaultSeasonBehavior()
         {
-            if (LocationsToGrowAllYearRoundIn != null)
-                return LocationsToGrowAllYearRoundIn.Split(',').ToList().Select(e => e.Trim()).ToList();
+            if (LocationsWithDefaultSeasonBehavior != null)
+                return LocationsWithDefaultSeasonBehavior.Split(',').ToList().Select(e => e.Trim()).ToList();
 
             return new List<string>();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CropGrowthAdjustments.Patching;
 using CropGrowthAdjustments.Types;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -7,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
 namespace CropGrowthAdjustments
@@ -86,9 +88,9 @@ namespace CropGrowthAdjustments
                                 {
                                     sourceImage = adjustments.ContentPack.ModContent.Load<Texture2D>(specialSprite.Sprites);
                                 }
-                                catch (Exception)
+                                catch (Exception e)
                                 {
-                                    Monitor.Log($"[{adjustments.ContentPack.Manifest.Name}] - Couldn't load special sprites for {specialSprite.Season}. They will not be shown.", LogLevel.Error);
+                                    Monitor.Log($"[{adjustments.ContentPack.Manifest.Name}] - Could not load special sprites for {cropAdjustment.CropProduceName} (season: {specialSprite.Season}), the plant might be invisible: {e}.", LogLevel.Error);
                                     continue;
                                 }
 
@@ -146,10 +148,10 @@ namespace CropGrowthAdjustments
                 AccessTools.Method(typeof(HoeDirt), nameof(HoeDirt.dayUpdate)),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.HoeDirtDayUpdate))
             );
-
+            
             harmony.Patch(
-                AccessTools.Method(typeof(HoeDirt), nameof(HoeDirt.draw)), 
-                new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.HoeDirtDraw))
+                AccessTools.Method(typeof(IndoorPot), nameof(IndoorPot.DayUpdate)), 
+                new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.IndoorPotDayUpdate))
             );
 
             harmony.Patch(

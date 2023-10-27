@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CropGrowthAdjustments.Types;
 using StardewModdingAPI;
@@ -12,27 +13,40 @@ namespace CropGrowthAdjustments
 
         public void InitializeContentPacks(IModHelper helper, IMonitor monitor)
         {
+            monitor.Log("Loading content packs...", LogLevel.Info);
+            
             foreach (var contentPack in helper.ContentPacks.GetOwned())
             {
                 if (!contentPack.HasFile(ContentJsonName))
                 {
                     monitor.Log(
-                        $"[{contentPack.Manifest.Name}] - Incorrect content pack folder structure. Expected {ContentJsonName} to be present in the folder.", LogLevel.Error);
+                        $"  [{contentPack.Manifest.Name}] - Incorrect content pack folder structure. Expected {ContentJsonName} to be present in the folder.", LogLevel.Error);
                     continue;
                 }
 
-                var content = contentPack.ReadJsonFile<Adjustments>(ContentJsonName);
-                content.ContentPack = contentPack;
-
-                // monitor.Log(content.CropAdjustments[0].CropProduceName, LogLevel.Info);
-
-                ContentPacks.Add(content);
-                monitor.VerboseLog($"Loaded {contentPack.Manifest.Name} by {contentPack.Manifest.Author}.");
+                var adjustments = new Adjustments();
+                
+                try
+                {
+                    adjustments.CropAdjustments = contentPack.ReadJsonFile<List<CropAdjustment>>(ContentJsonName);
+                }
+                catch (Exception e)
+                {
+                    monitor.Log($"  [{contentPack.Manifest.Name}] - Error while parsing adjustments.json: {e}", LogLevel.Error);
+                    continue;
+                }
+                
+                adjustments.ContentPack = contentPack;
+                
+                ContentPacks.Add(adjustments);
+                // provide info about the loaded content pack
+                monitor.Log(
+                    $"  Loaded {contentPack.Manifest.Name} {contentPack.Manifest.Version} by {contentPack.Manifest.Author}: {contentPack.Manifest.Description}", LogLevel.Info);
             }
 
             if (ContentPacks.Count == 0)
             {
-                monitor.VerboseLog("Nothing to load.");
+                monitor.Log("  No content packs to load.", LogLevel.Info);
             }
         }
 
