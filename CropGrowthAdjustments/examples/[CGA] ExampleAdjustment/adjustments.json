@@ -1,0 +1,15 @@
+[
+  {
+    "CropProduceName": "Grape",
+    "SeasonsToGrowIn": "spring, summer, fall, winter",
+    "SeasonsToProduceIn": "fall",
+    "LocationsWithDefaultSeasonBehavior": "indoors",
+    "SpecialSpritesForSeasons": [
+      {
+        "Season": "winter",
+        "Sprites": "assets/grape-winter.png",
+        "LocationsToIgnore": "indoors"
+      }
+    ]
+  }
+]
