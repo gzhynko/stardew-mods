@@ -1,7 +1,8 @@
 # Version history for GrapesAllYearRound
 
-## Upcoming
-- Migrated to net5.0 and updated to latest SMAPI version. SMAPI 3.13 or newer is now required.
+## 1.1.0
+Released October 28, 2023.
+- Rewrote the mod as a content pack for [CropGrowthAdjustments](https://www.nexusmods.com/stardewvalley/mods/18914). That mod is now required to run GrapesAllYearRound.
 
 ## 1.0.6
 Released August 13, 2021.
