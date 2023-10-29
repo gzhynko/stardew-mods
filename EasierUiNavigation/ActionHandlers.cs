@@ -124,7 +124,7 @@ namespace EasierUiNavigation
                     break;
                 
                 case GameMenu _:
-                    ItemGrabMenu.organizeItemsInList(Game1.player.items);
+                    ItemGrabMenu.organizeItemsInList(Game1.player.Items);
                     break;
             }
         }
