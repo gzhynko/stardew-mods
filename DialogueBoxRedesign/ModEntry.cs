@@ -1,5 +1,6 @@
 using DialogueBoxRedesign.Patching;
-using Harmony;
+using HarmonyLib;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -19,6 +20,8 @@ namespace DialogueBoxRedesign
         public static Texture2D GradientSample;
         public static Texture2D DarkerGradientSample;
 
+        internal static IHDPortraitsAPI HdPortraitsApi;
+
         #endregion
         #region Public methods
         
@@ -33,7 +36,39 @@ namespace DialogueBoxRedesign
             
             PrepareAssets();
             
+            helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        }
+        
+        public void SaveConfig(ModConfig newConfig)
+        {
+            Config = newConfig;
+            Helper.WriteConfig(newConfig);
+        }
+
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            if (e.Name.IsEquivalentTo("LooseSprites/Cursors"))
+            {
+                e.Edit(asset =>
+                {
+                    var editor = asset.AsImage();
+                    
+                    Texture2D sourceImage;
+
+                    try
+                    {
+                        sourceImage = Helper.ModContent.Load<Texture2D>("assets/friendshipJewel.png");
+                    }
+                    catch (Microsoft.Xna.Framework.Content.ContentLoadException)
+                    {
+                        return;
+                    }
+                    
+                    editor.PatchImage(sourceImage, new Rectangle(0, 0, 44, 55), new Rectangle(140, 532, 44, 55));
+                    editor.PatchImage(sourceImage, new Rectangle(44, 0, 11, 11), new Rectangle(269, 495, 11, 11));
+                });
+            }
         }
 
         #endregion
@@ -41,13 +76,13 @@ namespace DialogueBoxRedesign
         
         private void PrepareAssets()
         {
-            GradientSample = Helper.Content.Load<Texture2D>("assets/gradientSample.png");
-            DarkerGradientSample = Helper.Content.Load<Texture2D>("assets/darkerGradientSample.png");
+            GradientSample = Helper.ModContent.Load<Texture2D>("assets/gradientSample.png");
+            DarkerGradientSample = Helper.ModContent.Load<Texture2D>("assets/darkerGradientSample.png");
         }
         
         private void ApplyHarmonyPatches()
         {
-            var harmony = HarmonyInstance.Create(ModManifest.UniqueID);
+            var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
                 AccessTools.Method(typeof(DialogueBox), nameof(DialogueBox.drawPortrait)),
@@ -71,6 +106,12 @@ namespace DialogueBoxRedesign
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             ApplyHarmonyPatches();
+            ModConfig.SetUpModConfigMenu(Config, this);
+
+            if (Helper.ModRegistry.IsLoaded("tlitookilakin.HDPortraits"))
+            {
+                HdPortraitsApi = Helper.ModRegistry.GetApi<IHDPortraitsAPI>("tlitookilakin.HDPortraits");
+            }
         }
         
         #endregion

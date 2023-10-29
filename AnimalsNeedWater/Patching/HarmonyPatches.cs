@@ -1,7 +1,7 @@
-﻿using Harmony;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using StardewValley;
 using System;
+using HarmonyLib;
 using StardewModdingAPI;
 // ReSharper disable InconsistentNaming
 
