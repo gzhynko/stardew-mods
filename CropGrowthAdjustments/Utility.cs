@@ -65,9 +65,11 @@ namespace CropGrowthAdjustments
                 switch (RemoveWhitespaceInString(location.ToLower()))
                 {
                     case "indoors":
-                        return !environment.IsOutdoors;
+                        if (!environment.IsOutdoors) return true;
+                        break;
                     default:
-                        return CompareTwoStringsCaseAndSpaceIndependently(location, environment.Name);
+                        if (CompareTwoStringsCaseAndSpaceIndependently(location, environment.Name)) return true;
+                        break;
                 }
             }
 
@@ -82,6 +84,8 @@ namespace CropGrowthAdjustments
                 {
                     // skip if this crop is not the desired one.
                     if (hoeDirt.crop.indexOfHarvest.Value != adjustment.CropProduceItemId) continue;
+                    // skip if there are no special sprites specified for this crop
+                    if (adjustment.SpecialSpritesForSeasons == null) continue;
 
                     foreach (var specialSprite in adjustment.SpecialSpritesForSeasons)
                     {
