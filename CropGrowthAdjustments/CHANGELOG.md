@@ -1,5 +1,9 @@
 # Version history for CropGrowthAdjustments
 
+## 1.1.1
+Released November 9, 2023.
+- Fixed special sprites not showing up properly when multiple sprites are defined.
+
 ## 1.1.0
 Released November 3, 2023.
 - Made the mod work properly on crops that do not regrow.
