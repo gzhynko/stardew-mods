@@ -1,6 +1,5 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
@@ -10,16 +9,16 @@ using StardewValley.TerrainFeatures;
 
 namespace CropGrowthAdjustments.Patching
 {
-    internal class HarmonyPatchExecutors
+    internal static class HarmonyPatchExecutors
     {
         /// <summary> Patch for the HoeDirt.dayUpdate method </summary>
         public static bool HoeDirtDayUpdate(HoeDirt __instance, GameLocation environment, Vector2 tileLocation)
         {
-            // Avoid running if no crop is planted.
             if (__instance.crop == null) return true;
             
             // change sprites to special if needed
-            Utility.ChangeSpritesToSpecial(__instance, environment, tileLocation);
+            ModEntry.ModHelper.GameContent.InvalidateCache("TileSheets/Crops");
+            //Utility.ChangeSpritesToSpecial(__instance, environment, tileLocation);
 
             foreach (var contentPack in ModEntry.ContentPackManager.ContentPacks)
             {
@@ -40,7 +39,7 @@ namespace CropGrowthAdjustments.Patching
                         if ((!__instance.hasPaddyCrop() || !__instance.paddyWaterCheck(environment, tileLocation)) && ( __instance.fertilizer.Value != 370 || Game1.random.NextDouble() >= 0.33) && (__instance.fertilizer.Value != 371 || Game1.random.NextDouble() >= 0.66) && __instance.fertilizer.Value != 920)
                             __instance.state.Value = 0;
                         
-                        // do not run the original method: we don't want the crop to die
+                        // skip the original method
                         return false;
                     }
                 }
@@ -48,21 +47,11 @@ namespace CropGrowthAdjustments.Patching
 
             return true;
         }
-
-        /// <summary> Patch for the HoeDirt.plant method </summary>
-        public static void HoeDirtPlant(HoeDirt __instance, ref bool __result, int index, int tileX, int tileY, Farmer who, bool isFertilizer, GameLocation location)
-        {
-            if (!__result) return;
-            
-            Utility.ChangeSpritesToSpecial(__instance, location, new Vector2(tileX, tileY));
-        }
-
+        
         /// <summary> Patch for the IndoorPot.DayUpdate method </summary>
         public static bool IndoorPotDayUpdate(IndoorPot __instance, GameLocation location)
         {
             var hoeDirt = __instance.hoeDirt?.Value;
-
-            // Avoid running if no crop is planted.
             if (hoeDirt?.crop == null) return true;
 
             // if this indoor pot does indeed have a crop planted, treat it as a regular HoeDirt
@@ -101,7 +90,7 @@ namespace CropGrowthAdjustments.Patching
                     */
 
                     // return if the crop is planted in any of the locations where it should maintain default behavior
-                    if (Utility.IsCropInAnyOfSpecifiedLocations(adjustment.GetLocationsWithDefaultSeasonBehavior(), 
+                    if (Utility.IsInAnyOfSpecifiedLocations(adjustment.GetLocationsWithDefaultSeasonBehavior(), 
                             environment)) return;
                     
                     // return if the crop is already in its produce season.
@@ -150,6 +139,17 @@ namespace CropGrowthAdjustments.Patching
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Patch for the GameLocation.resetLocalState method.
+        /// 
+        /// This is responsible for updating the crop sprites when the player goes to a new location.
+        /// Note to self: the game appears to do this automatically when changing locations, is this patch really necessary?
+        /// </summary>
+        public static void GameLocationResetLocalState(Game1 __instance)
+        {
+            ModEntry.ModHelper.GameContent.InvalidateCache("TileSheets/Crops");
         }
     }
 }
