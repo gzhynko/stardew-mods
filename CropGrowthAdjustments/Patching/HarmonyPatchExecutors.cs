@@ -69,7 +69,7 @@ namespace CropGrowthAdjustments.Patching
             var cropPhasesCount = __instance.phaseDays.Count;
             // the game adds a phase at the end of the phaseDays list in the constructor of Crop,
             // and we don't want to count that state, so decrement the phases count
-            if (__instance.phaseDays.Last() == 99999)
+            if (cropPhasesCount > 0 && __instance.phaseDays.Last() == 99999)
             {
                 cropPhasesCount--;
             }
