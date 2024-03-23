@@ -1,7 +1,7 @@
 # Version history for AnimalsNeedWater
 
 ## 1.5.0
-Upcoming.
+Released March 23, 2024.
 - Updated for SMAPI 4.0 and Stardew Valley 1.6
 - Migrated to .NET 6
 - Replaced xnb tilesheets with PNGs.
