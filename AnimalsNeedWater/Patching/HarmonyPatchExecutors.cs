@@ -1,8 +1,10 @@
 using System;
 using AnimalsNeedWater.Types;
 using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Pathfinding;
 using StardewValley.Tools;
 using xTile.Layers;
 using xTile.Tiles;
@@ -12,25 +14,25 @@ namespace AnimalsNeedWater.Patching
 {
     public static class HarmonyPatchExecutors
     {
-        public static void AnimalDayUpdateExecutor(ref FarmAnimal __instance, ref GameLocation environtment)
+        public static void AnimalDayUpdateExecutor(ref FarmAnimal __instance, ref GameLocation environment)
         {
             if (__instance.home != null &&
                 !((AnimalHouse) __instance.home.indoors.Value).animals.ContainsKey(__instance.myID.Value) &&
-                environtment is Farm && !__instance.home.animalDoorOpen.Value) return;
+                environment is Farm && !__instance.home.animalDoorOpen.Value) return;
             
-            if (__instance.home != null && __instance.home.nameOfIndoors.ToLower().Contains("coop"))
+            if (__instance.home != null && __instance.home.buildingType.Value.ToLower().Contains("coop"))
             {
                 // check whether CoopsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
-                if (ModData.CoopsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance))
+                if (ModData.CoopsWithWateredTrough.Contains(__instance.home.indoors.Value.NameOrUniqueName.ToLower()) || ModData.FullAnimals.Contains(__instance))
                 {
                     // increase friendship points if any of the conditions above is met
                     __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.FriendshipPointsForWateredTrough);
                 }
             }
-            else if (__instance.home != null && __instance.home.nameOfIndoors.ToLower().Contains("barn"))
+            else if (__instance.home != null && __instance.home.buildingType.Value.ToLower().Contains("barn"))
             {
                 // check whether BarnsWithWateredTrough contains the coop the animal lives in and whether it was able to drink outside or not
-                if (ModData.BarnsWithWateredTrough.Contains(__instance.home.nameOfIndoors.ToLower()) || ModData.FullAnimals.Contains(__instance))
+                if (ModData.BarnsWithWateredTrough.Contains(__instance.home.indoors.Value.NameOrUniqueName.ToLower()) || ModData.FullAnimals.Contains(__instance))
                 {
                     // increase friendship points if any of the conditions above is met
                     __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Instance.Config.FriendshipPointsForWateredTrough);
@@ -52,7 +54,7 @@ namespace AnimalsNeedWater.Patching
                 {
                     // pathfind to the closest water tile
                     ++FarmAnimal.NumPathfindingThisTick;
-                    __instance.controller = new PathFindController(__instance, location, WaterEndPointFunction, -1, false, BehaviorAfterFindingWater, 200, Point.Zero);
+                    __instance.controller = new PathFindController(__instance, location, WaterEndPointFunction, -1, BehaviorAfterFindingWater, 200, Point.Zero);
                 }
             }
 
@@ -86,7 +88,7 @@ namespace AnimalsNeedWater.Patching
             ModData.FullAnimals.Add(c as FarmAnimal);
         }
         
-        public static bool AnimalHouseToolActionExecutor(ref AnimalHouse __instance, ref Tool t, ref int tileX, ref int tileY)
+        public static bool GameLocationToolActionExecutor(ref GameLocation __instance, ref Tool t, ref int tileX, ref int tileY)
         {
             GameLocation gameLocation = Game1.currentLocation;
 
@@ -96,7 +98,7 @@ namespace AnimalsNeedWater.Patching
             {
                 Type buildingType = typeof(Coop);
                 
-                if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "coop")
+                if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "coop")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.coopTroughTiles)
                     {
@@ -122,7 +124,7 @@ namespace AnimalsNeedWater.Patching
                         }
 
                         ModData.CoopsWithWateredTrough.Add(__instance.NameOrUniqueName.ToLower());
-                        ModEntry.Instance.ChangeCoopTexture(__instance.getBuilding(), false);
+                        ModEntry.Instance.ChangeCoopTexture(__instance.GetContainingBuilding(), false);
 
                         foreach (FarmAnimal animal in __instance.animals.Values)
                         {
@@ -134,7 +136,7 @@ namespace AnimalsNeedWater.Patching
                         }
                     }
                 }
-                else if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "coop2")
+                else if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "big coop")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.coop2TroughTiles)
                     {
@@ -160,7 +162,7 @@ namespace AnimalsNeedWater.Patching
                         }
 
                         ModData.CoopsWithWateredTrough.Add(__instance.NameOrUniqueName.ToLower());
-                        ModEntry.Instance.ChangeBigCoopTexture(__instance.getBuilding(), false);
+                        ModEntry.Instance.ChangeBigCoopTexture(__instance.GetContainingBuilding(), false);
 
                         foreach (FarmAnimal animal in __instance.animals.Values)
                         {
@@ -172,7 +174,7 @@ namespace AnimalsNeedWater.Patching
                         }
                     }
                 }
-                else if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "coop3")
+                else if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "deluxe coop")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.coop3TroughTiles)
                     {
@@ -214,7 +216,7 @@ namespace AnimalsNeedWater.Patching
             {
                 Type buildingType = typeof(Barn);
 
-                if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "barn")
+                if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "barn")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.barnTroughTiles)
                     {
@@ -251,7 +253,7 @@ namespace AnimalsNeedWater.Patching
                         }
                     }
                 }
-                else if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "barn2")
+                else if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "big barn")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.barn2TroughTiles)
                     {
@@ -288,7 +290,7 @@ namespace AnimalsNeedWater.Patching
                         }
                     }
                 }
-                else if (__instance.getBuilding().nameOfIndoorsWithoutUnique.ToLower() == "barn3")
+                else if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "deluxe barn")
                 {
                     foreach (TroughTile troughTile in ModEntry.Instance.CurrentTroughPlacementProfile.barn3TroughTiles)
                     {
@@ -330,12 +332,13 @@ namespace AnimalsNeedWater.Patching
             return false;
         }
         
-        public static void WarpFarmerExecutor(ref string locationName, ref int tileX, ref int tileY, ref int facingDirectionAfterWarp, ref bool isStructure)
+        public static void OnLocationChangedExecutor(GameLocation oldLocation, GameLocation newLocation)
         {
+            var locationName = newLocation.NameOrUniqueName;
             if (!locationName.ToLower().Contains("coop") && !locationName.ToLower().Contains("barn")) return;
             
             string locationNameWithoutUnique = Game1.getLocationFromName(locationName).Name;
-            Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).getBuilding();
+            Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).GetContainingBuilding();
             
             CheckForWateredTroughs(building, locationName, locationNameWithoutUnique);
         }
@@ -346,7 +349,7 @@ namespace AnimalsNeedWater.Patching
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
-                    switch (building.nameOfIndoorsWithoutUnique.ToLower())
+                    switch (building.buildingType.Value.ToLower())
                     {
                         case "coop":
                         {
@@ -371,7 +374,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "coop2":
+                        case "big coop":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -394,7 +397,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "coop3":
+                        case "deluxe coop":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -421,7 +424,7 @@ namespace AnimalsNeedWater.Patching
                 }
                 else if (locationNameWithoutUnique.Contains("Barn"))
                 {
-                    switch (building.nameOfIndoorsWithoutUnique.ToLower())
+                    switch (building.buildingType.Value.ToLower())
                     {
                         case "barn":
                         {
@@ -446,7 +449,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "barn2":
+                        case "big barn":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -469,7 +472,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "barn3":
+                        case "deluxe barn":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -500,7 +503,7 @@ namespace AnimalsNeedWater.Patching
             {
                 if (locationNameWithoutUnique.Contains("Coop"))
                 {
-                    switch (building.nameOfIndoorsWithoutUnique.ToLower())
+                    switch (building.buildingType.Value.ToLower())
                     {
                         case "coop":
                         {
@@ -525,7 +528,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "coop2":
+                        case "big coop":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -548,7 +551,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "coop3":
+                        case "deluxe coop":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -575,7 +578,7 @@ namespace AnimalsNeedWater.Patching
                 }
                 else if (locationNameWithoutUnique.Contains("Barn"))
                 {
-                    switch (building.nameOfIndoorsWithoutUnique.ToLower())
+                    switch (building.buildingType.Value.ToLower())
                     {
                         case "barn":
                         {
@@ -600,7 +603,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "barn2":
+                        case "big barn":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
@@ -623,7 +626,7 @@ namespace AnimalsNeedWater.Patching
 
                             break;
                         }
-                        case "barn3":
+                        case "deluxe barn":
                         {
                             GameLocation gameLocation = building.indoors.Value;
 
