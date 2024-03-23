@@ -96,7 +96,7 @@ namespace AnimalsNeedWater.Patching
             
             if (Game1.currentLocation.Name.ToLower().Contains("coop") && !ModData.CoopsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
-                Type buildingType = typeof(Coop);
+                string buildingType = "coop";
                 
                 if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "coop")
                 {
@@ -214,7 +214,7 @@ namespace AnimalsNeedWater.Patching
             }
             else if (Game1.currentLocation.Name.ToLower().Contains("barn") && !ModData.BarnsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
-                Type buildingType = typeof(Barn);
+                string buildingType = "barn";
 
                 if (__instance.GetContainingBuilding().buildingType.Value.ToLower() == "barn")
                 {

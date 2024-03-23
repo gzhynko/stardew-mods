@@ -59,7 +59,7 @@ namespace AnimalsNeedWater
             return new API();
         }
         
-        public void SendTroughWateredMessage(Type buildingType, string building)
+        public void SendTroughWateredMessage(string buildingType, string building)
         {
             SendMessageToSelf(new TroughWateredMessage(buildingType, building), "TroughWateredMessage");
         }
@@ -506,18 +506,18 @@ namespace AnimalsNeedWater
             
             TroughWateredMessage message = e.ReadAs<TroughWateredMessage>();
 
-            if (message.BuildingType == typeof(Coop))
+            if (message.BuildingType == "coop")
             {
                 ModData.CoopsWithWateredTrough.Add(message.BuildingUniqueName);
             }
-            else
+            else if (message.BuildingType == "barn")
             {
                 ModData.BarnsWithWateredTrough.Add(message.BuildingUniqueName);
             }
             
             string locationName = message.BuildingUniqueName;
             string locationNameWithoutUnique = Game1.getLocationFromName(locationName).Name;
-            Building building = ((AnimalHouse)Game1.getLocationFromName(locationName)).GetContainingBuilding();
+            Building building = Game1.getLocationFromName(locationName).GetContainingBuilding();
 
             switch (building.buildingType.Value.ToLower())
             {
