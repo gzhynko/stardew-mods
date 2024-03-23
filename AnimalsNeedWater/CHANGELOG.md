@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.5.1
+Released March 23, 2024.
+- Fixed not being able to water crops and pet bowl.
+
 ## 1.5.0
 Released March 23, 2024.
 - Updated for SMAPI 4.0 and Stardew Valley 1.6

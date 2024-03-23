@@ -91,8 +91,13 @@ namespace AnimalsNeedWater.Patching
         public static bool GameLocationToolActionExecutor(ref GameLocation __instance, ref Tool t, ref int tileX, ref int tileY)
         {
             GameLocation gameLocation = Game1.currentLocation;
-
-            if (t.BaseName != "Watering Can" || ((WateringCan) t).WaterLeft <= 0) return false;
+            
+            // execute original method if not in coop or barn
+            if (!gameLocation.Name.ToLower().Contains("coop") && !gameLocation.Name.ToLower().Contains("barn"))
+                return true;
+            // execute original method if this is not a watering can
+            if (t.BaseName != "Watering Can" || ((WateringCan) t).WaterLeft <= 0) 
+                return true;
             
             if (Game1.currentLocation.Name.ToLower().Contains("coop") && !ModData.CoopsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
