@@ -43,22 +43,35 @@ namespace AnimalsNeedWater.Patching
         
         public static bool AnimalBehaviorsExecutor(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
         {
-            // return false if the animal's home is null
             if (__instance.home == null)
-                __result = false;
-
-            if (!Game1.IsClient)
             {
-                if (__instance.controller != null)
-                    __result = true;
-                if (!__instance.isSwimming.Value && location.IsOutdoors && !ModData.FullAnimals.Contains(__instance) && __instance.controller == null && (Game1.random.NextDouble() < 0.005 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick) && ModEntry.Instance.Config.AnimalsCanDrinkOutside)
-                {
-                    // pathfind to the closest water tile
-                    ++FarmAnimal.NumPathfindingThisTick;
-                    __instance.controller = new PathFindController(__instance, location, WaterEndPointFunction, -1, BehaviorAfterFindingWater, 200, Point.Zero);
-                }
+                __result = false;
+                return false;
+            }
+            if (!Game1.IsMasterGame) // do not run if not host
+            {
+                __result = false;
+                return false;
+            }
+            if (__instance.controller != null) // do not run if has other pathfinding in progress
+            {
+                __result = true;
+                return true;
+            }
+            
+            if (ModEntry.Instance.Config.AnimalsCanDrinkOutside 
+                && !__instance.isSwimming.Value 
+                && location.IsOutdoors 
+                && !ModData.FullAnimals.Contains(__instance) 
+                && Game1.random.NextDouble() < 0.002 // set a random chance of 0.2% each frame to pathfind
+                && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick)
+            {
+                // pathfind to the closest water tile
+                ++FarmAnimal.NumPathfindingThisTick;
+                __instance.controller = new PathFindController(__instance, location, WaterEndPointFunction, -1, BehaviorAfterFindingWater, 200, Point.Zero);
             }
 
+            __result = true;
             return true;
         }
         
@@ -67,14 +80,22 @@ namespace AnimalsNeedWater.Patching
             PathNode currentPoint,
             Point endPoint,
             GameLocation location,
-            Character c)
+            Character c) 
         {
             if (!ModEntry.Instance.Config.AnimalsCanOnlyDrinkFromWaterBodies)
             {
-                return location.CanRefillWateringCanOnTile(currentPoint.x - 1, currentPoint.y) || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y - 1) || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y + 1) || location.CanRefillWateringCanOnTile(currentPoint.x + 1, currentPoint.y);
+                // check four adjacent tiles for wells, fish ponds, etc.
+                return location.CanRefillWateringCanOnTile(currentPoint.x - 1, currentPoint.y) 
+                       || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y - 1) 
+                       || location.CanRefillWateringCanOnTile(currentPoint.x, currentPoint.y + 1) 
+                       || location.CanRefillWateringCanOnTile(currentPoint.x + 1, currentPoint.y);
             }
             
-            return location.isOpenWater(currentPoint.x - 1, currentPoint.y) || location.isOpenWater(currentPoint.x, currentPoint.y - 1) || location.isOpenWater(currentPoint.x, currentPoint.y + 1) || location.isOpenWater(currentPoint.x + 1, currentPoint.y);
+            // check four adjacent tiles for open water (no wells, fish ponds, etc.)
+            return location.isOpenWater(currentPoint.x - 1, currentPoint.y) 
+                   || location.isOpenWater(currentPoint.x, currentPoint.y - 1) 
+                   || location.isOpenWater(currentPoint.x, currentPoint.y + 1) 
+                   || location.isOpenWater(currentPoint.x + 1, currentPoint.y);
         }
 
         /// <summary> Animal behavior after finding a water tile and pathfinding to it. </summary>

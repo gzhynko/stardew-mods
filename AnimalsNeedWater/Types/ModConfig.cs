@@ -41,14 +41,15 @@ namespace AnimalsNeedWater.Types
         public int FriendshipPointsForWateredTrough { get; set; } = 15;
 
         /// <summary>
-        /// The amount of friendship points player gets for watering a trough with animals inside the building.
+        /// The amount of friendship points player gets for watering a trough with animals inside the building
+        /// (i.e. when animals see the player watering the trough).
         /// </summary>
         public int AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding { get; set; } = 15;
 
         /// <summary>
         /// The amount of friendship points player loses for not watering a trough.
         /// </summary>
-        public int NegativeFriendshipPointsForNotWateredTrough { get; set; } = 20;
+        public int NegativeFriendshipPointsForNotWateredTrough { get; set; } = 10;
 
         /// <summary>
         /// Whether animals can drink outside.
@@ -58,7 +59,7 @@ namespace AnimalsNeedWater.Types
         /// <summary>
         /// Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).
         /// </summary>
-        public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = true;
+        public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = false;
         
         /// <summary>
         /// Whether troughs should have a cleaner texture.
@@ -97,7 +98,7 @@ namespace AnimalsNeedWater.Types
             api.AddSectionTitle(manifest, () => "Friendship");
 
             api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);
-            api.AddNumberOption(manifest, () => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding, val => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding = (int)val, () => "Watered Trough With Animals Inside", () => "The amount of friendship points player gets for watering a trough with animals inside the building.", interval: 1.0f);
+            api.AddNumberOption(manifest, () => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding, val => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding = (int)val, () => "Watered Trough With Animals Inside", () => "The amount of friendship points player gets for watering a trough with animals inside the building (i.e. when animals see the player watering the trough).", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.NegativeFriendshipPointsForNotWateredTrough, val => config.NegativeFriendshipPointsForNotWateredTrough = (int)val, () => "Negative; Not Watered Trough", () => "The amount of friendship points player loses for not watering a trough.", interval: 1.0f);
         }
     }

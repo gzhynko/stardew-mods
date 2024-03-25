@@ -1,5 +1,11 @@
 # Version history for AnimalsNeedWater
 
+## 1.5.3
+Released March 25, 2024.
+- Changed water pathfinding logic. Water pathfinding should work properly now.
+- Lowered default friendship loss when animal was left thirsty (20 -> 10 points).
+- Animals now drink from all water sources (wells, rivers, fish ponds, etc.) by default.
+
 ## 1.5.2
 Released March 24, 2024.
 - Fixed not being able to water troughs using upgraded watering cans.

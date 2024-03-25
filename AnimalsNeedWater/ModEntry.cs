@@ -482,10 +482,7 @@ namespace AnimalsNeedWater
 
             ModMonitor.VerboseLog("Patching FarmAnimal.behaviors.");
             harmony.Patch(
-                AccessTools.Method(typeof(FarmAnimal), "behaviors", new[] {
-                    typeof(GameTime),
-                    typeof(GameLocation)
-                }),
+                AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.behaviors)),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalBehaviors))
             );
 
@@ -599,18 +596,31 @@ namespace AnimalsNeedWater
         {
             if (!Config.ReplaceCoopTextureIfTroughIsEmpty) return;
 
-            building.texture = empty ? 
-                new Lazy<Texture2D>(() => Helper.ModContent.Load<Texture2D>("assets/Coop2_emptyWaterTrough.png"))
-                : new Lazy<Texture2D>(() => Helper.ModContent.Load<Texture2D>("assets/Coop2_fullWaterTrough.png"));
+            if (empty)
+            {
+                building.texture = new Lazy<Texture2D>(() =>
+                    Helper.ModContent.Load<Texture2D>("assets/Coop2_emptyWaterTrough.png"));
+            }
+            else
+            {
+                building.resetTexture();
+            }
         }
         
         public void ChangeCoopTexture(Building building, bool empty)
         {
             if (!Config.ReplaceCoopTextureIfTroughIsEmpty) return;
+            
+            if (empty)
+            {
+                building.texture = new Lazy<Texture2D>(() =>
+                    Helper.ModContent.Load<Texture2D>("assets/Coop_emptyWaterTrough.png"));
+            }
+            else
+            {
+                building.resetTexture();
+            }
 
-            building.texture = empty ? 
-                new Lazy<Texture2D>(() => Helper.ModContent.Load<Texture2D>("assets/Coop_emptyWaterTrough.png"))
-                : new Lazy<Texture2D>(() => Helper.ModContent.Load<Texture2D>("assets/Coop_fullWaterTrough.png"));
         }
 
         private void LoadNewTileSheets()
