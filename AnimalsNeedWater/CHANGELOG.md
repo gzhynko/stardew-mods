@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.5.2
+Released March 24, 2024.
+- Fixed not being able to water troughs using upgraded watering cans.
+
 ## 1.5.1
 Released March 23, 2024.
 - Fixed not being able to water crops and pet bowl.

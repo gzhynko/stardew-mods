@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AnimalsNeedWater.Types;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -96,9 +97,9 @@ namespace AnimalsNeedWater.Patching
             if (!gameLocation.Name.ToLower().Contains("coop") && !gameLocation.Name.ToLower().Contains("barn"))
                 return true;
             // execute original method if this is not a watering can
-            if (t.BaseName != "Watering Can" || ((WateringCan) t).WaterLeft <= 0) 
+            if (!(t is WateringCan) || ((WateringCan) t).WaterLeft <= 0) 
                 return true;
-            
+
             if (Game1.currentLocation.Name.ToLower().Contains("coop") && !ModData.CoopsWithWateredTrough.Contains(__instance.NameOrUniqueName.ToLower()))
             {
                 string buildingType = "coop";
