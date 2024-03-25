@@ -107,6 +107,7 @@ namespace AnimalsNeedWater.Patching
             
             // do the 'happy' emote and add the animal to the Full Animals list
             c.doEmote(32);
+            ((FarmAnimal)c).isEating.Value = true; // do the eating animation
             ModData.FullAnimals.Add(c as FarmAnimal);
         }
         
