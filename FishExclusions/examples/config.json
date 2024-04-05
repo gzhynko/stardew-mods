@@ -1,0 +1,23 @@
+{
+  "ItemsToExclude": {
+    "CommonExclusions": [
+      "167",
+      "168",
+      "169",
+      "170",
+      "171",
+      "172"
+    ],
+    "ConditionalExclusions": [
+      {
+        "Season": "summer",
+        "Exclusions": [
+          "154",
+          "152"
+        ]
+      }
+    ]
+  },
+  "ItemToCatchIfAllFishIsExcluded": "168",
+  "TimesToRetry": 20
+}
