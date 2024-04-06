@@ -1,4 +1,5 @@
 ﻿using System;
+using FishExclusions.Patching;
 using FishExclusions.Types;
 using HarmonyLib;
 using StardewModdingAPI;
@@ -35,8 +36,8 @@ namespace FishExclusions
             }
             catch (Exception exception)
             {
-                // Notify user and exit.
-                ModMonitor.Log($"Config file is formatted incorrectly, exiting. Details: {exception.Message}",
+                // Notify user of invalid config.
+                ModMonitor.Log($"Config file is formatted incorrectly, mod will not work correctly. Details: {exception.Message}",
                     LogLevel.Warn);
             }
             

@@ -4,9 +4,9 @@ using StardewModdingAPI;
 using StardewValley;
 // ReSharper disable InconsistentNaming
 
-namespace FishExclusions
+namespace FishExclusions.Patching
 {
-    public class HarmonyPatches
+    public class HarmonyPatchExecutors
     {
         /// <summary> Patch for the GameLocation.getFish method. </summary>
         public static void GetFish(GameLocation __instance, float millisecondsAfterNibble, string bait, int waterDepth, Farmer who,

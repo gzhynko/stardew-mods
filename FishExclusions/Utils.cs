@@ -21,11 +21,11 @@ namespace FishExclusions
 
             foreach (var exclusion in config.ItemsToExclude.ConditionalExclusions)
             {
-                var exclusionWeatherBool = exclusion.Weather.ToLower() == "rain";
+                var exclusionWeather = exclusion.Weather.ToLower();
 
                 if (exclusion.Season.ToLower() != seasonName.ToLower()) continue;
                 if (exclusion.Location.ToLower() != locationName.ToLower()) continue;
-                if (exclusionWeatherBool != raining) continue;
+                if ((exclusionWeather == "sunny" && raining) || (exclusionWeather == "rain" && !raining)) continue;
                 
                 foreach (var item in exclusion.Exclusions)
                 {

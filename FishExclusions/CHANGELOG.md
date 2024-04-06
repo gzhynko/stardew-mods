@@ -1,5 +1,9 @@
 # Version history for FishExclusions
 
+## 1.3.1
+Released April 5, 2024.
+- Fixed potential problems with weather exclusions.
+
 ## 1.3.0
 Released April 5, 2024.
 - Fixed issues related to JsonAssets and removed dependency on it.
