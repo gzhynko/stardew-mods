@@ -25,7 +25,11 @@ namespace AnimalsNeedWater
         public ModConfig Config;
         public TroughPlacementProfile CurrentTroughPlacementProfile;
         public List<FarmAnimal> AnimalsLeftThirstyYesterday;
-        
+
+        // Initialize a dictionary to group buildings by their parent location
+        public List<Building> AnimalBuildings;
+        public IEnumerable<IGrouping<GameLocation, Building>> AnimalBuildingGroups;
+
         /// <summary> The mod entry point, called after the mod is first loaded. </summary>
         /// <param name="helper"> Provides simplified APIs for writing mods. </param>
         public override void Entry(IModHelper helper)
@@ -35,6 +39,7 @@ namespace AnimalsNeedWater
             Instance = this;
 
             AnimalsLeftThirstyYesterday = new List<FarmAnimal>();
+            AnimalBuildings = new List<Building>();
 
             Config = Helper.ReadConfig<ModConfig>();
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
@@ -100,7 +105,7 @@ namespace AnimalsNeedWater
             ModData.BarnsWithWateredTrough = new List<string>();
             ModData.CoopsWithWateredTrough = new List<string>();
 
-            foreach (Building building in Game1.getFarm().buildings)
+            foreach (Building building in AnimalBuildings)
             {
                 if (!building.buildingType.Value.Contains("Barn") && !building.buildingType.Value.Contains("Coop"))
                     continue;
@@ -140,8 +145,8 @@ namespace AnimalsNeedWater
         {
             int animalCount = 0;
             GameLocation gameLocation = building.indoors.Value;
-
-            foreach (FarmAnimal animal in Game1.getFarm().getAllFarmAnimals())
+            
+            foreach (FarmAnimal animal in building.GetParentLocation().getAllFarmAnimals())
             {
                 if (animal.home.indoors.Value.NameOrUniqueName.ToLower().Equals(gameLocation.NameOrUniqueName.ToLower())) animalCount++;
             }
@@ -299,63 +304,71 @@ namespace AnimalsNeedWater
         private List<FarmAnimal> FindThirstyAnimals()
         { 
             List<FarmAnimal> animalsLeftThirsty = new List<FarmAnimal>();
-            
-            // Look for all animals inside buildings and check whether their troughs are watered.
-            foreach (Building building in Game1.getFarm().buildings)
+
+
+
+            foreach (var locationGroup in AnimalBuildingGroups)
             {
-                if (!building.buildingType.Value.Contains("Barn") && !building.buildingType.Value.Contains("Coop"))
-                    continue;
+                GameLocation parentLocation = locationGroup.Key;
+                List<Building> buildingsInLocation = locationGroup.ToList();
+
+                // Look for all animals inside buildings and check whether their troughs are watered.
+                foreach (Building building in buildingsInLocation)
+                {
+                    if (!building.buildingType.Value.Contains("Barn") && !building.buildingType.Value.Contains("Coop"))
+                        continue;
                 
-                if (IsCoop(building))
-                {
-                    foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
-                        .Where(animal =>
-                            ModData.CoopsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) == false &&
-                            ModData.FullAnimals.Contains(animal) == false).Where(animal =>
-                            !animalsLeftThirsty.Contains(animal)))
+                    if (IsCoop(building))
                     {
-                        animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                        animalsLeftThirsty.Add(animal);
-                    }
-                } 
-                else if (IsBarn(building))
-                {
-                    foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
-                        .Where(animal =>
-                            ModData.BarnsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) == false &&
-                            ModData.FullAnimals.Contains(animal) == false).Where(animal =>
-                            !animalsLeftThirsty.Contains(animal)))
+                        foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
+                            .Where(animal =>
+                                ModData.CoopsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) == false &&
+                                ModData.FullAnimals.Contains(animal) == false).Where(animal =>
+                                !animalsLeftThirsty.Contains(animal)))
+                        {
+                            animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
+                            animalsLeftThirsty.Add(animal);
+                        }
+                    } 
+                    else if (IsBarn(building))
                     {
-                        animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                        animalsLeftThirsty.Add(animal);
+                        foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
+                            .Where(animal =>
+                                ModData.BarnsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) == false &&
+                                ModData.FullAnimals.Contains(animal) == false).Where(animal =>
+                                !animalsLeftThirsty.Contains(animal)))
+                        {
+                            animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
+                            animalsLeftThirsty.Add(animal);
+                        }
                     }
                 }
-            }
 
-            // Check for animals outside their buildings as well.
-            foreach (var animal in Game1.getFarm().animals.Values)
-            {
-                if (IsCoop(animal.home))
+                // Check for animals outside their buildings as well.
+                foreach (var animal in parentLocation.animals.Values)
                 {
-                    if ((ModData.CoopsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) ||
-                         ModData.FullAnimals.Contains(animal)) &&
-                        animal.home.animalDoorOpen.Value) continue;
+                    if (IsCoop(animal.home))
+                    {
+                        if ((ModData.CoopsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) ||
+                             ModData.FullAnimals.Contains(animal)) &&
+                            animal.home.animalDoorOpen.Value) continue;
                     
-                    if (animalsLeftThirsty.Contains(animal)) continue;
+                        if (animalsLeftThirsty.Contains(animal)) continue;
                         
-                    animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                    animalsLeftThirsty.Add(animal);
-                } 
-                else if(IsBarn(animal.home))
-                {
-                    if ((ModData.BarnsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) ||
-                         ModData.FullAnimals.Contains(animal)) &&
-                        animal.home.animalDoorOpen.Value) continue;
+                        animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
+                        animalsLeftThirsty.Add(animal);
+                    } 
+                    else if(IsBarn(animal.home))
+                    {
+                        if ((ModData.BarnsWithWateredTrough.Contains(animal.home.indoors.Value.uniqueName.Value.ToLower()) ||
+                             ModData.FullAnimals.Contains(animal)) &&
+                            animal.home.animalDoorOpen.Value) continue;
                     
-                    if (animalsLeftThirsty.Contains(animal)) continue;
+                        if (animalsLeftThirsty.Contains(animal)) continue;
                     
-                    animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
-                    animalsLeftThirsty.Add(animal);
+                        animal.friendshipTowardFarmer.Value -= Math.Abs(Config.NegativeFriendshipPointsForNotWateredTrough);
+                        animalsLeftThirsty.Add(animal);
+                    }
                 }
             }
 
@@ -431,7 +444,7 @@ namespace AnimalsNeedWater
             }
             else
             {
-                foreach (Building building in Game1.getFarm().buildings)
+                foreach (Building building in AnimalBuildings)
                 {
                     if (!building.buildingType.Contains("Barn") && !building.buildingType.Contains("Coop"))
                         continue;
@@ -538,6 +551,7 @@ namespace AnimalsNeedWater
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            GetAnimalBuildings();
             CheckHomeStatus();
             LoadNewTileSheets();
             PlaceWateringSystems();
@@ -558,7 +572,7 @@ namespace AnimalsNeedWater
             } 
             else
             {
-                foreach (Building building in Game1.getFarm().buildings)
+                foreach (Building building in AnimalBuildings)
                 {
                     if (!building.buildingType.Contains("Barn") && !building.buildingType.Contains("Coop"))
                         continue;
@@ -583,15 +597,45 @@ namespace AnimalsNeedWater
                 }
             }
         }
-        
+
+        private void GetAnimalBuildings()
+        {
+            AnimalBuildings.Clear();
+            foreach (GameLocation location in Game1.locations)
+            {
+                foreach (Building building in location.buildings)
+                {
+                    if (building.GetIndoors() is AnimalHouse)
+                    {
+                        AnimalBuildings.Add(building);
+                    }
+                }
+            }
+
+            AnimalBuildingGroups = AnimalBuildings.GroupBy(b => b.GetParentLocation());
+        }
+
         private void CheckHomeStatus()
         {
-            if (Game1.getFarm().getAllFarmAnimals().Any(animal => animal.home == null))
+            bool needToFixAnimals = false;
+
+            foreach (var locationGroup in AnimalBuildingGroups)
+            {
+                GameLocation parentLocation = locationGroup.Key;
+
+                if (parentLocation.getAllFarmAnimals().Any(animal => animal.home == null))
+                {
+                    needToFixAnimals = true;
+                    break;
+                }
+            }
+
+            if (needToFixAnimals)
             {
                 Utility.fixAllAnimals();
             }
         }
-        
+
         public void ChangeBigCoopTexture(Building building, bool empty)
         {
             if (!Config.ReplaceCoopTextureIfTroughIsEmpty) return;
@@ -625,7 +669,7 @@ namespace AnimalsNeedWater
 
         private void LoadNewTileSheets()
         {
-            foreach (Building building in Game1.getFarm().buildings)
+            foreach (Building building in AnimalBuildings)
             {
                 if (IsCoop(building))
                 {
@@ -714,7 +758,7 @@ namespace AnimalsNeedWater
         {
             if (!Config.WateringSystemInDeluxeBuildings) return;
             
-            foreach (Building building in Game1.getFarm().buildings)
+            foreach (Building building in AnimalBuildings)
             {
                 switch (building.buildingType.Value.ToLower())
                 {
