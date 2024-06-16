@@ -4,7 +4,6 @@ using System.Linq;
 using AnimalsNeedWater.Patching;
 using AnimalsNeedWater.Types;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -808,30 +807,7 @@ namespace AnimalsNeedWater
         {
             Helper.Multiplayer.SendMessage(message, messageType, new[] { ModManifest.UniqueID });
         }
-
-        private string NextSeason(string season)
-        {
-            var newSeason = "";
-            
-            switch (season)
-            {
-                case "spring":
-                    newSeason = "summer";
-                    break;
-                case "summer":
-                    newSeason = "fall";
-                    break;
-                case "fall":
-                    newSeason = "winter";
-                    break;
-                case "winter":
-                    newSeason = "spring";
-                    break;
-            }
-
-            return newSeason;
-        }
-
+        
         private bool IsCoop(Building b)
         {
             return b.buildingType.Value.ToLower().Contains("coop");
