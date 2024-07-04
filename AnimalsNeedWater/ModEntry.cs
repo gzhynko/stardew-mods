@@ -22,7 +22,10 @@ namespace AnimalsNeedWater
         public static IModHelper ModHelper;
         public static ModEntry Instance;
         public ModConfig Config;
-        public TroughPlacementProfile CurrentTroughPlacementProfile;
+        
+        public TroughPlacementProfile CurrentBarnTroughPlacementProfile;
+        public TroughPlacementProfile CurrentCoopTroughPlacementProfile;
+        
         public List<FarmAnimal> AnimalsLeftThirstyYesterday;
 
         // Initialize a dictionary to group buildings by their parent location
@@ -47,7 +50,7 @@ namespace AnimalsNeedWater
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
 
-            SetTroughPlacementProfile();
+            InitTroughPlacementProfiles();
         }
         
         public void SaveConfig(ModConfig newConfig)
@@ -68,8 +71,8 @@ namespace AnimalsNeedWater
             SendMessageToSelf(new TroughWateredMessage(buildingType, building), "TroughWateredMessage");
         }
         
-        /// <summary> Look for known mods that modify coop/barn interiors and load the matching profile (if any). </summary>
-        private void SetTroughPlacementProfile()
+        /// <summary> Look for known mods that modify coop/barn interiors and load the matching profile(s) (if any). </summary>
+        private void InitTroughPlacementProfiles()
         {
             try
             {
@@ -82,20 +85,35 @@ namespace AnimalsNeedWater
 
             if (TroughPlacementProfiles.DefaultProfile == null)
             {
-                Monitor.Log("The default trough placement profile was not loaded. Animals Need Water will not work correctly. Make sure all files in this mod's assets folder are in place.", LogLevel.Error);
+                Monitor.Log("The default trough placement profile was not loaded. Animals Need Water will not work correctly. Make sure all files in the Animals Need Water/assets folder are in place.", LogLevel.Error);
                 return;
             }
-            
+
             foreach (var modInfo in Helper.ModRegistry.GetAll())
             {
                 var profile = TroughPlacementProfiles.GetProfileByUniqueId(modInfo.Manifest.UniqueID);
                 if (profile != null)
                 {
-                    CurrentTroughPlacementProfile = profile;
+                    if (profile.targetBuildings == null)
+                    {
+                        Monitor.Log("Skipping trough placement profile for mod id " + profile.modUniqueId + " because targetBuildings are not specified.", LogLevel.Warn);
+                        continue;
+                    }
+                    if (profile.targetBuildings.Contains("coop", StringComparer.OrdinalIgnoreCase))
+                        CurrentCoopTroughPlacementProfile = profile;
+                    if (profile.targetBuildings.Contains("barn", StringComparer.OrdinalIgnoreCase))
+                        CurrentBarnTroughPlacementProfile = profile;
                 }
             }
 
-            CurrentTroughPlacementProfile ??= TroughPlacementProfiles.DefaultProfile;
+            CurrentCoopTroughPlacementProfile ??= TroughPlacementProfiles.DefaultProfile;
+            CurrentBarnTroughPlacementProfile ??= TroughPlacementProfiles.DefaultProfile;
+            
+            Monitor.Log(
+                $"Current trough placement profiles: " +
+                $"Coop: {(CurrentCoopTroughPlacementProfile == TroughPlacementProfiles.DefaultProfile ? "default" : CurrentCoopTroughPlacementProfile.modUniqueId)}" +
+                $", Barn: {(CurrentBarnTroughPlacementProfile == TroughPlacementProfiles.DefaultProfile ? "default" : CurrentBarnTroughPlacementProfile.modUniqueId)}"
+                , LogLevel.Info);
         }
 
         /// <summary> Empty water troughs in animal houses. </summary>
@@ -171,7 +189,7 @@ namespace AnimalsNeedWater
                 {
                     ChangeCoopTexture(building, true);
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coopTroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coopTroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -180,11 +198,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coopTroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coopTroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -194,7 +212,7 @@ namespace AnimalsNeedWater
                 {
                     ChangeBigCoopTexture(building, true);
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coop2TroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coop2TroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -203,11 +221,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coop2TroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coop2TroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -215,7 +233,7 @@ namespace AnimalsNeedWater
                 }
                 case "deluxe coop":
                 {
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coop3TroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coop3TroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -224,11 +242,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.coop3TroughTiles)
+                    foreach (TroughTile tile in CurrentCoopTroughPlacementProfile.coop3TroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -236,7 +254,7 @@ namespace AnimalsNeedWater
                 }
                 case "barn":
                 {
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barnTroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barnTroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -245,11 +263,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barnTroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barnTroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -257,7 +275,7 @@ namespace AnimalsNeedWater
                 }
                 case "big barn":
                 {
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barn2TroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barn2TroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -266,11 +284,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barn2TroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barn2TroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -278,7 +296,7 @@ namespace AnimalsNeedWater
                 }
                 case "deluxe barn":
                 {
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barn3TroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barn3TroughTiles)
                     {
                         gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                     }
@@ -287,11 +305,11 @@ namespace AnimalsNeedWater
                     Layer frontLayer = gameLocation.Map.GetLayer("Front");
                     TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                    foreach (TroughTile tile in CurrentTroughPlacementProfile.barn3TroughTiles)
+                    foreach (TroughTile tile in CurrentBarnTroughPlacementProfile.barn3TroughTiles)
                     {
-                        if (tile.Layer.Equals("Buildings"))
+                        if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                             buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                        else if (tile.Layer.Equals("Front"))
+                        else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                             frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     }
 
@@ -765,7 +783,7 @@ namespace AnimalsNeedWater
                     {
                         var gameLocation = building.indoors.Value;
 
-                        foreach (SimplifiedTile tile in CurrentTroughPlacementProfile.coop3WateringSystem.TilesToRemove)
+                        foreach (SimplifiedTile tile in CurrentCoopTroughPlacementProfile.coop3WateringSystem.TilesToRemove)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
@@ -774,17 +792,19 @@ namespace AnimalsNeedWater
                         Layer frontLayer = gameLocation.Map.GetLayer("Front");
                         TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
 
-                        if (CurrentTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Buildings"))
-                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemIndex);
-                        else if (CurrentTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Front"))
-                            frontLayer.Tiles[CurrentTroughPlacementProfile.coop3WateringSystem.TileX, CurrentTroughPlacementProfile.coop3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.coop3WateringSystem.SystemIndex);
+                        if (CurrentCoopTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
+                            buildingsLayer.Tiles[CurrentCoopTroughPlacementProfile.coop3WateringSystem.TileX, CurrentCoopTroughPlacementProfile.coop3WateringSystem.TileY] 
+                                = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentCoopTroughPlacementProfile.coop3WateringSystem.SystemIndex);
+                        else if (CurrentCoopTroughPlacementProfile.coop3WateringSystem.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
+                            frontLayer.Tiles[CurrentCoopTroughPlacementProfile.coop3WateringSystem.TileX, CurrentCoopTroughPlacementProfile.coop3WateringSystem.TileY] 
+                                = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentCoopTroughPlacementProfile.coop3WateringSystem.SystemIndex);
                         break;
                     }
                     case "deluxe barn":
                     {
                         var gameLocation = building.indoors.Value;
 
-                        foreach (SimplifiedTile tile in CurrentTroughPlacementProfile.barn3WateringSystem.TilesToRemove)
+                        foreach (SimplifiedTile tile in CurrentBarnTroughPlacementProfile.barn3WateringSystem.TilesToRemove)
                         {
                             gameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                         }
@@ -793,10 +813,10 @@ namespace AnimalsNeedWater
                         Layer frontLayer = gameLocation.Map.GetLayer("Front");
                         TileSheet tilesheet = gameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
 
-                        if (CurrentTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Buildings"))
-                            buildingsLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemIndex);
-                        else if (CurrentTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Front"))
-                            frontLayer.Tiles[CurrentTroughPlacementProfile.barn3WateringSystem.TileX, CurrentTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentTroughPlacementProfile.barn3WateringSystem.SystemIndex);
+                        if (CurrentBarnTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
+                            buildingsLayer.Tiles[CurrentBarnTroughPlacementProfile.barn3WateringSystem.TileX, CurrentBarnTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentBarnTroughPlacementProfile.barn3WateringSystem.SystemIndex);
+                        else if (CurrentBarnTroughPlacementProfile.barn3WateringSystem.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
+                            frontLayer.Tiles[CurrentBarnTroughPlacementProfile.barn3WateringSystem.TileX, CurrentBarnTroughPlacementProfile.barn3WateringSystem.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: CurrentBarnTroughPlacementProfile.barn3WateringSystem.SystemIndex);
                         break;
                     }
                 }

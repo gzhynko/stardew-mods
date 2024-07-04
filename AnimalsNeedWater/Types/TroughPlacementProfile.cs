@@ -6,6 +6,7 @@ namespace AnimalsNeedWater.Types
     public class TroughPlacementProfile
     {
         public string modUniqueId;
+        public List<string> targetBuildings;
         public List<TroughTile> barnTroughTiles;
         public List<TroughTile> barn2TroughTiles;
         public List<TroughTile> barn3TroughTiles;

@@ -1,71 +1,7 @@
 {
-  "modUniqueId": "pepoluan.cleanblockbarncoop",
-  "targetBuildings": ["barn", "coop"],
-  "coopTroughTiles": [
-    {
-      "tileX": 10,
-      "tileY": 5,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
-    }
-  ],
-  "coop2TroughTiles": [
-    {
-      "tileX": 14,
-      "tileY": 5,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
-    }
-  ],
-  "coop3TroughTiles": [
-    {
-      "tileX": 20,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
-    }
-  ],
-  "coop3WateringSystem": {
-    "tileX": 20,
-    "tileY": 2,
-    "layer": "Front",
-    "systemIndex": 1,
-    "tilesToRemove": []
-  },
+  "modUniqueId": "Ghilminion_Ghilland.Bigger.Barn",
+  "targetBuildings": ["barn"],
   "barnTroughTiles": [
-    {
-      "tileX": 13,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
-    },
-    {
-      "tileX": 14,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
-    },
-    {
-      "tileX": 13,
-      "tileY": 2,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 14,
-      "tileY": 2,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "barn2TroughTiles": [
     {
       "tileX": 19,
       "tileY": 3,
@@ -74,28 +10,93 @@
       "fullIndex": 3
     },
     {
-      "tileX": 17,
+      "tileX": 3,
+      "tileY": 7,
+      "layer": "Buildings",
+      "emptyIndex": 6,
+      "fullIndex": 8
+    },
+    {
+      "tileX": 4,
+      "tileY": 7,
+      "layer": "Buildings",
+      "emptyIndex": 7,
+      "fullIndex": 9
+    },
+    {
+      "tileX": 3,
+      "tileY": 6,
+      "layer": "Front",
+      "emptyIndex": 1,
+      "fullIndex": 4
+    },
+    {
+      "tileX": 4,
+      "tileY": 6,
+      "layer": "Front",
+      "emptyIndex": 2,
+      "fullIndex": 5
+    }
+  ],
+  "barn2TroughTiles": [
+    {
+      "tileX": 25,
+      "tileY": 3,
+      "layer": "Buildings",
+      "emptyIndex": 0,
+      "fullIndex": 3
+    },
+    {
+      "tileX": 26,
       "tileY": 3,
       "layer": "Buildings",
       "emptyIndex": 6,
       "fullIndex": 8
     },
     {
-      "tileX": 18,
+      "tileX": 27,
       "tileY": 3,
       "layer": "Buildings",
       "emptyIndex": 7,
       "fullIndex": 9
     },
     {
-      "tileX": 17,
+      "tileX": 26,
       "tileY": 2,
       "layer": "Front",
       "emptyIndex": 1,
       "fullIndex": 4
     },
     {
-      "tileX": 18,
+      "tileX": 27,
+      "tileY": 2,
+      "layer": "Front",
+      "emptyIndex": 2,
+      "fullIndex": 5
+    },
+    {
+      "tileX": 4,
+      "tileY": 3,
+      "layer": "Buildings",
+      "emptyIndex": 6,
+      "fullIndex": 8
+    },
+    {
+      "tileX": 5,
+      "tileY": 3,
+      "layer": "Buildings",
+      "emptyIndex": 7,
+      "fullIndex": 9
+    },
+    {
+      "tileX": 4,
+      "tileY": 2,
+      "layer": "Front",
+      "emptyIndex": 1,
+      "fullIndex": 4
+    },
+    {
+      "tileX": 5,
       "tileY": 2,
       "layer": "Front",
       "emptyIndex": 2,
@@ -104,35 +105,35 @@
   ],
   "barn3TroughTiles": [
     {
-      "tileX": 23,
-      "tileY": 13,
+      "tileX": 37,
+      "tileY": 3,
       "layer": "Buildings",
       "emptyIndex": 0,
       "fullIndex": 3
     },
     {
-      "tileX": 21,
+      "tileX": 38,
       "tileY": 3,
       "layer": "Buildings",
       "emptyIndex": 6,
       "fullIndex": 8
     },
     {
-      "tileX": 22,
+      "tileX": 39,
       "tileY": 3,
       "layer": "Buildings",
       "emptyIndex": 7,
       "fullIndex": 9
     },
     {
-      "tileX": 21,
+      "tileX": 38,
       "tileY": 2,
       "layer": "Front",
       "emptyIndex": 1,
       "fullIndex": 4
     },
     {
-      "tileX": 22,
+      "tileX": 39,
       "tileY": 2,
       "layer": "Front",
       "emptyIndex": 2,
@@ -140,18 +141,18 @@
     }
   ],
   "barn3WateringSystem": {
-    "tileX": 23,
+    "tileX": 40,
     "tileY": 3,
     "layer": "Buildings",
     "systemIndex": 0,
     "tilesToRemove": [
       {
-        "tileX": 23,
+        "tileX": 40,
         "tileY": 3,
         "layer": "Buildings"
       },
       {
-        "tileX": 23,
+        "tileX": 40,
         "tileY": 2,
         "layer": "Front"
       }

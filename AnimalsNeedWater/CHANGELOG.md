@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.5.5
+Released July 4, 2024.
+- Add support for Ghilland's Bigger coop barn and silo (thanks to Roman0).
+
 ## 1.5.4
 Released June 16, 2024.
 - Extend functionality to make mod work on Animal House buildings outside the Farm (thanks to @Smoked-Fish).
