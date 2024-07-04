@@ -1,0 +1,13 @@
+{
+  "Name": "GrapesAllYearRound",
+  "Author": "GZhynko",
+  "Version": "1.1.0",
+  "Description": "Allows grapes to grow all year round, but produce only in fall.",
+  "UniqueID": "GZhynko.CGA.GrapesAllYearRound",
+  "MinimumApiVersion": "3.18.0",
+  "UpdateKeys": [ "Nexus:7759" ],
+  "ContentPackFor": {
+    "UniqueID": "GZhynko.CropGrowthAdjustments",
+    "MinimumVersion": "1.0.0"
+   }
+}

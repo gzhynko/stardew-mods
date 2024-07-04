@@ -1,4 +1,5 @@
 ﻿using System;
+using FishExclusions.Patching;
 using FishExclusions.Types;
 using HarmonyLib;
 using StardewModdingAPI;
@@ -13,12 +14,11 @@ namespace FishExclusions
     {
         #region Variables
 
+        public static IModHelper ModHelper;
         public static IMonitor ModMonitor;
         public static ModConfig Config;
         
         public static bool ExclusionsEnabled = true;
-
-        public static IJsonAssetsApi JsonAssetsApi;
         
         #endregion
         #region Public methods
@@ -27,6 +27,7 @@ namespace FishExclusions
         /// <param name="helper"> Provides simplified APIs for writing mods. </param>
         public override void Entry(IModHelper helper)
         {
+            ModHelper = Helper;
             ModMonitor = Monitor;
 
             try
@@ -35,8 +36,8 @@ namespace FishExclusions
             }
             catch (Exception exception)
             {
-                // Notify user and exit.
-                ModMonitor.Log($"Config file is formatted incorrectly, exiting. Details: {exception.Message}",
+                // Notify user of invalid config.
+                ModMonitor.Log($"Config file is formatted incorrectly, mod will not work correctly. Details: {exception.Message}",
                     LogLevel.Warn);
             }
             
@@ -49,6 +50,11 @@ namespace FishExclusions
         {
             Config = newConfig;
             Helper.WriteConfig(newConfig);
+        }
+
+        public static void ReloadConfig()
+        {
+            Config = ModHelper.ReadConfig<ModConfig>();
         }
 
         #endregion
@@ -76,8 +82,6 @@ namespace FishExclusions
         {
             ApplyHarmonyPatches();
             ModConfig.SetUpModConfigMenu(Config, this);
-            
-            JsonAssetsApi = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
         }
         
         #endregion
