@@ -1,103 +1,51 @@
 using System;
-using System.Xml.Serialization;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
-using StardewValley.Locations;
+using Constants = StardewElectricity.Types.Constants;
 
 namespace StardewElectricity.Buildings
 {
-    [XmlType("Mods_StardewElectricity")]
-    public class UtilityPole : Building
+    public class UtilityPole
     {
-        public bool IsPlacedSideways = false;
-        public bool IsOrigin = false;
+        public bool IsPlacedSideways => _building.GetMetadata(Constants.MetadataIsPlacedSideways) == "true";
+        public bool IsOrigin => _building.modData.TryGetValue(Constants.ModDataIsOrigin, out var val) && val == "true";
 
-        public const string BlueprintName = "UtilityPole";
-        private static readonly BluePrint BluePrint = new BluePrint(BlueprintName);
-
-        public Vector2 TilePosition => new Vector2(tileX, tileY);
-        private Texture2D TextureToDraw => IsPlacedSideways ? ModEntry.SidewaysPoleTexture : ModEntry.PoleTexture;
-
-        public UtilityPole()
+        public Vector2 TilePosition
         {
+            get => new Vector2(_building.tileX.Value, _building.tileY.Value);
+            set { _building.tileX.Set((int)value.X); _building.tileY.Set((int)value.Y); }
         }
+        public Vector2 WorldPosition => TilePosition * 16f * 4f;
         
-        public UtilityPole(bool isOrigin, int tileX, int tileY) : base(BluePrint, new Vector2(tileX, tileY))
-        {
-            IsOrigin = isOrigin;
-        }
+        private Building _building;
         
-        public UtilityPole(BluePrint b, Vector2 tileLocation)
-            : base(b, tileLocation)
+        public UtilityPole(Building poleBuilding)
         {
+            _building = poleBuilding;
         }
 
-        public override void draw(SpriteBatch spriteBatch)
+        public UtilityPole(Vector2 tile, long owner)
         {
-            if (isMoving)
-            {
-                return;
-            }
-
-            var scaleToDrawAt = 4f;
-            
-            drawShadow(spriteBatch);
-            
-            spriteBatch.Draw(TextureToDraw,
-                Game1.GlobalToLocal(new Vector2((int) tileX * 16 * scaleToDrawAt + TextureToDraw.Width / 2f,
-                    (int) tileY * 16 * scaleToDrawAt + (int) tilesHigh * 16 * scaleToDrawAt)),
-                new Rectangle(0, 0, TextureToDraw.Width, TextureToDraw.Height), color.Value * alpha, 0f,
-                new Vector2(TextureToDraw.Width / 2f, TextureToDraw.Height), scaleToDrawAt, SpriteEffects.None,
-                ((int) tileY + (int) tilesHigh - 1) * 16 * scaleToDrawAt / 10000f);
+            _building = new Building(Constants.UtilityPoleBuildingTypeName, tile);
+            _building.owner.Set(owner);
         }
 
-        public override void drawInMenu(SpriteBatch spriteBatch, int x, int y)
+        public Building GetBuilding()
         {
-            var scaleToDrawAt = 4f;
-
-            drawShadow(spriteBatch, x, y);
-            spriteBatch.Draw(TextureToDraw, new Vector2(x + 16 * scaleToDrawAt / 2, y), getSourceRect(), color, 0f, new Vector2(TextureToDraw.Width / 2f, 0f), 4f, SpriteEffects.None, 0.89f);
+            return _building;
         }
 
-        public override void drawShadow(SpriteBatch spriteBatch, int localX = -1, int localY = -1)
+        public void SetIsPlacedSideways(bool value)
         {
-            var scaleToDrawAt = 4f;
-
-            var shadowTextureToDraw = ModEntry.PoleShadowTexture;
-            
-            var shadowOrigin = new Vector2(shadowTextureToDraw.Width / 2f, shadowTextureToDraw.Height / 2f);
-            var shadowPosition = localX == -1 ? Game1.GlobalToLocal(new Vector2((int)tileX * 16 * scaleToDrawAt + TextureToDraw.Width / 2f, ((int)tileY + (int)tilesHigh) * 16 * scaleToDrawAt)) : new Vector2(localX + TextureToDraw.Width / 2, localY + getSourceRectForMenu().Height * scaleToDrawAt);
-
-            var rotation = IsPlacedSideways ? (float)Math.PI / 2f : 0f;
-            
-            spriteBatch.Draw(shadowTextureToDraw, shadowPosition, shadowTextureToDraw.Bounds, Color.White * alpha, rotation, shadowOrigin, scaleToDrawAt, SpriteEffects.None, 1E-05f);
+            _building.skinId.Set(value ? $"{ModEntry.Instance.Helper.ModContent.ModID}_{Constants.SkinUtilityPoleSide}" : null);
         }
 
-        public static bool Build(BuildableGameLocation gameLocation, Vector2 position, Farmer player)
+        public void SetIsOrigin(bool value)
         {
-            if (!Utility.Utility.CheckIfAbleToBuild(BluePrint, gameLocation, position, player))
-                return false;
-
-            var building = new UtilityPole(BluePrint, position);
-            building.owner.Value = player.UniqueMultiplayerID;
-            
-            for (int y = 0; y < BluePrint.tilesHeight; y++)
-            {
-                for (int x = 0; x < BluePrint.tilesWidth; x++)
-                {
-                    Vector2 currentGlobalTilePosition = new Vector2(position.X + x, position.Y + y);
-                    gameLocation.terrainFeatures.Remove(currentGlobalTilePosition);
-                }
-            }
-            
-            gameLocation.buildings.Add(building);
-            building.performActionOnConstruction(gameLocation);
-            
-            ModEntry.PoleManager.DoWiring();
-
-            return true;
+            _building.modData[Constants.ModDataIsOrigin] = value ? "true" : "false";
         }
 
         /// <summary>
@@ -106,36 +54,34 @@ namespace StardewElectricity.Buildings
         public Tuple<Vector2, Vector2> GetInsulatorPositions()
         {
             if (IsPlacedSideways)
-            {
                 return new Tuple<Vector2, Vector2>(new Vector2(31, 6), new Vector2(31, 36));
-            }
-            
-            return new Tuple<Vector2, Vector2>(new Vector2(6, 20), new Vector2(57, 20));
+
+            return new Tuple<Vector2, Vector2>(new Vector2(6, 16), new Vector2(57, 16));
         }
-        
-        
+
+
         /// <summary>
-        /// Same as GetInsulatorPositions, but with on-screen coordinates.
+        /// Same as GetInsulatorPositions, but with world coordinates.
         /// </summary>
-        public Tuple<Vector2, Vector2> GetOnScreenInsulatorPositions()
+        public Tuple<Vector2, Vector2> GetWorldInsulatorPositions()
         {
-            var scaleToDrawAt = 4f;
+            var scale = 4f;
 
             var insulatorPositions = GetInsulatorPositions();
 
-            var baseCoordinate = new Vector2((int) tileX * 16 * scaleToDrawAt + TextureToDraw.Width / 2f,
-                (int) tileY * 16 * scaleToDrawAt + (int) tilesHigh * 16 * scaleToDrawAt);
-            
+            var baseCoordinate = new Vector2((int) _building.tileX.Value * 16 * scale + _building.texture.Value.Width / 2f,
+                (int) _building.tileY.Value * 16 * scale + (int) _building.tilesHigh.Value * 16 * scale);
+
             var topLeftCornerTextureCoordinateOnScreen =
-                Game1.GlobalToLocal(new Vector2(baseCoordinate.X - TextureToDraw.Width / 2f * scaleToDrawAt,
-                    baseCoordinate.Y - TextureToDraw.Height * scaleToDrawAt));
+                new Vector2(baseCoordinate.X - _building.texture.Value.Width / 2f * scale,
+                    baseCoordinate.Y - _building.texture.Value.Height * scale);
 
             var firstInsulatorPosition =
-                new Vector2(topLeftCornerTextureCoordinateOnScreen.X + insulatorPositions.Item1.X * scaleToDrawAt,
-                    topLeftCornerTextureCoordinateOnScreen.Y + insulatorPositions.Item1.Y * scaleToDrawAt);
+                new Vector2(topLeftCornerTextureCoordinateOnScreen.X + insulatorPositions.Item1.X * scale,
+                    topLeftCornerTextureCoordinateOnScreen.Y + insulatorPositions.Item1.Y * scale);
             var secondInsulatorPosition =
-                new Vector2(topLeftCornerTextureCoordinateOnScreen.X + insulatorPositions.Item2.X * scaleToDrawAt,
-                    topLeftCornerTextureCoordinateOnScreen.Y + insulatorPositions.Item2.Y * scaleToDrawAt);
+                new Vector2(topLeftCornerTextureCoordinateOnScreen.X + insulatorPositions.Item2.X * scale,
+                    topLeftCornerTextureCoordinateOnScreen.Y + insulatorPositions.Item2.Y * scale);
 
             return new Tuple<Vector2, Vector2>(firstInsulatorPosition, secondInsulatorPosition);
 

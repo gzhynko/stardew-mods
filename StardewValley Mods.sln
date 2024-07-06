@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueBoxRedesign", "Dial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropGrowthAdjustments", "CropGrowthAdjustments\CropGrowthAdjustments.csproj", "{041B9398-64A3-4D00-B156-A071D850D717}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewElectricity", "StardewElectricity\StardewElectricity.csproj", "{9385F6F8-9982-47D8-B059-7EC80FBC4B10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{041B9398-64A3-4D00-B156-A071D850D717}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
