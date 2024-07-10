@@ -1,21 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
-using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewElectricity.Buildings;
+using StardewElectricity.ContentPacks;
 using StardewElectricity.Managers;
 using StardewElectricity.Types;
 using StardewElectricity.Patching;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Buildings;
 using StardewValley.GameData.Buildings;
 using StardewValley.Menus;
 using StardewValley.Mods;
 using Constants = StardewElectricity.Types.Constants;
+using Patches = Common.Patching.Patches;
 
 
 namespace StardewElectricity
@@ -23,15 +21,16 @@ namespace StardewElectricity
     /// <summary> The mod entry class loaded by SMAPI. </summary>
     public class ModEntry : Mod
     {
-        public static ModEntry Instance;
         public static IMonitor ModMonitor;
-        public ModConfig Config;
-        
-        public static Texture2D PoleTexture;
-        public static Texture2D SidewaysPoleTexture;
-        
-        public static Texture2D PoleShadowTexture;
+        public static IModHelper ModHelper;
+        private ModConfig _config;
 
+        private static Texture2D _poleTexture;
+        private static Texture2D _sidewaysPoleTexture;
+        public static Texture2D PoleShadowTexture;
+        public static Texture2D IconsTexture;
+
+        public static ContentPackManager ContentPackManager;
         public static ElectricityManager ElectricityManager;
         public static PoleManager PoleManager;
 
@@ -40,25 +39,30 @@ namespace StardewElectricity
         public override void Entry(IModHelper helper)
         {
             ModMonitor = Monitor;
-            Instance = this;
+            ModHelper = Helper;
 
             helper.Events.Display.RenderingStep += OnRenderingStep;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.World.BuildingListChanged += OnBuildingListChanged;
+            helper.Events.GameLoop.DayEnding += OnDayEnding;
 
             helper.Events.Content.AssetRequested += OnAssetRequested;
+            helper.Events.Display.MenuChanged += OnMenuChanged;
 
+            ContentPackManager = new ContentPackManager();
             ElectricityManager = new ElectricityManager();
             PoleManager = new PoleManager();
+            
+            ContentPackManager.InitializeContentPacks(helper, Monitor);
 
-            Config = Helper.ReadConfig<ModConfig>();
+            _config = Helper.ReadConfig<ModConfig>();
             PrepareAssets();
         }
 
         public void SaveConfig(ModConfig newConfig)
         {
-            Config = newConfig;
+            _config = newConfig;
             Helper.WriteConfig(newConfig);
         }
 
@@ -67,9 +71,10 @@ namespace StardewElectricity
         /// </summary>
         private void PrepareAssets()
         {
-            PoleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPole.png");
-            SidewaysPoleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPoleSideways.png");
+            _poleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPole.png");
+            _sidewaysPoleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPoleSideways.png");
             PoleShadowTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPole_shadow.png");
+            IconsTexture = Helper.ModContent.Load<Texture2D>("assets/icons.png");
         }
         
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
@@ -85,7 +90,7 @@ namespace StardewElectricity
                         {
                             Name = "Utility Pole",
                             Description = "Allows for electricity transmission within the farm bounds.",
-                            Texture = Helper.ModContent.GetInternalAssetName(PoleTexture.Name).Name,
+                            Texture = Helper.ModContent.GetInternalAssetName(_poleTexture.Name).Name,
                             DrawShadow = true,
                             DrawOffset = new Vector2(-24.0f, -4.0f),
                             FadeWhenBehind = true,
@@ -100,10 +105,10 @@ namespace StardewElectricity
                             {
                                 new BuildingSkin()
                                 {
-                                    Id = $"{Helper.ModContent.ModID}_{Constants.SkinUtilityPoleSide}",
+                                    Id = Constants.SkinUtilityPoleSide,
                                     Name = "Utility Pole",
                                     Description = "Allows for electricity transmission within the farm bounds.",
-                                    Texture = Helper.ModContent.GetInternalAssetName(SidewaysPoleTexture.Name).Name,
+                                    Texture = Helper.ModContent.GetInternalAssetName(_sidewaysPoleTexture.Name).Name,
                                     Metadata = new Dictionary<string, string> { { Constants.MetadataIsPlacedSideways, "true" } }
                                 }
                             },
@@ -115,16 +120,18 @@ namespace StardewElectricity
         
         private void OnRenderingStep(object sender, RenderingStepEventArgs e)
         {
-            if (e.Step != RenderSteps.World_Sorted)
-                return;
-            if (!Game1.player.currentLocation.IsFarm)
-                return;
-            PoleManager.Draw(e.SpriteBatch);
+            if (e.Step == RenderSteps.World_Sorted)
+            {
+                if (!Game1.player.currentLocation.IsFarm || !Game1.player.currentLocation.IsOutdoors)
+                    return;
+                PoleManager.DrawWiring(e.SpriteBatch);
+            }
         }
         
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             PoleManager.SaveLoaded();
+            ElectricityManager.SaveLoaded();
         }
 
         private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
@@ -132,23 +139,22 @@ namespace StardewElectricity
             if (e.Added.Any(b => b.buildingType.Value == Constants.UtilityPoleBuildingTypeName)
                 || e.Removed.Any(b => b.buildingType.Value == Constants.UtilityPoleBuildingTypeName))
             {
-                PoleManager.UpdatePoles();
-                PoleManager.DoWiring(PoleManager.PolesOnFarm);
+                PoleManager.UpdateAll();
+            }
+            PoleManager.UpdateFarmBuildingTiles();
+        }
+
+        private void OnMenuChanged(object sender, MenuChangedEventArgs e)
+        {
+            if (e.NewMenu is GameMenu menu)
+            {
+                Menus.Electricity.GameMenuOpened(menu);
             }
         }
 
-        private void ApplyHarmonyPatches()
+        private void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            var harmony = new Harmony(ModManifest.UniqueID);
-
-            harmony.Patch(
-                AccessTools.Method(typeof(Building), nameof(Building.drawShadow)),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.BuildingDrawShadow))
-            );
-            harmony.Patch(
-                AccessTools.Method(typeof(CarpenterMenu), nameof(CarpenterMenu.draw), new []{ typeof(SpriteBatch) }),
-                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.CarpenterMenuDraw))
-            );
+            ElectricityManager.DayEnding();
         }
 
         /// <summary> Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations. </summary>
@@ -156,8 +162,14 @@ namespace StardewElectricity
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            ApplyHarmonyPatches();
-            ModConfig.SetUpModConfigMenu(Config, this);
+            ModConfig.SetUpModConfigMenu(_config, this);
+            
+            Patches.Apply(this,
+                new BuildingPatcher(),
+                new CarpenterMenuPatcher(),
+                new GameMenuPatcher(),
+                new FarmerPatcher(),
+                new ObjectPatcher());
         }
     }
 }

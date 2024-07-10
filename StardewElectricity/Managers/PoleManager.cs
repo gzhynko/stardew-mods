@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewElectricity.Buildings;
@@ -14,41 +13,85 @@ namespace StardewElectricity.Managers
 {
     public class PoleManager
     {
-        public List<UtilityPole> PolesOnFarm = new List<UtilityPole>();
-        public List<OverheadWire> PoleWires = new List<OverheadWire>();
+        public const int WireConnectionTileRange = 15;
+        public const int PoleCoverageTileRange = 3;
+        
+        private List<UtilityPole> _polesOnFarm = new ();
+        private List<OverheadWire> _poleWires = new ();
 
-        public UtilityPole OriginPole;
+        private Dictionary<int, List<int>> _connectedPoles = new ();
+        
+        /// <summary>
+        /// Tiles that are "powered" (within the pole coverage area)
+        /// </summary>
+        public HashSet<Vector2> CoveredTiles = new ();
+        public HashSet<Guid> CoveredFarmBuildings = new ();
+        
+        private int _originPoleIndex;
+        private Dictionary<Vector2, Guid> _farmBuildingTiles = new ();
 
         /// <summary>
-        /// Called after a save is loaded. Collects all of the poles placed on the farm into PolesOnFarm.
+        /// Called after a save is loaded. Collects all poles placed on the farm into PolesOnFarm.
         /// </summary>
         public void SaveLoaded()
         {
-            ModEntry.ModMonitor.Log("saveLoaded. Init poles and wires", LogLevel.Info);
+            UpdateFarmBuildingTiles();
+            UpdateAll();
+        }
+
+        public void UpdateAll()
+        {
             UpdatePoles();
-            DoWiring(PolesOnFarm);
+            DoWiring();
+            CalculatePoleCoverage();
+        }
+        
+        public bool IsTilePowered(GameLocation location, Vector2 tile)
+        {
+            return (location.GetContainingBuilding() != null && CoveredFarmBuildings.Contains(location.GetContainingBuilding().id.Value)) 
+                   || (location.IsFarm && location.IsOutdoors && CoveredTiles.Contains(tile));
+        }
+
+        public void UpdateFarmBuildingTiles()
+        {
+            _farmBuildingTiles = new Dictionary<Vector2, Guid>();
+            
+            var farmBuildings = Game1.getFarm().buildings;
+            foreach (var building in farmBuildings)
+            {
+                if (building.buildingType.Value == Constants.UtilityPoleBuildingTypeName)
+                    continue;
+                
+                for (int x = 0; x < building.tilesWide.Value; x++)
+                {
+                    for (int y = 0; y < building.tilesHigh.Value; y++)
+                    {
+                        _farmBuildingTiles[new Vector2(building.tileX.Value + x, building.tileY.Value + y)] = building.id.Value;
+                    }
+                }
+            }
         }
 
         public void UpdatePoles()
         {
-            PolesOnFarm = new List<UtilityPole>();
-            OriginPole = null;
+            _polesOnFarm = new List<UtilityPole>();
+            _originPoleIndex = -1;
 
             foreach (var building in Game1.getFarm().buildings)
             {
                 if (building.buildingType.Value == Constants.UtilityPoleBuildingTypeName)
                 {
                     var pole = new UtilityPole(building);
+                    _polesOnFarm.Add(pole);
+                    
                     if (pole.IsOrigin)
                     {
-                        OriginPole = pole;
+                        _originPoleIndex = _polesOnFarm.Count - 1;
                     }
-                    
-                    PolesOnFarm.Add(pole);
                 }
             }
 
-            if (OriginPole == null)
+            if (_originPoleIndex == -1)
             {
                 PlaceOriginPole();
             }
@@ -57,11 +100,14 @@ namespace StardewElectricity.Managers
         /// <summary>
         /// Fills out the PoleWires array with positions of the overhead wires.
         /// </summary>
-        public void DoWiring(List<UtilityPole> poles)
+        public void DoWiring(List<UtilityPole> poles = null)
         {
+            if (poles == null) poles = _polesOnFarm;
             if (poles.Count < 2) return;
             
-            PoleWires = new List<OverheadWire>();
+            _poleWires = new List<OverheadWire>();
+            _connectedPoles = new Dictionary<int, List<int>>();
+
             ModEntry.ModMonitor.Log($"doing wiring; num of poles on farm: {poles.Count}", LogLevel.Info);
 
             var pairsSet = new HashSet<Tuple<int, int>>();
@@ -75,9 +121,19 @@ namespace StardewElectricity.Managers
                     if (AreWithinWireRange(poles[i], poles[j]))
                     {
                         var wires = GetWiresForTwoPoles(poles[i], poles[j]);
-                
-                        PoleWires.Add(wires.Item1);
-                        PoleWires.Add(wires.Item2);
+
+                        if (_connectedPoles.TryGetValue(i, out var ei))
+                            ei.Add(j);
+                        else
+                            _connectedPoles[i] = new List<int> { j };
+                        
+                        if (_connectedPoles.TryGetValue(j, out var ej))
+                            ej.Add(i);
+                        else
+                            _connectedPoles[j] = new List<int> { i };
+                        
+                        _poleWires.Add(wires.Item1);
+                        _poleWires.Add(wires.Item2);
                     }
 
                     pairsSet.Add(new Tuple<int, int>(i, j));
@@ -91,22 +147,63 @@ namespace StardewElectricity.Managers
         {
             var utilityPole = new UtilityPole(poleBuilding);
 
-            var poles = new List<UtilityPole>(PolesOnFarm);
+            var poles = new List<UtilityPole>(_polesOnFarm);
             poles.Add(utilityPole);
             DoWiring(poles);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        /// <summary>
+        /// Calculates tiles and farm buildings covered by poles that actually carry power (i.e. connected to the origin pole).
+        /// </summary>
+        public void CalculatePoleCoverage()
         {
-            foreach (var overheadWire in PoleWires)
+            CoveredTiles = new HashSet<Vector2>();
+            CoveredFarmBuildings = new HashSet<Guid>();
+            
+            // perform a BFS starting from the origin pole
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(_originPoleIndex);
+            HashSet<int> explored = new HashSet<int>();
+            while (q.TryPeek(out _))
+            {
+                var poleIndex = q.Dequeue();
+                explored.Add(poleIndex);
+
+                var pole = _polesOnFarm[poleIndex];
+                pole.HasPower = true;
+                for (int x = -PoleCoverageTileRange; x <= PoleCoverageTileRange; x++)
+                {
+                    for (int y = -PoleCoverageTileRange; y <= PoleCoverageTileRange; y++)
+                    {
+                        if (x == 0 && y == 0) continue;
+                        var pos = new Vector2(pole.TilePosition.X + x, pole.TilePosition.Y + y);
+                        
+                        CoveredTiles.Add(pos);
+                        if (_farmBuildingTiles.TryGetValue(pos, out var tile))
+                            CoveredFarmBuildings.Add(tile);
+                    }
+                }
+                
+                if (!_connectedPoles.ContainsKey(poleIndex)) continue;
+                foreach (var connectedIndex in _connectedPoles[poleIndex])
+                {
+                    if (!explored.Contains(connectedIndex))
+                    {
+                        q.Enqueue(connectedIndex);
+                    }
+                }
+            }
+        }
+        
+        public void DrawWiring(SpriteBatch spriteBatch)
+        {
+            foreach (var overheadWire in _poleWires)
             {
                 var originPoleHeightAboveGround =
                     Math.Abs(overheadWire.OriginPoint.Y - overheadWire.OriginPole.WorldPosition.Y);
                 var endPoleHeightAboveGround =
                     Math.Abs(overheadWire.EndPoint.Y - overheadWire.EndPole.WorldPosition.Y);
                 
-                //ModEntry.ModMonitor.Log($"wire depth: {layerDepth}, wire lowest Y: {lowestY}, player depth: {Game1.player.getDrawLayer()}, player Y: {Game1.player.position.Y}", LogLevel.Info);
-
                 float LayerDepthFunction(Vector2 pos)
                 {
                     bool isOriginPoleClosest = !(Vector2.Distance(pos, overheadWire.EndPole.WorldPosition) <
@@ -116,7 +213,33 @@ namespace StardewElectricity.Managers
                     return (pos.Y + heightAboveGround - 1f) / 10000f;
                 }
 
-                Utility.Utility.DrawWireWithWidth(spriteBatch, overheadWire.OriginPoint, overheadWire.EndPoint, 2, LayerDepthFunction);
+                var color = overheadWire.EndPole.HasPower ? Color.DarkBlue : Color.Black;
+                
+                Utility.Utility.DrawWireWithWidth(spriteBatch, overheadWire.OriginPoint, overheadWire.EndPoint, 2, color, LayerDepthFunction);
+            }
+        }
+
+        public void DrawPoleCoverage(SpriteBatch spriteBatch)
+        {
+            if (!Game1.player.currentLocation.IsFarm || !Game1.player.currentLocation.IsOutdoors)
+                return;
+
+            foreach (var coveredTileLocation in ModEntry.PoleManager.CoveredTiles)
+                spriteBatch.Draw(Game1.mouseCursors, Game1.GlobalToLocal(Game1.viewport, coveredTileLocation * 64f),
+                        new Rectangle(194 + 0 * 16, 388, 16, 16),
+                    Color.Blue * 0.5f, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.999f);
+            
+            foreach (var building in Game1.getFarm().buildings)
+            {
+                if (!CoveredFarmBuildings.Contains(building.id.Value))
+                    continue;
+                
+                var center = new Vector2(building.tileX.Value * 64f + building.tilesWide.Value * 64f / 2f,
+                    building.tileY.Value * 64f + building.tilesHigh.Value * 64f / 2f);
+                var scale = 1.5f + (float)Math.Abs(Math.Sin(Game1.currentGameTime.TotalGameTime.TotalMilliseconds / 800.0f)) / 2f;
+                var halfTextureSize = new Vector2(8f, 8f);
+                
+                spriteBatch.Draw(ModEntry.IconsTexture, Game1.GlobalToLocal(Game1.viewport, center), new Rectangle(16, 0, 16, 16), Color.White, 0.0f, halfTextureSize, 4f * scale, SpriteEffects.None, 0.9999f);
             }
         }
         
@@ -125,38 +248,19 @@ namespace StardewElectricity.Managers
         /// </summary>
         private void PlaceOriginPole()
         {
-            OriginPole = new UtilityPole(new Vector2(83, 6), Game1.player.UniqueMultiplayerID);
-            OriginPole.SetIsPlacedSideways(true);
-            OriginPole.SetIsOrigin(true);
-            
             ModEntry.ModMonitor.Log("placeOriginPole", LogLevel.Info);
+
+            var origin = new UtilityPole(new Vector2(83, 6), Game1.player.UniqueMultiplayerID);
+            origin.SetIsPlacedSideways(true);
+            origin.SetIsOrigin(true);
             
-            Game1.getFarm().buildStructure(OriginPole.GetBuilding(), new Vector2(83, 6), Game1.player, true);
+            Game1.getFarm().buildStructure(origin.GetBuilding(), new Vector2(83, 6), Game1.player, true);
         }
-
-        private UtilityPole GetClosestUtilityPole(UtilityPole previousPole)
-        {
-            var closestNumberYet = int.MaxValue;
-            UtilityPole closestPoleYet = null;
-            
-            foreach (var pole in PolesOnFarm)
-            {
-                if(pole == previousPole) continue;
-                
-                if (Utility.Utility.GetTileDistanceBetweenTilePoints(previousPole.TilePosition, pole.TilePosition) <
-                    closestNumberYet)
-                {
-                    closestPoleYet = pole;
-                }
-            }
-
-            return closestPoleYet;
-        }
-
+        
         private bool AreWithinWireRange(UtilityPole firstPole, UtilityPole secondPole)
         {
-            var tileDistance = Utility.Utility.GetTileDistanceBetweenTilePoints(firstPole.TilePosition, secondPole.TilePosition);
-            return tileDistance <= 15;
+            var tileDistance = Utility.Utility.GetTileDistance(firstPole.TilePosition, secondPole.TilePosition);
+            return tileDistance <= WireConnectionTileRange;
         }
 
         private Tuple<OverheadWire, OverheadWire> GetWiresForTwoPoles(UtilityPole firstPole, UtilityPole secondPole)
@@ -164,8 +268,24 @@ namespace StardewElectricity.Managers
             var firstPoleInsulatorPositions = firstPole.GetWorldInsulatorPositions();
             var secondPoleInsulatorPositions = secondPole.GetWorldInsulatorPositions();
 
-            var firstWire = new OverheadWire(firstPoleInsulatorPositions.Item1, firstPole, secondPoleInsulatorPositions.Item1, secondPole);
-            var secondWire = new OverheadWire(firstPoleInsulatorPositions.Item2, firstPole, secondPoleInsulatorPositions.Item2, secondPole);
+            Vector2 originPos1 = firstPoleInsulatorPositions.Item1;
+            Vector2 endPos1 = secondPoleInsulatorPositions.Item1;
+            Vector2 originPos2 = firstPoleInsulatorPositions.Item2;
+            Vector2 endPos2 = secondPoleInsulatorPositions.Item2;
+            if (firstPole.IsPlacedSideways != secondPole.IsPlacedSideways)
+            {
+                if ((secondPole.TilePosition.Y > firstPole.TilePosition.Y 
+                    && secondPole.TilePosition.X < firstPole.TilePosition.X)
+                    || (secondPole.TilePosition.Y < firstPole.TilePosition.Y 
+                        && secondPole.TilePosition.X > firstPole.TilePosition.X))
+                {
+                    endPos1 = secondPoleInsulatorPositions.Item2;
+                    endPos2 = secondPoleInsulatorPositions.Item1;
+                }
+            }
+
+            var firstWire = new OverheadWire(originPos1, firstPole, endPos1, secondPole);
+            var secondWire = new OverheadWire(originPos2, firstPole, endPos2, secondPole);
 
             return new Tuple<OverheadWire, OverheadWire>(firstWire, secondWire);
         }

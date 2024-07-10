@@ -12,13 +12,15 @@ namespace StardewElectricity.Buildings
     {
         public bool IsPlacedSideways => _building.GetMetadata(Constants.MetadataIsPlacedSideways) == "true";
         public bool IsOrigin => _building.modData.TryGetValue(Constants.ModDataIsOrigin, out var val) && val == "true";
-
+        
         public Vector2 TilePosition
         {
             get => new Vector2(_building.tileX.Value, _building.tileY.Value);
             set { _building.tileX.Set((int)value.X); _building.tileY.Set((int)value.Y); }
         }
         public Vector2 WorldPosition => TilePosition * 16f * 4f;
+
+        public bool HasPower = false;
         
         private Building _building;
         
@@ -40,7 +42,7 @@ namespace StardewElectricity.Buildings
 
         public void SetIsPlacedSideways(bool value)
         {
-            _building.skinId.Set(value ? $"{ModEntry.Instance.Helper.ModContent.ModID}_{Constants.SkinUtilityPoleSide}" : null);
+            _building.skinId.Set(value ? Constants.SkinUtilityPoleSide : null);
         }
 
         public void SetIsOrigin(bool value)
@@ -54,7 +56,7 @@ namespace StardewElectricity.Buildings
         public Tuple<Vector2, Vector2> GetInsulatorPositions()
         {
             if (IsPlacedSideways)
-                return new Tuple<Vector2, Vector2>(new Vector2(31, 6), new Vector2(31, 36));
+                return new Tuple<Vector2, Vector2>(new Vector2(31, 36), new Vector2(31, 6));
 
             return new Tuple<Vector2, Vector2>(new Vector2(6, 16), new Vector2(57, 16));
         }
