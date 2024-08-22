@@ -1,5 +1,12 @@
 # Version history for AnimalsNeedWater
 
+## 1.6.0
+Released August 22, 2024.
+- Add support for Barn and Coop by Lu_B17, Cute and Tidy Coops and Barns by neuralwiles, 
+Lnh's Leisure Barn and Coop by LiuNianHui, Jen's Mega Coop and Barn, Resource Chickens by UncleArya, 
+and Walk of Life - Rebirth by DaLion. (thanks to @Sweet-Defender-Turtle)
+- Internal rework of mod profiles system, adding support for custom animal buildings.
+
 ## 1.5.5
 Released July 4, 2024.
 - Add support for Ghilland's Bigger coop barn and silo (thanks to Roman0).
