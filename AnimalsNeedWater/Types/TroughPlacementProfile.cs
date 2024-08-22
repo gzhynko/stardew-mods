@@ -5,16 +5,25 @@ namespace AnimalsNeedWater.Types
 {
     public class TroughPlacementProfile
     {
-        public string modUniqueId;
-        public List<string> targetBuildings;
-        public List<TroughTile> barnTroughTiles;
-        public List<TroughTile> barn2TroughTiles;
-        public List<TroughTile> barn3TroughTiles;
-        public WateringSystemTile barn3WateringSystem;
-        public List<TroughTile> coopTroughTiles;
-        public List<TroughTile> coop2TroughTiles;
-        public List<TroughTile> coop3TroughTiles;
-        public WateringSystemTile coop3WateringSystem;
+        [JsonProperty("modUniqueId")]
+        public string ModUniqueId { get; set; }
+        [JsonProperty("targetBuildings")]
+        public List<string> TargetBuildings { get; set; }
+        [JsonProperty("placement")]
+        public List<PlacementItem> Placement { get; set; }
+
+        public PlacementItem GetPlacementForBuildingName(string buildingName) =>
+            Placement[TargetBuildings.ConvertAll(s => s.ToLower()).IndexOf(buildingName.ToLower())];
+        public bool BuildingHasWateringSystem(string buildingName) =>
+            GetPlacementForBuildingName(buildingName)?.WateringSystem != null;
+    }
+
+    public class PlacementItem
+    {
+        [JsonProperty("troughTiles")]
+        public List<TroughTile> TroughTiles;
+        [JsonProperty("wateringSystem")]
+        public WateringSystemTile WateringSystem;
     }
     
     public class TroughTile

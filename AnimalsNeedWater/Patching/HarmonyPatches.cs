@@ -11,11 +11,11 @@ namespace AnimalsNeedWater.Patching
     {
         /// <summary> Patch for the FarmAnimal.dayUpdate method. </summary>
         [HarmonyPriority(500)]
-        public static void AnimalDayUpdate(ref FarmAnimal __instance, ref GameLocation environment)
+        public static void AnimalDayUpdate(FarmAnimal __instance, GameLocation environment)
         {
             try
             {
-                HarmonyPatchExecutors.AnimalDayUpdateExecutor(ref __instance, ref environment);
+                HarmonyPatchExecutors.AnimalDayUpdateExecutor(__instance, environment);
             }
             catch (Exception e)
             {
@@ -25,11 +25,11 @@ namespace AnimalsNeedWater.Patching
 
         /// <summary> Patch for the FarmAnimal.behaviors method. </summary>
         [HarmonyPriority(600)]
-        public static bool AnimalBehaviors(ref bool __result, ref FarmAnimal __instance, ref GameTime time, ref GameLocation location)
+        public static bool AnimalBehaviors(ref bool __result, FarmAnimal __instance, GameTime time, GameLocation location)
         {
             try
             {
-                return HarmonyPatchExecutors.AnimalBehaviorsExecutor(ref __result, ref __instance, ref time, ref location);
+                return HarmonyPatchExecutors.AnimalBehaviorsExecutor(ref __result, __instance, time, location);
             }
             catch (Exception e)
             {
@@ -41,11 +41,11 @@ namespace AnimalsNeedWater.Patching
 
         /// <summary> Patch for the GameLocation.performToolAction method. </summary>
         [HarmonyPriority(500)]
-        public static bool GameLocationToolAction(ref GameLocation __instance, ref Tool t, ref int tileX, ref int tileY)
+        public static bool GameLocationToolAction(Tool t, int tileX, int tileY)
         { 
             try
             {
-                return HarmonyPatchExecutors.GameLocationToolActionExecutor(ref __instance, ref t, ref tileX, ref tileY);
+                return HarmonyPatchExecutors.GameLocationToolActionExecutor(t, tileX, tileY);
             }
             catch (Exception e)
             {
