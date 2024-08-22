@@ -1,116 +1,113 @@
 {
-  "modUniqueId": "Lnh.LeisureBarn",
-  "targetBuildings": ["barn", "big barn", "deluxe barn"],
+  "modUniqueId": "jenf1.megacoopbarn",
+  "targetBuildings": ["Coop4", "Barn4"],
   "placement": [
     {
       "troughTiles": [
         {
-          "tileX": 20,
-          "tileY": 12,
-          "layer": "Buildings",
-          "emptyIndex": 0,
-          "fullIndex": 3
-        },
-        {
-          "tileX": 13,
+          "tileX": 32,
           "tileY": 3,
           "layer": "Buildings",
           "emptyIndex": 0,
           "fullIndex": 3
         },
         {
-          "tileX": 16,
-          "tileY": 3,
-          "layer": "Buildings",
-          "emptyIndex": 6,
-          "fullIndex": 8
+            "tileX": 33,
+            "tileY": 3,
+            "layer": "Buildings",
+            "emptyIndex": 0,
+            "fullIndex": 3
         },
         {
-          "tileX": 17,
-          "tileY": 3,
+          "tileX": 34,
+          "tileY": 4,
           "layer": "Buildings",
-          "emptyIndex": 7,
-          "fullIndex": 9
+          "emptyIndex": 0,
+          "fullIndex": 3
         }
-      ]
+      ],
+      "wateringSystem": {
+        "tileX": 32,
+        "tileY": 2,
+        "layer": "Front",
+        "systemIndex": 1,
+        "tilesToRemove": [
+        ]
+      }
     },
     {
       "troughTiles": [
         {
-          "tileX": 20,
-          "tileY": 12,
-          "layer": "Buildings",
-          "emptyIndex": 0,
-          "fullIndex": 3
-        },
-        {
-          "tileX": 17,
+          "tileX": 2,
           "tileY": 3,
           "layer": "Buildings",
           "emptyIndex": 6,
           "fullIndex": 8
         },
         {
-          "tileX": 18,
+          "tileX": 3,
           "tileY": 3,
           "layer": "Buildings",
           "emptyIndex": 7,
           "fullIndex": 9
-        }
-      ]
-    },
-    {
-      "troughTiles": [
-        {
-          "tileX": 20,
-          "tileY": 12,
-          "layer": "Buildings",
-          "emptyIndex": 0,
-          "fullIndex": 3
         },
         {
-          "tileX": 3,
-          "tileY": 8,
-          "layer": "Buildings",
-          "emptyIndex": 6,
-          "fullIndex": 8
-        },
-        {
-          "tileX": 4,
-          "tileY": 8,
-          "layer": "Buildings",
-          "emptyIndex": 7,
-          "fullIndex": 9
-        },
-        {
-          "tileX": 3,
-          "tileY": 7,
+          "tileX": 2,
+          "tileY": 2,
           "layer": "Front",
           "emptyIndex": 1,
           "fullIndex": 4
         },
         {
-          "tileX": 4,
-          "tileY": 7,
+          "tileX": 3,
+          "tileY": 2,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        },
+        {
+          "tileX": 24,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 25,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 24,
+          "tileY": 2,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 25,
+          "tileY": 2,
           "layer": "Front",
           "emptyIndex": 2,
           "fullIndex": 5
         }
       ],
       "wateringSystem": {
-        "tileX": 5,
-        "tileY": 8,
+        "tileX": 4,
+        "tileY": 3,
         "layer": "Buildings",
         "systemIndex": 0,
         "tilesToRemove": [
           {
-            "tileX": 5,
-            "tileY": 8,
+            "tileX": 4,
+            "tileY": 3,
             "layer": "Buildings"
           },
           {
-            "tileX": 5,
-            "tileY": 7,
+            "tileX": 4,
+            "tileY": 2,
             "layer": "Front"
           }
         ]

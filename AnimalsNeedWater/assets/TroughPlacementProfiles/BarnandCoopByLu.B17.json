@@ -1,241 +1,255 @@
 {
   "modUniqueId": "Lu.B17.BarnandCoop",
-  "targetBuildings": ["barn", "coop"],
-  "coopTroughTiles": [
+  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
+  "placement": [
     {
-      "tileX": 11,
-      "tileY": 9,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
+      "troughTiles": [
+        {
+          "tileX": 11,
+          "tileY": 9,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 12,
+          "tileY": 9,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 11,
+          "tileY": 8,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4 
+        },
+        {
+          "tileX": 12,
+          "tileY": 8,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ]
     },
     {
-      "tileX": 12,
-      "tileY": 9,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
+      "troughTiles": [
+        {
+          "tileX": 15,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 14,
+          "tileY": 10,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 15,
+          "tileY": 10,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 14,
+          "tileY": 9,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 15,
+          "tileY": 9,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ]
     },
     {
-      "tileX": 11,
-      "tileY": 8,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 12,
-      "tileY": 8,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "coop2TroughTiles": [
-    {
-      "tileX": 15,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
-    },
-    {
-      "tileX": 14,
-      "tileY": 10,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
-    },
-    {
-      "tileX": 15,
-      "tileY": 10,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
-    },
-    {
-      "tileX": 14,
-      "tileY": 9,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 15,
-      "tileY": 9,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "coop3TroughTiles": [
-    {
-      "tileX": 5,
-      "tileY": 11,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
-    },
-    {
-      "tileX": 6,
-      "tileY": 11,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
-    },
-    {
-      "tileX": 5,
-      "tileY": 10,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 6,
-      "tileY": 10,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "coop3WateringSystem": {
-    "tileX": 7,
-    "tileY": 11,
-    "layer": "Buildings",
-    "systemIndex": 0,
-    "tilesToRemove": [
-      {
+      "troughTiles": [
+        {
+          "tileX": 5,
+          "tileY": 11,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 6,
+          "tileY": 11,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 5,
+          "tileY": 10,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 6,
+          "tileY": 10,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ],
+      "wateringSystem": {
         "tileX": 7,
         "tileY": 11,
-        "layer": "Buildings"
-      },
-      {
-        "tileX": 7,
-        "tileY": 10,
-        "layer": "Front"
+        "layer": "Buildings",
+        "systemIndex": 0,
+        "tilesToRemove": [
+          {
+            "tileX": 7,
+            "tileY": 11,
+            "layer": "Buildings"
+          },
+          {
+            "tileX": 7,
+            "tileY": 10,
+            "layer": "Front"
+          }
+        ]
       }
-    ]
-  },
-  "barnTroughTiles": [
-    {
-      "tileX": 13,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
     },
     {
-      "tileX": 3,
-      "tileY": 7,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
+      "troughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 3,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 3,
+          "tileY": 8,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 3,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 3,
+          "tileY": 7,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ]
     },
     {
-      "tileX": 3,
-      "tileY": 8,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
+      "troughTiles": [
+        {
+          "tileX": 17,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 2,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 2,
+          "tileY": 8,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 2,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 2,
+          "tileY": 7,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ]
     },
     {
-      "tileX": 3,
-      "tileY": 6,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 3,
-      "tileY": 7,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "barn2TroughTiles": [
-    {
-      "tileX": 17,
-      "tileY": 3,
-      "layer": "Buildings",
-      "emptyIndex": 0,
-      "fullIndex": 3
-    },
-    {
-      "tileX": 2,
-      "tileY": 7,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
-    },
-    {
-      "tileX": 2,
-      "tileY": 8,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
-    },
-    {
-      "tileX": 2,
-      "tileY": 6,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 2,
-      "tileY": 7,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "barn3TroughTiles": [
-    {
-      "tileX": 4,
-      "tileY": 7,
-      "layer": "Buildings",
-      "emptyIndex": 6,
-      "fullIndex": 8
-    },
-    {
-      "tileX": 5,
-      "tileY": 7,
-      "layer": "Buildings",
-      "emptyIndex": 7,
-      "fullIndex": 9
-    },
-    {
-      "tileX": 4,
-      "tileY": 6,
-      "layer": "Front",
-      "emptyIndex": 1,
-      "fullIndex": 4
-    },
-    {
-      "tileX": 5,
-      "tileY": 6,
-      "layer": "Front",
-      "emptyIndex": 2,
-      "fullIndex": 5
-    }
-  ],
-  "barn3WateringSystem": {
-    "tileX": 6,
-    "tileY": 7,
-    "layer": "Buildings",
-    "systemIndex": 0,
-    "tilesToRemove": [
-      {
+      "troughTiles": [
+        {
+          "tileX": 4,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 5,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 4,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 5,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ],
+      "wateringSystem": {
         "tileX": 6,
         "tileY": 7,
-        "layer": "Buildings"
-      },
-      {
-        "tileX": 6,
-        "tileY": 6,
-        "layer": "Front"
+        "layer": "Buildings",
+        "systemIndex": 0,
+        "tilesToRemove": [
+          {
+            "tileX": 6,
+            "tileY": 7,
+            "layer": "Buildings"
+          },
+          {
+            "tileX": 6,
+            "tileY": 6,
+            "layer": "Front"
       }
-    ]
-  }
+        ]
+      }
+    }
+  ]
 }
