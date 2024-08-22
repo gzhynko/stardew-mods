@@ -1,0 +1,32 @@
+{
+  "modUniqueId": "UncleArya.ResourceChickens",
+  "targetBuildings": ["UncleArya.ResourceChickens.GiantCoop"],
+  "placement": [
+    {
+      "troughTiles": [
+        {
+          "tileX": 32,
+          "tileY": 3,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+            "tileX": 1,
+            "tileY": 12,
+            "layer": "Buildings",
+            "emptyIndex": 0,
+            "fullIndex": 3
+        }
+      ],
+      "wateringSystem": {
+        "tileX": 32,
+        "tileY": 2,
+        "layer": "Front",
+        "systemIndex": 1,
+        "tilesToRemove": [
+        ]
+      }
+    }
+  ]
+}
