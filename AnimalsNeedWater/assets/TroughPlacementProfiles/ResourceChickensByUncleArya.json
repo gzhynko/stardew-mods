@@ -1,6 +1,6 @@
 {
   "modUniqueId": "UncleArya.ResourceChickens",
-  "targetBuildings": ["Coop4"],
+  "targetBuildings": ["UncleArya.ResourceChickens.GiantCoop"],
   "placement": [
     {
       "troughTiles": [

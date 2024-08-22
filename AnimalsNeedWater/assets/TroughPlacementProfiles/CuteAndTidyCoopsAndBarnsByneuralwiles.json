@@ -110,28 +110,28 @@
     {
       "troughTiles": [
         {
-          "tileX": 4,
+          "tileX": 3,
           "tileY": 7,
           "layer": "Buildings",
           "emptyIndex": 6,
           "fullIndex": 8
         },
         {
-          "tileX": 5,
+          "tileX": 4,
           "tileY": 7,
           "layer": "Buildings",
           "emptyIndex": 7,
           "fullIndex": 9
         },
         {
-          "tileX": 4,
+          "tileX": 3,
           "tileY": 6,
           "layer": "Front",
           "emptyIndex": 1,
           "fullIndex": 4
         },
         {
-          "tileX": 5,
+          "tileX": 4,
           "tileY": 6,
           "layer": "Front",
           "emptyIndex": 2,
@@ -139,18 +139,18 @@
         }
       ],
       "wateringSystem": {
-        "tileX": 6,
+        "tileX": 5,
         "tileY": 7,
         "layer": "Buildings",
         "systemIndex": 0,
         "tilesToRemove": [
           {
-            "tileX": 6,
+            "tileX": 5,
             "tileY": 7,
             "layer": "Buildings"
           },
           {
-            "tileX": 6,
+            "tileX": 5,
             "tileY": 6,
             "layer": "Front"
           }

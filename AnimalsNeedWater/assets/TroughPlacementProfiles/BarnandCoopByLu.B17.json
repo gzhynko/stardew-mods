@@ -140,8 +140,8 @@
           "fullIndex": 8
         },
         {
-          "tileX": 3,
-          "tileY": 8,
+          "tileX": 4,
+          "tileY": 7,
           "layer": "Buildings",
           "emptyIndex": 7,
           "fullIndex": 9
@@ -179,8 +179,8 @@
           "fullIndex": 8
         },
         {
-          "tileX": 2,
-          "tileY": 8,
+          "tileX": 3,
+          "tileY": 7,
           "layer": "Buildings",
           "emptyIndex": 7,
           "fullIndex": 9

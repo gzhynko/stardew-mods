@@ -1,6 +1,6 @@
 {
   "modUniqueId": "jenf1.megacoopbarn",
-  "targetBuildings": ["Coop4", "Barn4"],
+  "targetBuildings": ["jenf1.megacoopbarn_MegaCoop", "jenf1.megacoopbarn_MegaBarn"],
   "placement": [
     {
       "troughTiles": [
@@ -66,28 +66,28 @@
           "fullIndex": 5
         },
         {
-          "tileX": 24,
+          "tileX": 34,
           "tileY": 3,
           "layer": "Buildings",
           "emptyIndex": 6,
           "fullIndex": 8
         },
         {
-          "tileX": 25,
+          "tileX": 35,
           "tileY": 3,
           "layer": "Buildings",
           "emptyIndex": 7,
           "fullIndex": 9
         },
         {
-          "tileX": 24,
+          "tileX": 34,
           "tileY": 2,
           "layer": "Front",
           "emptyIndex": 1,
           "fullIndex": 4
         },
         {
-          "tileX": 25,
+          "tileX": 35,
           "tileY": 2,
           "layer": "Front",
           "emptyIndex": 2,
