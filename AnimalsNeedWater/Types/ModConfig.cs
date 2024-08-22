@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using StardewModdingAPI;
 
 namespace AnimalsNeedWater.Types
@@ -24,11 +25,15 @@ namespace AnimalsNeedWater.Types
         /// were left thirsty last night. 
         /// </summary>
         public bool ShowAnimalsLeftThirstyMessage { get; set; } = true;
+        
+        [Obsolete("Use UseWateringSystems instead")]
+        public bool? WateringSystemInDeluxeBuildings { get; set; }
+        public bool ShouldSerializeWateringSystemInDeluxeBuildings() => false;
 
         /// <summary>
-        /// Whether to enable the watering system in Deluxe Coops and Deluxe Barns.
+        /// Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).
         /// </summary>
-        public bool WateringSystemInDeluxeBuildings { get; set; } = true;
+        public bool UseWateringSystems { get; set; } = true;
 
         /// <summary>
         /// Whether to replace coop's and big coop's textures when troughs inside them are empty.
@@ -83,20 +88,17 @@ namespace AnimalsNeedWater.Types
             }, () => mod.SaveConfig(config));
             
             api.AddSectionTitle(manifest, () => "Visual");
-
             api.AddBoolOption(manifest, () => config.ShowLoveBubblesOverAnimalsWhenWateredTrough, val => config.ShowLoveBubblesOverAnimalsWhenWateredTrough = val, () => "Show Love Bubbles", () => "Whether to show \"love\" bubbles over animals inside the building when watered the trough.");
             api.AddBoolOption(manifest, () => config.ShowAnimalsLeftThirstyMessage, val => config.ShowAnimalsLeftThirstyMessage = val, () => "Show Number of Animals Left Thirsty Message", () => "Whether to show a message (bottom left corner of screen) in the morning telling how many animals (if any) were left thirsty last night.");
             api.AddBoolOption(manifest, () => config.ReplaceCoopTextureIfTroughIsEmpty, val => config.ReplaceCoopTextureIfTroughIsEmpty = val, () => "Replace Coop Texture If Trough Is Empty", () => "Whether to replace coop's and big coop's textures when troughs inside them are empty.");
             api.AddBoolOption(manifest, () => config.CleanerTroughs, val => config.CleanerTroughs = val, () => "Cleaner Troughs", () => "Whether troughs should have a cleaner texture. Note: Won't change until a day update.");
             
             api.AddSectionTitle(manifest, () => "Functionality");
-            
-            api.AddBoolOption(manifest, () => config.WateringSystemInDeluxeBuildings, val => config.WateringSystemInDeluxeBuildings = val, () => "Watering System In Deluxe Buildings", () => "Whether to enable the watering system in Deluxe Coops and Deluxe Barns.");
+            api.AddBoolOption(manifest, () => config.UseWateringSystems, val => config.UseWateringSystems = val, () => "Use Watering Systems", () => "Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).");
             api.AddBoolOption(manifest, () => config.AnimalsCanDrinkOutside, val => config.AnimalsCanDrinkOutside = val, () => "Animals Can Drink Outside", () => "Whether animals can drink outside.");
             api.AddBoolOption(manifest, () => config.AnimalsCanOnlyDrinkFromWaterBodies, val => config.AnimalsCanOnlyDrinkFromWaterBodies = val, () => "Animals Can Only Drink From Water Bodies", () => "Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).");
             
             api.AddSectionTitle(manifest, () => "Friendship");
-
             api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding, val => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding = (int)val, () => "Watered Trough With Animals Inside", () => "The amount of friendship points player gets for watering a trough with animals inside the building (i.e. when animals see the player watering the trough).", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.NegativeFriendshipPointsForNotWateredTrough, val => config.NegativeFriendshipPointsForNotWateredTrough = (int)val, () => "Negative; Not Watered Trough", () => "The amount of friendship points player loses for not watering a trough.", interval: 1.0f);
