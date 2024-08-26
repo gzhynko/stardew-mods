@@ -14,19 +14,19 @@ Simply removing mod's folder will work.
 See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/API-documentation.md) for more info.
 
 ## Translating
-| Language | Status |
-|--|--|
-| Chinese | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam)) |
-| French | ✕ |
-| German | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [Makytar](https://www.nexusmods.com/stardewvalley/users/51740796)) |
-| Hungarian | ✕ |
-| Italian | ✕ |
-| Japanese | ✕ |
-| Korean | ✕ |
+| Language             | Status                                                                                                                                                                    |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Chinese              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam))                                     |
+| French               | ✕                                                                                                                                                                         |
+| German               | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [Makytar](https://www.nexusmods.com/stardewvalley/users/51740796))       |
+| Hungarian            | ✕                                                                                                                                                                         |
+| Italian              | ✕                                                                                                                                                                         |
+| Japanese             | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ja.json) (credit to [TinyCordelia](https://next.nexusmods.com/profile/TinyCordelia))    |
+| Korean               | ✕                                                                                                                                                                         |
 | Brazilian Portuguese | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/pt-BR.json) (credit to [tramontina](https://www.nexusmods.com/stardewvalley/users/36215665)) |
-| Russian | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ru.json) |
-| Spanish | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373)) |
-| Turkish | ✕ |
+| Russian              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ru.json)                                                                                     |
+| Spanish              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373))                       |
+| Turkish              | ✕                                                                                                                                                                         |
 
 **Contributing**
 If you'd like to help me translate the mod, here's how:
