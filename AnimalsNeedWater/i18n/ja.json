@@ -1,0 +1,8 @@
+{
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "昨日、{{firstAnimalName}}は喉が渇いたままでした。",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "昨日、{{firstAnimalName}}は喉が渇いたままでした。",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "昨日、{{firstAnimalName}}は喉が渇いたままでした。",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "昨日、{{firstAnimalName}}と{{secondAnimalName}}は喉が渇いたままでした。",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "昨日、{{firstAnimalName}}、 {{secondAnimalName}}と{{thirdAnimalName}}は喉が渇いたままでした。",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "昨日、{{firstAnimalName}}、{{secondAnimalName}}、 {{thirdAnimalName}}、そして{{totalAmountExcludingFirstThree}}匹の動物は喉が渇いたままでした。"
+}

@@ -1,5 +1,10 @@
 # Version history for AnimalsNeedWater
 
+## 1.6.1
+Released August 25, 2024.
+- Add profile for Dwarven Expansion (thanks to Zairya).
+- Add Japanese translation (thanks to TinyCordelia).
+
 ## 1.6.0
 Released August 22, 2024.
 - Add support for Barn and Coop by Lu_B17, Cute and Tidy Coops and Barns by neuralwiles, 
