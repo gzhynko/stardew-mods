@@ -20,7 +20,7 @@ namespace AnimalsNeedWater
             {
                 var profile = helper.Data.ReadJsonFile<TroughPlacementProfile>("assets/TroughPlacementProfiles/" + Path.GetFileName(file));
                 
-                if (Path.GetFileNameWithoutExtension(file).Contains("default"))
+                if (Path.GetFileNameWithoutExtension(file).Equals("default"))
                 {
                     DefaultProfile = profile;
                 }
@@ -38,7 +38,7 @@ namespace AnimalsNeedWater
             TroughPlacementProfile result = null;
             foreach (var profile in LoadedProfiles)
             {
-                if (profile.modUniqueId.Contains(id, StringComparison.CurrentCultureIgnoreCase))
+                if (profile.ModUniqueId.Contains(id, StringComparison.CurrentCultureIgnoreCase))
                 {
                     result = profile;
                 }

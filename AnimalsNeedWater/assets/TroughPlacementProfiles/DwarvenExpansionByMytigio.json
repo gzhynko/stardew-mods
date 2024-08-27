@@ -1,0 +1,46 @@
+{
+  "modUniqueId": "mytigio.dwarven_expansion",
+  "targetBuildings": ["mytigio.dwarven_expansion_CaveCoop", "mytigio.dwarven_expansion_BigCaveCoop", "mytigio.dwarven_expansion_DeluxeCaveCoop"],
+  "placement": [
+    {
+      "troughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ]
+    },
+    {
+      "troughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ]
+    },
+    {
+      "troughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ],
+      "wateringSystem": {
+        "tileX": 13,
+        "tileY": 4,
+        "layer": "Front",
+        "systemIndex": 1,
+        "tilesToRemove": []
+      }
+    }
+  ]
+}

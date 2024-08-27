@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AnimalsNeedWater.Types;
 using StardewValley;
+// ReSharper disable InconsistentNaming
 
 namespace AnimalsNeedWater
 {
@@ -9,8 +10,7 @@ namespace AnimalsNeedWater
         List<long> GetAnimalsLeftThirstyYesterday();
         bool WasAnimalLeftThirstyYesterday(FarmAnimal animal);
 
-        List<string> GetCoopsWithWateredTrough();
-        List<string> GetBarnsWithWateredTrough();
+        List<string> GetBuildingsWithWateredTrough();
 
         bool IsAnimalFull(FarmAnimal animal);
         bool DoesAnimalHaveAccessToWater(FarmAnimal animal);
@@ -21,22 +21,17 @@ namespace AnimalsNeedWater
     {
         public List<long> GetAnimalsLeftThirstyYesterday()
         {
-            return ModEntry.Instance.AnimalsLeftThirstyYesterday.ConvertAll(i => i.myID.Value);
+            return ModEntry.AnimalsLeftThirstyYesterday.ConvertAll(i => i.myID.Value);
         }
 
         public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
         {
-            return ModEntry.Instance.AnimalsLeftThirstyYesterday.Contains(animal);
+            return ModEntry.AnimalsLeftThirstyYesterday.Contains(animal);
         }
 
-        public List<string> GetCoopsWithWateredTrough()
+        public List<string> GetBuildingsWithWateredTrough()
         {
-            return ModData.CoopsWithWateredTrough;
-        }
-
-        public List<string> GetBarnsWithWateredTrough()
-        {
-            return ModData.BarnsWithWateredTrough;
+            return ModData.BuildingsWithWateredTrough;
         }
 
         public bool IsAnimalFull(FarmAnimal animal)
@@ -46,8 +41,7 @@ namespace AnimalsNeedWater
         
         public bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
         {
-            var houseTroughFull = ModData.CoopsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) ||
-                                  ModData.BarnsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower());
+            var houseTroughFull = ModData.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower());
             return houseTroughFull || ModData.FullAnimals.Contains(animal);
         }
 

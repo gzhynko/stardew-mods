@@ -1,21 +1,6 @@
 # API Documentation
 **Animals Need Water** provides an API allowing modders to access some of its data.
 
-Here's the ANW's API interface:
-```csharp
-    public interface IAnimalsNeedWaterAPI
-    {
-        List<long> GetAnimalsLeftThirstyYesterday();
-        bool WasAnimalLeftThirstyYesterday(FarmAnimal animal);
-    
-        List<string> GetCoopsWithWateredTrough();
-        List<string> GetBarnsWithWateredTrough();
-    
-        bool IsAnimalFull(FarmAnimal animal);
-        bool DoesAnimalHaveAccessToWater(FarmAnimal animal);
-        List<long> GetFullAnimals();
-    }
-```
 ## Methods
 **GetAnimalsLeftThirstyYesterday**
 
@@ -30,17 +15,11 @@ Requires a ```FarmAnimal``` instance.
 
 Returns a ```bool``` defining whether the animal was left thirsty yesterday.
 
-**GetCoopsWithWateredTrough**
+**GetBuildingsWithWateredTrough**
 
 *No parameters*
 
-Returns a ```List<string>```  containing a list of Coops with watered trough.
-
-**GetBarnsWithWateredTrough**
-
-*No parameters*
-
-Returns a ```List<string>```  containing a list of Barns with watered trough.
+Returns a ```List<string>```  containing a list of animal buildings with watered troughs.
 
 **IsAnimalFull**
 
