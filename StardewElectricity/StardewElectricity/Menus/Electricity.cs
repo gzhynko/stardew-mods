@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using StardewElectricity.Menus.Pages;
 using StardewValley.Menus;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 
 namespace StardewElectricity.Menus;
 

@@ -8,5 +8,5 @@ public class StardewElectricitySaveData
     public float KwhConsumed { get; set; }
     public int DaysSinceLastBill { get; set; }
     public Dictionary<int, int> PendingBills { get; set; } = new ();
-    public BillingCycle BillingCycle { get; set; }
+    public BillingCycle BillingCycle { get; set; } = BillingCycle.Daily;
 }

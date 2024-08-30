@@ -1,0 +1,10 @@
+[
+  {
+    "Id": "GZhynko.StardewElectricity.OnBoarding_NowAvailable",
+    "Title": "Electricity Services Now Available", 
+    "Text": "Dear resident:^^We are pleased to inform you that our electricity services are now available in your community. If you would like to get connected to our reliable network, please contact your local carpenter.^^JojaEnergy, a subsidiary of Joja Co.",
+    "Repeatable": false, 
+    "AutoOpen": false,
+    "Date": "5 summer Y1"
+  }
+]

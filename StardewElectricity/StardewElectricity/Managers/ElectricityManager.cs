@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StardewElectricity.Types;
+using StardewModdingAPI;
 using StardewValley;
 
 namespace StardewElectricity.Managers
@@ -68,10 +69,9 @@ namespace StardewElectricity.Managers
         public void DayEnding()
         {
             _saveData.DaysSinceLastBill++;
-            if (_saveData.DaysSinceLastBill == Utility.Utility.GetBillingCycleLengthDays(_saveData.BillingCycle))
-            {
+            if (_saveData.DaysSinceLastBill >= Utility.Utility.GetBillingCycleLengthDays(_saveData.BillingCycle))
                 PostBill();
-            }
+            
             SaveModData();
         }
 

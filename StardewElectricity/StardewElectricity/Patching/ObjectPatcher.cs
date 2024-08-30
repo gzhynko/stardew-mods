@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 using Object = StardewValley.Object;
 
 namespace StardewElectricity.Patching;
@@ -38,7 +38,7 @@ public class ObjectPatcher : BasePatcher
         GameLocation location = __instance.Location;
         if (location == null)
             return false;
-        if (__instance.heldObject.Value != null && ModEntry.ContentPackManager.IsConsumer(__instance.QualifiedItemId))
+        if (__instance.heldObject.Value != null && Utility.Utility.IsConsumer(__instance.QualifiedItemId))
         {
             if (!ModEntry.PoleManager.IsTilePowered(__instance.Location, __instance.TileLocation))
                 return false;
@@ -46,7 +46,9 @@ public class ObjectPatcher : BasePatcher
             ModEntry.ModMonitor.Log($"{__instance.name} ({__instance.DisplayName}): minutes elapsed: {minutes}; remaining: {__instance.MinutesUntilReady}", LogLevel.Alert);
 
             if (__instance.MinutesUntilReady <= 0) return true;
-            ModEntry.ElectricityManager.ConsumeKwh(minutes / 10.0f * ModEntry.ContentPackManager.GetConsumptionRatePer10Minutes(__instance.QualifiedItemId));
+            var consumed = Utility.Utility.GetKwhConsumedPer10Minutes(__instance.QualifiedItemId);
+            if (consumed != null)
+                ModEntry.ElectricityManager.ConsumeKwh(minutes / 10.0f * consumed.Value);
         }
 
         return true;
@@ -55,7 +57,7 @@ public class ObjectPatcher : BasePatcher
     private static bool ShouldTimePassForMachine_Prefix(Object __instance, ref bool __result)
     {
         if (__instance.Location != null 
-            && ModEntry.ContentPackManager.IsConsumer(__instance.QualifiedItemId) 
+            && Utility.Utility.IsConsumer(__instance.QualifiedItemId) 
             && !ModEntry.PoleManager.IsTilePowered(__instance.Location, __instance.TileLocation))
         {
             __result = false;
@@ -67,7 +69,7 @@ public class ObjectPatcher : BasePatcher
     private static bool ShouldWobble_Prefix(Object __instance, ref bool __result)
     {
         if (__instance.Location != null 
-            && ModEntry.ContentPackManager.IsConsumer(__instance.QualifiedItemId) 
+            && Utility.Utility.IsConsumer(__instance.QualifiedItemId) 
             && !ModEntry.PoleManager.IsTilePowered(__instance.Location, __instance.TileLocation))
         {
             __result = false;
@@ -78,7 +80,7 @@ public class ObjectPatcher : BasePatcher
 
     private static void Draw_Postfix(Object __instance, SpriteBatch spriteBatch, int x, int y, float alpha = 1f)
     {
-        if (__instance.Location == null || __instance.readyForHarvest.Value || !ModEntry.ContentPackManager.IsConsumer(__instance.QualifiedItemId)) return;
+        if (__instance.Location == null || __instance.readyForHarvest.Value || !Utility.Utility.IsConsumer(__instance.QualifiedItemId)) return;
 
         if (ModEntry.PoleManager.IsTilePowered(__instance.Location, __instance.TileLocation))
             return;

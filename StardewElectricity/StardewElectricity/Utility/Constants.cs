@@ -1,6 +1,6 @@
 using StardewValley.Menus;
 
-namespace StardewElectricity.Types;
+namespace StardewElectricity.Utility;
 
 public class Constants
 {
@@ -8,6 +8,8 @@ public class Constants
     
     public static readonly string MetadataIsPlacedSideways = "IsPlacedSideways";
     public static readonly string ModDataIsOrigin = "IsOrigin";
+    public static readonly string ModDataKwhConsumedPer10Minutes =
+        $"{ModEntry.ModHelper.ModRegistry.ModID}/KwhConsumedPer10Minutes";
 
     public static readonly string SkinUtilityPoleSide = $"{ModEntry.ModHelper.ModRegistry.ModID}_UtilityPoleSide";
 

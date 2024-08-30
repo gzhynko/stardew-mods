@@ -1,0 +1,13 @@
+{
+  "Name": "[MFM] Stardew Electricity",
+  "Author": "GZhynko",
+  "Version": "1.0.0",
+  "Description": "Mail provider for Stardew Electricity.",
+  "UniqueID": "GZhynko.StardewElectricity.MFM",
+  "MinimumApiVersion": "3.5.0",
+  "UpdateKeys": [],
+  "ContentPackFor": {
+    "UniqueID": "DIGUS.MailFrameworkMod",
+    "MinimumVersion": "1.18.0"
+  }
+}

@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewElectricity.ContentPacks;
 using StardewElectricity.Managers;
 using StardewElectricity.Types;
 using StardewElectricity.Patching;
@@ -12,7 +11,7 @@ using StardewValley;
 using StardewValley.GameData.Buildings;
 using StardewValley.Menus;
 using StardewValley.Mods;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 using Patches = Common.Patching.Patches;
 
 
@@ -30,7 +29,6 @@ namespace StardewElectricity
         public static Texture2D PoleShadowTexture;
         public static Texture2D IconsTexture;
 
-        public static ContentPackManager ContentPackManager;
         public static ElectricityManager ElectricityManager;
         public static PoleManager PoleManager;
 
@@ -50,12 +48,9 @@ namespace StardewElectricity
             helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.Display.MenuChanged += OnMenuChanged;
 
-            ContentPackManager = new ContentPackManager();
             ElectricityManager = new ElectricityManager();
             PoleManager = new PoleManager();
             
-            ContentPackManager.InitializeContentPacks(helper, Monitor);
-
             _config = Helper.ReadConfig<ModConfig>();
             PrepareAssets();
         }

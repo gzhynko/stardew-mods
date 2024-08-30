@@ -22,7 +22,7 @@ public class BuildingPatcher : BasePatcher
     private static bool DrawShadow_Prefix(Building __instance, SpriteBatch b, int localX = -1, int localY = -1)
     {
         // apply shadow changes to the utility pole building
-        if (__instance.buildingType.Value != Types.Constants.UtilityPoleBuildingTypeName)
+        if (__instance.buildingType.Value != Utility.Constants.UtilityPoleBuildingTypeName)
             return true; // run original method
             
         Rectangle rectangle = __instance.getSourceRectForMenu() ?? __instance.getSourceRect();
@@ -34,7 +34,7 @@ public class BuildingPatcher : BasePatcher
         var rotationCenter = new Vector2(ModEntry.PoleShadowTexture.Width / 2.0f,
             ModEntry.PoleShadowTexture.Height / 2.0f);
         // apply a 90deg rotation if placed sideways
-        var shadowRotation = __instance.GetMetadata(Types.Constants.MetadataIsPlacedSideways) == "true" ? (float)Math.PI / 2.0f : 0.0f;
+        var shadowRotation = __instance.GetMetadata(Utility.Constants.MetadataIsPlacedSideways) == "true" ? (float)Math.PI / 2.0f : 0.0f;
 
         // alpha is a protected field, so we use a reflection
         //var alpha = localX == -1

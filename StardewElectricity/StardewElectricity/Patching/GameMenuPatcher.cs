@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 
 namespace StardewElectricity.Patching;
 

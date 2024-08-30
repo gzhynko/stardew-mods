@@ -9,7 +9,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 
 namespace StardewElectricity.Patching;
 
@@ -173,7 +173,7 @@ public class CarpenterMenuPatcher : BasePatcher
         if (__instance.moving)
         {
             // only affect poles
-            if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Types.Constants.UtilityPoleBuildingTypeName)
+            if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Utility.Constants.UtilityPoleBuildingTypeName)
                 return true;
             
             Vector2 vector2 = new Vector2((float) ((Game1.viewport.X + Game1.getMouseX(false)) / 64), (float) ((Game1.viewport.Y + Game1.getMouseY(false)) / 64));

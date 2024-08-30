@@ -7,7 +7,7 @@ using StardewElectricity.Types;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
-using Constants = StardewElectricity.Types.Constants;
+using Constants = StardewElectricity.Utility.Constants;
 
 namespace StardewElectricity.Managers
 {

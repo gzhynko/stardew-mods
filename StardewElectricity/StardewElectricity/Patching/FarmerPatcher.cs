@@ -23,7 +23,7 @@ public class FarmerPatcher : BasePatcher
         if (Game1.activeClickableMenu != null) return;
         
         var heldObject = __instance.ActiveObject;
-        if (heldObject != null && ModEntry.ContentPackManager.IsConsumer(heldObject.QualifiedItemId))
+        if (heldObject != null && Utility.Utility.IsConsumer(heldObject.QualifiedItemId))
         {
             ModEntry.PoleManager.DrawPoleCoverage(b);
         }

@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewElectricity.Types;
-using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Locations;
+using StardewValley.GameData.BigCraftables;
 using xTile.Dimensions;
+using Object = StardewValley.Object;
 
 namespace StardewElectricity.Utility
 {
@@ -81,6 +82,32 @@ namespace StardewElectricity.Utility
 			var season = totalDays % WorldDate.DaysPerMonth % WorldDate.MonthsPerYear;
 			var dayOfMonth = totalDays % WorldDate.DaysPerMonth;
 			return new WorldDate(year, (Season)season, dayOfMonth);
+		}
+
+		public static Dictionary<string, string> GetCustomFields(string qualifiedItemId)
+		{
+			var itemData = ItemRegistry.GetDataOrErrorItem(qualifiedItemId);
+			dynamic rawData = itemData.RawData;
+			
+			return rawData == null ? null : (Dictionary<string, string>)rawData.CustomFields;
+		}
+		
+		public static bool IsConsumer(string qualifiedItemId)
+		{
+			var customFields = GetCustomFields(qualifiedItemId);
+			return customFields != null && customFields.ContainsKey(Constants.ModDataKwhConsumedPer10Minutes);
+		}
+
+		public static float? GetKwhConsumedPer10Minutes(string qualifiedItemId)
+		{
+			var customFields = GetCustomFields(qualifiedItemId);
+			var value = customFields?[Constants.ModDataKwhConsumedPer10Minutes];
+			if (value == null)
+				return null;
+
+			if (float.TryParse(value, out var parsed))
+				return parsed;
+			return null;
 		}
 	}
 }
