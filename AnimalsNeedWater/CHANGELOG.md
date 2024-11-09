@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.6.2
+Released November 9, 2024.
+- Fixed errors with the latest SDV 1.6.9 release.
+
 ## 1.6.1
 Released August 25, 2024.
 - Add profile for Dwarven Expansion (thanks to Zairya).

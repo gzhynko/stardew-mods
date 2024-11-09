@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using AnimalsNeedWater.Types;
 using Microsoft.Xna.Framework;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Pathfinding;
@@ -90,19 +89,19 @@ namespace AnimalsNeedWater.Patching
         private static void BehaviorAfterFindingWater(Character c, GameLocation environment)
         {
             // return if the animal is already on the list
-            if (ModData.FullAnimals.Contains(c as FarmAnimal))
+            if (ModData.FullAnimals.Contains((c as FarmAnimal)!))
                 return;
             
             // do the 'happy' emote and add the animal to the Full Animals list
             c.doEmote(32);
             ((FarmAnimal)c).isEating.Value = true; // do the eating animation
-            ModData.FullAnimals.Add(c as FarmAnimal);
+            ModData.FullAnimals.Add((c as FarmAnimal)!);
         }
         
         public static bool GameLocationToolActionExecutor(Tool tool, int tileX, int tileY)
         {
             GameLocation currentLocation = Game1.currentLocation;
-            var building = currentLocation.GetContainingBuilding();
+            var building = currentLocation.ParentBuilding;
             // execute original method if not in a building
             if (building == null)
                 return true;
@@ -156,7 +155,7 @@ namespace AnimalsNeedWater.Patching
         
         public static void OnLocationChangedExecutor(GameLocation _oldLocation, GameLocation newLocation)
         {
-            Building building = newLocation.GetContainingBuilding();
+            Building building = newLocation.ParentBuilding;
             if (building == null)
                 return;
             
@@ -190,7 +189,7 @@ namespace AnimalsNeedWater.Patching
                     ? tile.FullIndex
                     : tile.EmptyIndex;
                 
-                if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
+                if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                     buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
                 else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                     frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);

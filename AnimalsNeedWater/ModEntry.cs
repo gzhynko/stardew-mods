@@ -18,18 +18,18 @@ namespace AnimalsNeedWater
     /// <summary> The mod entry class loaded by SMAPI. </summary>
     public class ModEntry : Mod
     {
-        public static IMonitor ModMonitor;
-        public static IModHelper ModHelper;
-        public static ModConfig Config;
-        public static IManifest Manifest;
+        public static IMonitor ModMonitor = null!;
+        public static IModHelper ModHelper = null!;
+        public static ModConfig Config = null!;
+        public static IManifest Manifest = null!;
         
-        public static Dictionary<string, TroughPlacementProfile> CurrentTroughPlacementProfiles;
+        public static Dictionary<string, TroughPlacementProfile> CurrentTroughPlacementProfiles = null!;
         
-        public static List<FarmAnimal> AnimalsLeftThirstyYesterday;
+        public static List<FarmAnimal> AnimalsLeftThirstyYesterday = null!;
 
         // Initialize a dictionary to group buildings by their parent location
-        public List<Building> AnimalBuildings;
-        public IEnumerable<IGrouping<GameLocation, Building>> AnimalBuildingGroups;
+        public List<Building> AnimalBuildings = null!;
+        public IEnumerable<IGrouping<GameLocation, Building>> AnimalBuildingGroups = null!;
 
         /// <summary> The mod entry point, called after the mod is first loaded. </summary>
         /// <param name="helper"> Provides simplified APIs for writing mods. </param>
@@ -124,7 +124,7 @@ namespace AnimalsNeedWater
                 }
             }
 
-            foreach (var defaultBuilding in TroughPlacementProfiles.DefaultProfile.TargetBuildings)
+            foreach (var defaultBuilding in TroughPlacementProfiles.DefaultProfile.TargetBuildings!)
             {
                 if (!CurrentTroughPlacementProfiles.ContainsKey(defaultBuilding))
                     CurrentTroughPlacementProfiles[defaultBuilding] = TroughPlacementProfiles.DefaultProfile;
@@ -205,7 +205,7 @@ namespace AnimalsNeedWater
 
                 foreach (TroughTile tile in profileTroughTiles)
                 {
-                    if (tile.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
+                    if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
                         buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
                     else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
                         frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
@@ -257,7 +257,7 @@ namespace AnimalsNeedWater
         /// <summary> Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
             var harmony = new Harmony(ModManifest.UniqueID);
             
@@ -290,7 +290,7 @@ namespace AnimalsNeedWater
             ModConfig.SetUpModConfigMenu(Config, this);
         }
 
-        private void OnModMessageReceived(object sender, ModMessageReceivedEventArgs e)
+        private void OnModMessageReceived(object? sender, ModMessageReceivedEventArgs e)
         {
             if (e.FromModID != ModManifest.UniqueID || e.Type != "TroughWateredMessage") return;
             
@@ -299,7 +299,7 @@ namespace AnimalsNeedWater
             ModData.BuildingsWithWateredTrough.Add(message.BuildingUniqueName.ToLower());
             
             string locationName = message.BuildingUniqueName;
-            Building building = Game1.getLocationFromName(locationName).GetContainingBuilding();
+            Building building = Game1.getLocationFromName(locationName).ParentBuilding;
 
             switch (building.buildingType.Value.ToLower())
             {
@@ -321,7 +321,7 @@ namespace AnimalsNeedWater
         /// <summary> Raised after the save is loaded. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
         {
             GetAnimalBuildings();
             CheckHomeStatus();
@@ -331,7 +331,7 @@ namespace AnimalsNeedWater
             HandleDayStart();
         }
         
-        private void OnDayEnding(object sender, DayEndingEventArgs e)
+        private void OnDayEnding(object? sender, DayEndingEventArgs e)
         {
             AnimalsLeftThirstyYesterday = FindThirstyAnimals();
         }
@@ -344,7 +344,7 @@ namespace AnimalsNeedWater
         /// <summary> Looks for animals left thirsty and notifies player of them. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void HandleDayUpdate(object sender, SavedEventArgs e)
+        private void HandleDayUpdate(object? sender, SavedEventArgs e)
         {
             PrepareForNewDay();
             // If enabled in config: notify player of animals left thirsty, if any.
@@ -507,7 +507,6 @@ namespace AnimalsNeedWater
             }
         }
         
-#nullable enable
         public static TroughPlacementProfile? GetProfileForBuilding(string buildingName)
         {
             foreach (var (profileBuildingName, profile) in CurrentTroughPlacementProfiles)
@@ -517,7 +516,6 @@ namespace AnimalsNeedWater
             }
             return null;
         }
-#nullable disable
 
         private void LoadNewTileSheets()
         {
@@ -580,7 +578,7 @@ namespace AnimalsNeedWater
                 var profileWateringSystemPlacement = buildingProfile.GetPlacementForBuildingName(buildingName).WateringSystem;
                 var indoorsGameLocation = building.indoors.Value;
 
-                foreach (SimplifiedTile tile in profileWateringSystemPlacement.TilesToRemove)
+                foreach (SimplifiedTile tile in profileWateringSystemPlacement!.TilesToRemove)
                 {
                     indoorsGameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
                 }
@@ -589,7 +587,7 @@ namespace AnimalsNeedWater
                 Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
                 TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
                 var wateringSystemLayer =
-                    profileWateringSystemPlacement.Layer.Equals("Buildings", StringComparison.OrdinalIgnoreCase)
+                    profileWateringSystemPlacement.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase)
                         ? buildingsLayer
                         : profileWateringSystemPlacement.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase) 
                             ? frontLayer 

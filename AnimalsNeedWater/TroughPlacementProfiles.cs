@@ -9,8 +9,8 @@ namespace AnimalsNeedWater
 {
     public class TroughPlacementProfiles
     {
-        public static TroughPlacementProfile DefaultProfile;
-        public static List<TroughPlacementProfile> LoadedProfiles;
+        public static TroughPlacementProfile? DefaultProfile;
+        public static List<TroughPlacementProfile>? LoadedProfiles;
 
         public static void LoadProfiles(IModHelper helper)
         {
@@ -19,6 +19,8 @@ namespace AnimalsNeedWater
             foreach (var file in availableFiles)
             {
                 var profile = helper.Data.ReadJsonFile<TroughPlacementProfile>("assets/TroughPlacementProfiles/" + Path.GetFileName(file));
+                if (profile == null)
+                    continue;
                 
                 if (Path.GetFileNameWithoutExtension(file).Equals("default"))
                 {
@@ -33,12 +35,12 @@ namespace AnimalsNeedWater
             LoadedProfiles = profiles;
         }
         
-        public static TroughPlacementProfile GetProfileByUniqueId(string id)
+        public static TroughPlacementProfile? GetProfileByUniqueId(string id)
         {
-            TroughPlacementProfile result = null;
-            foreach (var profile in LoadedProfiles)
+            TroughPlacementProfile? result = null;
+            foreach (var profile in LoadedProfiles!)
             {
-                if (profile.ModUniqueId.Contains(id, StringComparison.CurrentCultureIgnoreCase))
+                if (profile.ModUniqueId!.Contains(id, StringComparison.CurrentCultureIgnoreCase))
                 {
                     result = profile;
                 }
