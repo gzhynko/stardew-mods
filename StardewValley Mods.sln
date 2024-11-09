@@ -15,9 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueBoxRedesign", "Dial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropGrowthAdjustments", "CropGrowthAdjustments\CropGrowthAdjustments.csproj", "{041B9398-64A3-4D00-B156-A071D850D717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewElectricity", "StardewElectricity\StardewElectricity\StardewElectricity.csproj", "{9385F6F8-9982-47D8-B059-7EC80FBC4B10}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{49C40E04-5A9F-47DA-8906-FA717816E772}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StardewUI", "external\StardewUI\StardewUI.shproj", "{D3DBB38B-79AF-4B84-B425-1CFFDEFA7A86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewElectricity", "StardewElectricity\StardewElectricity\StardewElectricity.csproj", "{5EE18971-349B-48D2-93F7-96A542A4BD53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +51,10 @@ Global
 		{041B9398-64A3-4D00-B156-A071D850D717}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9385F6F8-9982-47D8-B059-7EC80FBC4B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
