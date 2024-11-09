@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewElectricity.Types;
 using StardewValley;
-using StardewValley.GameData.BigCraftables;
 using xTile.Dimensions;
-using Object = StardewValley.Object;
 
 namespace StardewElectricity.Utility
 {
-	public class Utility
+	public static class Utility
 	{
 		public static void DrawWireWithWidth(SpriteBatch spriteBatch, Vector2 originPoint, Vector2 destinationPoint, int widthInPixels, Color color, Func<Vector2, float> layerDepthFunction)
 		{
@@ -84,12 +80,12 @@ namespace StardewElectricity.Utility
 			return new WorldDate(year, (Season)season, dayOfMonth);
 		}
 
-		public static Dictionary<string, string> GetCustomFields(string qualifiedItemId)
+		private static Dictionary<string, string>? GetCustomFields(string qualifiedItemId)
 		{
 			var itemData = ItemRegistry.GetDataOrErrorItem(qualifiedItemId);
 			dynamic rawData = itemData.RawData;
 			
-			return rawData == null ? null : (Dictionary<string, string>)rawData.CustomFields;
+			return rawData == null ? null : (Dictionary<string, string>?)rawData.CustomFields;
 		}
 		
 		public static bool IsConsumer(string qualifiedItemId)

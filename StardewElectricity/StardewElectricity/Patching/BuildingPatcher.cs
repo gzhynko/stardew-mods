@@ -1,4 +1,3 @@
-using System;
 using Common.Patching;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -6,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
+// ReSharper disable InconsistentNaming
 
 namespace StardewElectricity.Patching;
 
@@ -31,8 +31,8 @@ public class BuildingPatcher : BasePatcher
             localX == -1 ? Game1.GlobalToLocal(new Vector2(__instance.tileX.Value * 16 * 4, (__instance.tileY.Value + __instance.tilesHigh.Value) * 16 * 4) + offset) 
                 : new Vector2(localX + 32.0f * 4.0f, localY + rectangle.Height * 4);
             
-        var rotationCenter = new Vector2(ModEntry.PoleShadowTexture.Width / 2.0f,
-            ModEntry.PoleShadowTexture.Height / 2.0f);
+        var rotationCenter = new Vector2(ModEntry.AssetManager.PoleShadowTexture.Width / 2.0f,
+            ModEntry.AssetManager.PoleShadowTexture.Height / 2.0f);
         // apply a 90deg rotation if placed sideways
         var shadowRotation = __instance.GetMetadata(Utility.Constants.MetadataIsPlacedSideways) == "true" ? (float)Math.PI / 2.0f : 0.0f;
 
@@ -40,8 +40,8 @@ public class BuildingPatcher : BasePatcher
         //var alpha = localX == -1
         //    ? ModEntry.ModHelper.Reflection.GetField<float>(__instance, "alpha").GetValue()
         //    : 1f;
-            
-        b.Draw(ModEntry.PoleShadowTexture, position, null, Color.White, shadowRotation, rotationCenter, 4f, SpriteEffects.None, 1E-05f);
+        
+        b.Draw(ModEntry.AssetManager.PoleShadowTexture, position, null, Color.White, shadowRotation, rotationCenter, 4f, SpriteEffects.None, 1E-05f);
 
         return false; // don't run original method
     }

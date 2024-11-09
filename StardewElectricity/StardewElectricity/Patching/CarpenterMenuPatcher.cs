@@ -1,4 +1,3 @@
-using System;
 using Common.Patching;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -10,6 +9,7 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 using Constants = StardewElectricity.Utility.Constants;
+// ReSharper disable InconsistentNaming
 
 namespace StardewElectricity.Patching;
 
@@ -21,15 +21,15 @@ public class CarpenterMenuPatcher : BasePatcher
     {
         harmony.Patch(
             AccessTools.Method(typeof(CarpenterMenu), nameof(CarpenterMenu.draw), new []{ typeof(SpriteBatch) }),
-            postfix: new HarmonyMethod(this.GetType(), nameof(CarpenterMenuPatcher.Draw_Postfix))
+            postfix: new HarmonyMethod(GetType(), nameof(Draw_Postfix))
         );
         harmony.Patch(
             AccessTools.Method(typeof(CarpenterMenu), nameof(CarpenterMenu.receiveKeyPress)),
-            prefix: new HarmonyMethod(this.GetType(), nameof(CarpenterMenuPatcher.ReceiveKeyPress_Prefix))
+            prefix: new HarmonyMethod(GetType(), nameof(ReceiveKeyPress_Prefix))
         );
         harmony.Patch(
             AccessTools.Method(typeof(CarpenterMenu), nameof(CarpenterMenu.receiveLeftClick)),
-            prefix: new HarmonyMethod(this.GetType(), nameof(CarpenterMenuPatcher.ReceiveLeftClick_Prefix))
+            prefix: new HarmonyMethod(GetType(), nameof(ReceiveLeftClick_Prefix))
         );
     }
     
@@ -95,8 +95,7 @@ public class CarpenterMenuPatcher : BasePatcher
                     if (x == 0 && y == 0) continue;
                     Vector2 tileLocation = new Vector2(mouseTilePos.X + x, mouseTilePos.Y + y);
                     b.Draw(Game1.mouseCursors, Game1.GlobalToLocal(Game1.viewport, tileLocation * 64f),
-                        new Microsoft.Xna.Framework.Rectangle?(
-                            new Microsoft.Xna.Framework.Rectangle(194 + structurePlacementTile * 16, 388, 16, 16)),
+                        new Rectangle(194 + structurePlacementTile * 16, 388, 16, 16),
                         Color.Blue * 0.5f, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.999f);
                 }
             }
@@ -173,10 +172,10 @@ public class CarpenterMenuPatcher : BasePatcher
         if (__instance.moving)
         {
             // only affect poles
-            if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Utility.Constants.UtilityPoleBuildingTypeName)
+            if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Constants.UtilityPoleBuildingTypeName)
                 return true;
             
-            Vector2 vector2 = new Vector2((float) ((Game1.viewport.X + Game1.getMouseX(false)) / 64), (float) ((Game1.viewport.Y + Game1.getMouseY(false)) / 64));
+            Vector2 vector2 = new Vector2((Game1.viewport.X + Game1.getMouseX(false)) / 64, (Game1.viewport.Y + Game1.getMouseY(false)) / 64);
             if (__instance.ConfirmBuildingAccessibility(vector2))
             {
                 __instance.buildingToMove.isMoving = true; // temporarily enable moving flag to do safety checks
@@ -186,7 +185,7 @@ public class CarpenterMenuPatcher : BasePatcher
                 if (__instance.TargetLocation.buildStructure(__instance.buildingToMove, vector2, Game1.player))
                 {
                     __instance.buildingToMove.isMoving = false;
-                    __instance.buildingToMove = (Building) null;
+                    __instance.buildingToMove = null;
                     Game1.playSound("axchop");
                     DelayedAction.playSoundAfterDelay("dirtyHit", 50);
                     DelayedAction.playSoundAfterDelay("dirtyHit", 150);
@@ -205,7 +204,7 @@ public class CarpenterMenuPatcher : BasePatcher
         else if (__instance.demolishing)
         {
             GameLocation farm = __instance.TargetLocation;
-            Building destroyed = farm.getBuildingAt(new Vector2((float) ((Game1.viewport.X + Game1.getOldMouseX(false)) / 64), (float) ((Game1.viewport.Y + Game1.getOldMouseY(false)) / 64)));
+            Building destroyed = farm.getBuildingAt(new Vector2((Game1.viewport.X + Game1.getOldMouseX(false)) / 64, (Game1.viewport.Y + Game1.getOldMouseY(false)) / 64));
             if (destroyed == null)
                 return false;
             // only affect poles
@@ -218,7 +217,7 @@ public class CarpenterMenuPatcher : BasePatcher
                 return false;
             Game1.player.team.demolishLock.RequestLock(() =>
             {
-                if (!__instance.demolishing || destroyed == null || !farm.buildings.Contains(destroyed))
+                if (!__instance.demolishing || !farm.buildings.Contains(destroyed))
                     return;
                 destroyed.BeforeDemolish();
                 if (!farm.destroyStructure(destroyed))
@@ -228,7 +227,7 @@ public class CarpenterMenuPatcher : BasePatcher
                 
                 if (!ModEntry.ModHelper.Input.IsDown(SButton.LeftShift))
                 {
-                    DelayedAction.functionAfterDelay(new Action(__instance.returnToCarpentryMenu), 1500);
+                    DelayedAction.functionAfterDelay(__instance.returnToCarpentryMenu, 1500);
                     __instance.freeze = true;
                 }
             }, () => {});
@@ -255,7 +254,7 @@ public class CarpenterMenuPatcher : BasePatcher
 
                         if (!ModEntry.ModHelper.Input.IsDown(SButton.LeftShift))
                         {
-                            DelayedAction.functionAfterDelay(new Action(__instance.returnToCarpentryMenuAfterSuccessfulBuild), 2000);
+                            DelayedAction.functionAfterDelay(__instance.returnToCarpentryMenuAfterSuccessfulBuild, 2000);
                             __instance.freeze = true;
                         }
                     }

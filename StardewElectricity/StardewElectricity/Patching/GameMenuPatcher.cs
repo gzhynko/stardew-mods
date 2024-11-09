@@ -2,10 +2,12 @@ using Common.Patching;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StardewElectricity.Types;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
 using Constants = StardewElectricity.Utility.Constants;
+// ReSharper disable InconsistentNaming
 
 namespace StardewElectricity.Patching;
 
@@ -15,15 +17,15 @@ public class GameMenuPatcher : BasePatcher
     {
         harmony.Patch(
             AccessTools.Method(typeof(GameMenu), nameof(GameMenu.getTabNumberFromName)),
-            prefix: new HarmonyMethod(this.GetType(), nameof(GameMenuPatcher.GetTabNumberFromName_Prefix))
+            prefix: new HarmonyMethod(GetType(), nameof(GetTabNumberFromName_Prefix))
         );
         harmony.Patch(
             AccessTools.Method(typeof(GameMenu), nameof(GameMenu.draw), new []{ typeof(SpriteBatch) }),
-            prefix: new HarmonyMethod(this.GetType(), nameof(GameMenuPatcher.Draw_Prefix))
+            prefix: new HarmonyMethod(GetType(), nameof(Draw_Prefix))
         );
     }
-
-    private static bool GetTabNumberFromName_Prefix(GameMenu __instance, ref int __result, string name)
+    
+    private static bool GetTabNumberFromName_Prefix(ref int __result, string name)
     {
         if (name != Constants.GameMenuElectricityTabName) return true;
         
@@ -46,7 +48,7 @@ public class GameMenuPatcher : BasePatcher
           switch (tab.name)
           {
             case "animals":
-              b.Draw(Game1.mouseCursors_1_6, new Vector2((float) tab.bounds.X, (float) (tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0))), new Rectangle?(new Rectangle(257, 246, 16, 16)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
+              b.Draw(Game1.mouseCursors_1_6, new Vector2(tab.bounds.X, tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0)), new Rectangle(257, 246, 16, 16), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
               break;
             case "catalogue":
               num = 7;
@@ -73,7 +75,7 @@ public class GameMenuPatcher : BasePatcher
               num = 6;
               break;
             case "powers":
-              b.Draw(Game1.mouseCursors_1_6, new Vector2((float) tab.bounds.X, (float) (tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0))), new Rectangle?(new Rectangle(216, 494, 16, 16)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
+              b.Draw(Game1.mouseCursors_1_6, new Vector2(tab.bounds.X, tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0)), new Rectangle(216, 494, 16, 16), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
               break;
             case "skills":
               num = 1;
@@ -83,13 +85,13 @@ public class GameMenuPatcher : BasePatcher
               break;
             // (addition)
             case Constants.GameMenuElectricityTabName:
-              b.Draw(ModEntry.IconsTexture, new Vector2((float) tab.bounds.X, (float) (tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0))), new Rectangle(0, 0, 16, 16), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
+              b.Draw(ModEntry.AssetManager.IconsTexture, new Vector2(tab.bounds.X, tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0)), ModEntry.AssetManager.IconsTextureBoundsMap[IconsTextureItem.MenuElectricityTabIcon], Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
               break;
           }
           if (num != -1)
-            b.Draw(Game1.mouseCursors, new Vector2((float) tab.bounds.X, (float) (tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0))), new Rectangle?(new Rectangle(num * 16, 368, 16, 16)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
+            b.Draw(Game1.mouseCursors, new Vector2(tab.bounds.X, tab.bounds.Y + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0)), new Rectangle(num * 16, 368, 16, 16), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 0.0001f);
           if (tab.name.Equals("skills"))
-            Game1.player.FarmerRenderer.drawMiniPortrat(b, new Vector2((float) (tab.bounds.X + 8), (float) (tab.bounds.Y + 12 + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0))), 0.00011f, 3f, 2, Game1.player);
+            Game1.player.FarmerRenderer.drawMiniPortrat(b, new Vector2(tab.bounds.X + 8, tab.bounds.Y + 12 + (__instance.currentTab == __instance.getTabNumberFromName(tab.name) ? 8 : 0)), 0.00011f, 3f, 2, Game1.player);
         }
         b.End();
         b.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
@@ -101,7 +103,7 @@ public class GameMenuPatcher : BasePatcher
             // the following is essentially base.draw(b)
             if (__instance.upperRightCloseButton != null && __instance.shouldDrawCloseButton())
                 __instance.upperRightCloseButton.draw(b);
-        if (Game1.options.SnappyMenus && (__instance.pages[__instance.currentTab] is CollectionsPage page ? page.letterviewerSubMenu : (LetterViewerMenu) null) != null || Game1.options.hardwareCursor)
+        if (Game1.options.SnappyMenus && (__instance.pages[__instance.currentTab] is CollectionsPage page ? page.letterviewerSubMenu : null) != null || Game1.options.hardwareCursor)
             return false;
         __instance.drawMouse(b, true);
         

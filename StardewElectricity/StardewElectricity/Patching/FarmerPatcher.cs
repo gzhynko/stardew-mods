@@ -1,10 +1,9 @@
 using Common.Patching;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Menus;
+// ReSharper disable InconsistentNaming
 
 namespace StardewElectricity.Patching;
 

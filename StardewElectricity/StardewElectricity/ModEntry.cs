@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using StardewElectricity.Managers;
 using StardewElectricity.Types;
 using StardewElectricity.Patching;
@@ -24,11 +21,7 @@ namespace StardewElectricity
         public static IModHelper ModHelper;
         private ModConfig _config;
 
-        private static Texture2D _poleTexture;
-        private static Texture2D _sidewaysPoleTexture;
-        public static Texture2D PoleShadowTexture;
-        public static Texture2D IconsTexture;
-
+        public static AssetManager AssetManager;
         public static ElectricityManager ElectricityManager;
         public static PoleManager PoleManager;
 
@@ -48,11 +41,12 @@ namespace StardewElectricity
             helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.Display.MenuChanged += OnMenuChanged;
 
+            AssetManager = new AssetManager();
             ElectricityManager = new ElectricityManager();
             PoleManager = new PoleManager();
             
             _config = Helper.ReadConfig<ModConfig>();
-            PrepareAssets();
+            AssetManager.PrepareAssets(Helper.ModContent);
         }
 
         public void SaveConfig(ModConfig newConfig)
@@ -60,19 +54,8 @@ namespace StardewElectricity
             _config = newConfig;
             Helper.WriteConfig(newConfig);
         }
-
-        /// <summary>
-        /// Prepare textures.
-        /// </summary>
-        private void PrepareAssets()
-        {
-            _poleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPole.png");
-            _sidewaysPoleTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPoleSideways.png");
-            PoleShadowTexture = Helper.ModContent.Load<Texture2D>("assets/utilityPole_shadow.png");
-            IconsTexture = Helper.ModContent.Load<Texture2D>("assets/icons.png");
-        }
         
-        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
         {
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
             {
@@ -81,11 +64,11 @@ namespace StardewElectricity
                     var data = asset.AsDictionary<string, BuildingData>().Data;
                     
                     data.Add(Constants.UtilityPoleBuildingTypeName,
-                        new BuildingData()
+                        new BuildingData
                         {
                             Name = "Utility Pole",
                             Description = "Allows for electricity transmission within the farm bounds.",
-                            Texture = Helper.ModContent.GetInternalAssetName(_poleTexture.Name).Name,
+                            Texture = Helper.ModContent.GetInternalAssetName(AssetManager.PoleTexture.Name).Name,
                             DrawShadow = true,
                             DrawOffset = new Vector2(-24.0f, -4.0f),
                             FadeWhenBehind = true,
@@ -94,16 +77,16 @@ namespace StardewElectricity
                             BuildCost = 100,
                             BuildMaterials = new List<BuildingMaterial>()
                             {
-                                new BuildingMaterial() { ItemId = "(O)388", Amount = 50 }
+                                new () { ItemId = "(O)388", Amount = 50 }
                             },
                             Skins = new List<BuildingSkin>()
                             {
-                                new BuildingSkin()
+                                new ()
                                 {
                                     Id = Constants.SkinUtilityPoleSide,
                                     Name = "Utility Pole",
                                     Description = "Allows for electricity transmission within the farm bounds.",
-                                    Texture = Helper.ModContent.GetInternalAssetName(_sidewaysPoleTexture.Name).Name,
+                                    Texture = Helper.ModContent.GetInternalAssetName(AssetManager.SidewaysPoleTexture.Name).Name,
                                     Metadata = new Dictionary<string, string> { { Constants.MetadataIsPlacedSideways, "true" } }
                                 }
                             },
@@ -113,7 +96,7 @@ namespace StardewElectricity
             }
         }
         
-        private void OnRenderingStep(object sender, RenderingStepEventArgs e)
+        private void OnRenderingStep(object? sender, RenderingStepEventArgs e)
         {
             if (e.Step == RenderSteps.World_Sorted)
             {
@@ -123,13 +106,13 @@ namespace StardewElectricity
             }
         }
         
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
         {
             PoleManager.SaveLoaded();
             ElectricityManager.SaveLoaded();
         }
 
-        private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
+        private void OnBuildingListChanged(object? sender, BuildingListChangedEventArgs e)
         {
             if (e.Added.Any(b => b.buildingType.Value == Constants.UtilityPoleBuildingTypeName)
                 || e.Removed.Any(b => b.buildingType.Value == Constants.UtilityPoleBuildingTypeName))
@@ -139,7 +122,7 @@ namespace StardewElectricity
             PoleManager.UpdateFarmBuildingTiles();
         }
 
-        private void OnMenuChanged(object sender, MenuChangedEventArgs e)
+        private void OnMenuChanged(object? sender, MenuChangedEventArgs e)
         {
             if (e.NewMenu is GameMenu menu)
             {
@@ -147,7 +130,7 @@ namespace StardewElectricity
             }
         }
 
-        private void OnDayEnding(object sender, DayEndingEventArgs e)
+        private void OnDayEnding(object? sender, DayEndingEventArgs e)
         {
             ElectricityManager.DayEnding();
         }
@@ -155,7 +138,7 @@ namespace StardewElectricity
         /// <summary> Raised after the game is launched, right before the first update tick. This happens once per game session (unrelated to loading saves). All mods are loaded and initialised at this point, so this is a good time to set up mod integrations. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
             ModConfig.SetUpModConfigMenu(_config, this);
             

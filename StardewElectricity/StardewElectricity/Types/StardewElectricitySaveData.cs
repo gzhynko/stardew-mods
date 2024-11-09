@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using StardewValley;
-
 namespace StardewElectricity.Types;
 
 public class StardewElectricitySaveData

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using StardewElectricity.Types;
-using StardewModdingAPI;
 using StardewValley;
 
 namespace StardewElectricity.Managers
@@ -33,7 +29,11 @@ namespace StardewElectricity.Managers
             var paid = new List<int>();
             foreach (var billDate in _saveData.PendingBills.Keys)
             {
-                Game1.player.Money -= _saveData.PendingBills[billDate];
+                var billAmount = _saveData.PendingBills[billDate];
+                if (Game1.player.Money < billAmount)
+                    continue;
+                
+                Game1.player.Money -= billAmount;
                 paid.Add(billDate);
             }
 

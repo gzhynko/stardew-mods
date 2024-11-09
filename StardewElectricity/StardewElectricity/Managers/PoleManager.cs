@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewElectricity.Buildings;
@@ -48,7 +46,7 @@ namespace StardewElectricity.Managers
         
         public bool IsTilePowered(GameLocation location, Vector2 tile)
         {
-            return (location.GetContainingBuilding() != null && CoveredFarmBuildings.Contains(location.GetContainingBuilding().id.Value)) 
+            return (location.ParentBuilding != null && CoveredFarmBuildings.Contains(location.ParentBuilding.id.Value)) 
                    || (location.IsFarm && location.IsOutdoors && CoveredTiles.Contains(tile));
         }
 
@@ -100,16 +98,14 @@ namespace StardewElectricity.Managers
         /// <summary>
         /// Fills out the PoleWires array with positions of the overhead wires.
         /// </summary>
-        public void DoWiring(List<UtilityPole> poles = null)
+        public void DoWiring(List<UtilityPole>? poles = null)
         {
-            if (poles == null) poles = _polesOnFarm;
+            poles ??= _polesOnFarm;
             if (poles.Count < 2) return;
             
             _poleWires = new List<OverheadWire>();
             _connectedPoles = new Dictionary<int, List<int>>();
-
-            ModEntry.ModMonitor.Log($"doing wiring; num of poles on farm: {poles.Count}", LogLevel.Info);
-
+            
             var pairsSet = new HashSet<Tuple<int, int>>();
             for (int i = 0; i < poles.Count; i++)
             {
@@ -139,8 +135,6 @@ namespace StardewElectricity.Managers
                     pairsSet.Add(new Tuple<int, int>(i, j));
                 }
             }
-            
-            ModEntry.ModMonitor.Log($"done with wiring; num unique pole pairs: {pairsSet.Count}", LogLevel.Info);
         }
 
         public void DoWiringConstructionMode(Building poleBuilding)
@@ -239,7 +233,7 @@ namespace StardewElectricity.Managers
                 var scale = 1.5f + (float)Math.Abs(Math.Sin(Game1.currentGameTime.TotalGameTime.TotalMilliseconds / 800.0f)) / 2f;
                 var halfTextureSize = new Vector2(8f, 8f);
                 
-                spriteBatch.Draw(ModEntry.IconsTexture, Game1.GlobalToLocal(Game1.viewport, center), new Rectangle(16, 0, 16, 16), Color.White, 0.0f, halfTextureSize, 4f * scale, SpriteEffects.None, 0.9999f);
+                spriteBatch.Draw(ModEntry.AssetManager.IconsTexture, Game1.GlobalToLocal(Game1.viewport, center), ModEntry.AssetManager.IconsTextureBoundsMap[IconsTextureItem.BuildingPoweredIcon], Color.White, 0.0f, halfTextureSize, 4f * scale, SpriteEffects.None, 0.9999f);
             }
         }
         

@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using StardewModdingAPI;
-using StardewValley;
 using StardewValley.Buildings;
 using Constants = StardewElectricity.Utility.Constants;
 
@@ -71,8 +67,8 @@ namespace StardewElectricity.Buildings
 
             var insulatorPositions = GetInsulatorPositions();
 
-            var baseCoordinate = new Vector2((int) _building.tileX.Value * 16 * scale + _building.texture.Value.Width / 2f,
-                (int) _building.tileY.Value * 16 * scale + (int) _building.tilesHigh.Value * 16 * scale);
+            var baseCoordinate = new Vector2(_building.tileX.Value * 16 * scale + _building.texture.Value.Width / 2f,
+                _building.tileY.Value * 16 * scale + _building.tilesHigh.Value * 16 * scale);
 
             var topLeftCornerTextureCoordinateOnScreen =
                 new Vector2(baseCoordinate.X - _building.texture.Value.Width / 2f * scale,
