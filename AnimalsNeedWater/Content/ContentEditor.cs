@@ -10,21 +10,6 @@ public class ContentEditor
 {
     public static void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
-        // add the translations for the bowl
-        if (e.NameWithoutLocale.IsEquivalentTo("Strings/BigCraftables"))
-        {
-            e.Edit(asset =>
-            {
-                var editor = asset.AsDictionary<string, string>();
-                editor.Data.Add(
-                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.name", 
-                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.name"));
-                editor.Data.Add(
-                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description", 
-                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.description"));
-            });
-        }
-        
         // add the water bowl item
         if (e.NameWithoutLocale.IsEquivalentTo("Data/BigCraftables"))
         {
@@ -41,6 +26,21 @@ public class ContentEditor
                     Price = ModEntry.Config.MarnieWaterBowlPrice,
                 };
                 editor.Data.Add(ModData.WaterBowlItemId, waterBowlAssetData);
+            });
+        }
+        
+        // add the translations for the bowl
+        if (e.NameWithoutLocale.IsEquivalentTo("Strings/BigCraftables"))
+        {
+            e.Edit(asset =>
+            {
+                var editor = asset.AsDictionary<string, string>();
+                editor.Data.Add(
+                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.name", 
+                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.name"));
+                editor.Data.Add(
+                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description", 
+                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.description"));
             });
         }
         
