@@ -15,10 +15,10 @@ namespace AnimalsNeedWater
         public static void LoadProfiles(IModHelper helper)
         {
             var profiles = new List<TroughPlacementProfile>();
-            var availableFiles = Directory.GetFiles(Path.Combine(helper.DirectoryPath, "assets/TroughPlacementProfiles")).Where(filename => filename.Contains(".json"));
+            var availableFiles = Directory.GetFiles(Path.Combine(helper.DirectoryPath, "assets/profiles")).Where(filename => filename.Contains(".json"));
             foreach (var file in availableFiles)
             {
-                var profile = helper.Data.ReadJsonFile<TroughPlacementProfile>("assets/TroughPlacementProfiles/" + Path.GetFileName(file));
+                var profile = helper.Data.ReadJsonFile<TroughPlacementProfile>("assets/profiles/" + Path.GetFileName(file));
                 if (profile == null)
                     continue;
                 

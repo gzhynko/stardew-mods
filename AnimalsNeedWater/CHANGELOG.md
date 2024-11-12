@@ -1,5 +1,10 @@
 # Version history for AnimalsNeedWater
 
+## 1.7.0
+Released November 11, 2024.
+- Add a water bowl that can be placed inside animal houses to allow filling the trough even if there is no profile for the building. Sold for free at Marnie's animal shop.
+- Organize assets and put asset names as constants.
+
 ## 1.6.2
 Released November 9, 2024.
 - Fixed errors with the latest SDV 1.6.9 release.

@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using AnimalsNeedWater.Types;
 using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Extensions;
 using StardewValley.Pathfinding;
 using StardewValley.Tools;
 using xTile.Layers;
@@ -106,50 +108,68 @@ namespace AnimalsNeedWater.Patching
             if (building == null)
                 return true;
             var buildingUniqueName = currentLocation.NameOrUniqueName;
+            var buildingNameNoUnique = building.buildingType.Value;
             
             // execute original method if this is not a watering can
             if (!(tool is WateringCan can) || can.WaterLeft <= 0) 
                 return true;
-            // execute original method if the building is watered
+            
+            // check if hit a water bowl object
+            var objectHit = currentLocation.getObjectAtTile(tileX, tileY);
+            // hit a bowl!
+            if (objectHit != null && objectHit.HasTypeId("(BC)") && objectHit.ItemId == ModData.WaterBowlItemId)
+            {
+                Utility.FillWaterBowlObject(objectHit);
+                return false;
+            }
+
+            // if did not hit any water bowl objects, check for trough tiles hits instead
+            
+            // skip if the building is watered
             if (ModData.BuildingsWithWateredTrough.Contains(buildingUniqueName.ToLower()))
                 return true;
             
-            var buildingNameNoUnique = building.buildingType.Value;
             var buildingProfile = ModEntry.GetProfileForBuilding(buildingNameNoUnique);
             // execute original method if this building should not be affected by this mod
             if (buildingProfile == null)
                 return true;
 
             var profilePlacement = buildingProfile.GetPlacementForBuildingName(buildingNameNoUnique);
-            var troughHit = profilePlacement.TroughTiles.Any(troughTile => tileX == troughTile.TileX && tileY == troughTile.TileY);
-            // execute original method if the tool action did not hit any trough tiles
+            var troughHit = profilePlacement.TroughTiles.Any(troughTile =>
+                tileX == troughTile.TileX && tileY == troughTile.TileY);
+            // check if hit any water trough tiles
             if (!troughHit)
                 return true;
             
             ModData.BuildingsWithWateredTrough.Add(buildingUniqueName.ToLower());
             ModEntry.SendTroughWateredMessage(buildingUniqueName.ToLower());
             UpdateBuildingTroughs(building);
-            
+        
+            // change building texture to reflect full trough
             switch (buildingNameNoUnique.ToLower())
             {
                 case "coop":
                     ModEntry.ChangeCoopTexture(building, false);
                     break;
-                        
+                    
                 case "big coop":
                     ModEntry.ChangeBigCoopTexture(building, false);
                     break;
             }
             
+            // give additional friendship to animals currently here
             foreach (FarmAnimal animal in currentLocation.animals.Values)
             {
                 if (ModEntry.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                 {
                     animal.doEmote(ModData.LoveEmote);
                 }
-                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
+
+                animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config
+                    .AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
             }
 
+            // skip original method
             return false;
         }
         

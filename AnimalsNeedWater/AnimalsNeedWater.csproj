@@ -5,9 +5,23 @@
     <Version>1.4.0</Version>
     <TargetFramework>net6.0</TargetFramework>
     <EnableHarmony>true</EnableHarmony>
+    
+    <GamePath>$(HOME)/Library/Application Support/Steam/steamapps/common/Stardew Valley/Contents/MacOS</GamePath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <!-- Adds a run configuration for the mod, because ModBuildConfig doesn't do so on Linux yet. -->
+    <StartAction>Program</StartAction>
+    <StartProgram>$(GamePath)/StardewModdingAPI</StartProgram>
+    <StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
+    <StartArguments>-mode dryrun</StartArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\items\" />
   </ItemGroup>
 </Project>

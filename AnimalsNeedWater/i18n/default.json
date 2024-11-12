@@ -10,5 +10,8 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} were left thirsty yesterday.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} and {{secondAnimalName}} were left thirsty yesterday.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} and {{thirdAnimalName}} were left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday."
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday.",
+    
+    "Items.Water_Bowl.name": "Water Bowl",
+    "Items.Water_Bowl.description": "Can be placed inside animal buildings so that they can drink water even if the building does not come with a trough."
 }

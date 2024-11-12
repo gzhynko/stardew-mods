@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnimalsNeedWater.Content;
 using AnimalsNeedWater.Patching;
 using AnimalsNeedWater.Types;
 using HarmonyLib;
@@ -9,9 +10,11 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Extensions;
 using xTile.Dimensions;
 using xTile.Layers;
 using xTile.Tiles;
+using Object = StardewValley.Object;
 
 namespace AnimalsNeedWater
 {
@@ -50,6 +53,8 @@ namespace AnimalsNeedWater
             helper.Events.GameLoop.Saved += HandleDayUpdate;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
+            
+            helper.Events.Content.AssetRequested += ContentEditor.OnAssetRequested;
 
             InitTroughPlacementProfiles();
         }
@@ -144,6 +149,19 @@ namespace AnimalsNeedWater
             
             foreach (Building building in AnimalBuildings)
             {
+                // empty Water Bowl objects
+                var buildingObjects = building.GetIndoors().Objects.Values;
+                foreach (Object @object in buildingObjects)
+                {
+                    if (!@object.HasTypeId("(BC)") || @object.ItemId != ModData.WaterBowlItemId) 
+                        continue;
+                    if (@object.modData.ContainsKey(ModData.WaterBowlItemModDataIsFullField)
+                        && @object.modData[ModData.WaterBowlItemModDataIsFullField] == "true")
+                    {
+                        Utility.EmptyWaterBowlObject(@object);
+                    }
+                }
+                
                 if (Config.UseWateringSystems)
                 {
                     // check if this building has a watering system
@@ -178,6 +196,7 @@ namespace AnimalsNeedWater
                 return;
             }
 
+            // empty the troughs
             foreach (var (profileBuildingName, profile) in CurrentTroughPlacementProfiles)
             {
                 if (!buildingName.Equals(profileBuildingName, StringComparison.CurrentCultureIgnoreCase)) continue;
@@ -222,9 +241,26 @@ namespace AnimalsNeedWater
                 GameLocation parentLocation = locationGroup.Key;
                 List<Building> buildingsInLocation = locationGroup.ToList();
 
-                // Look for all animals inside buildings and check whether their troughs are watered.
+                // Look for all animals inside buildings and check whether their troughs are watered
+                // OR the building has a full Water Bowl inside it.
                 foreach (Building building in buildingsInLocation)
                 {
+                    // check if there are any full water bowls inside
+                    var hasFullWaterBowlObject = false;
+                    var buildingObjects = building.GetIndoors().Objects.Values;
+                    foreach (Object @object in buildingObjects)
+                    {
+                        if (!@object.HasTypeId("(BC)") || @object.ItemId != ModData.WaterBowlItemId) 
+                            continue;
+                        if (@object.modData.ContainsKey(ModData.WaterBowlItemModDataIsFullField)
+                            && @object.modData[ModData.WaterBowlItemModDataIsFullField] == "true")
+                        {
+                            hasFullWaterBowlObject = true;
+                        }
+                    }
+                    if (hasFullWaterBowlObject)
+                        continue;
+                    
                     foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
                         .Where(animal =>
                             ModData.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) == false &&
@@ -408,7 +444,7 @@ namespace AnimalsNeedWater
             ModData.FullAnimals = new List<FarmAnimal>();
             
             // Check whether there is a festival today. If not, empty the troughs.
-            if (!Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
+            if (!StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
             {
                 EmptyWaterTroughs();
             }
@@ -473,7 +509,7 @@ namespace AnimalsNeedWater
 
             if (needToFixAnimals)
             {
-                Utility.fixAllAnimals();
+                StardewValley.Utility.fixAllAnimals();
             }
         }
 
@@ -484,7 +520,7 @@ namespace AnimalsNeedWater
             if (empty)
             {
                 building.texture = new Lazy<Texture2D>(() =>
-                    ModHelper.ModContent.Load<Texture2D>("assets/Coop2_emptyWaterTrough.png"));
+                    ModHelper.ModContent.Load<Texture2D>(AssetManager.Coop2EmptyWaterTrough));
             }
             else
             {
@@ -499,7 +535,7 @@ namespace AnimalsNeedWater
             if (empty)
             {
                 building.texture = new Lazy<Texture2D>(() =>
-                    ModHelper.ModContent.Load<Texture2D>("assets/Coop_emptyWaterTrough.png"));
+                    ModHelper.ModContent.Load<Texture2D>(AssetManager.CoopEmptyWaterTrough));
             }
             else
             {
@@ -531,8 +567,9 @@ namespace AnimalsNeedWater
                 if (indoorsMap.TileSheets.All(ts => !ts.Id.Equals("z_waterTroughTilesheet")))
                 {
                     var tileSheetImageSource = Helper.ModContent
-                        .GetInternalAssetName(
-                            $"assets/waterTroughTilesheet{(Config.CleanerTroughs ? "_clean" : "")}.png").Name;
+                        .GetInternalAssetName(Config.CleanerTroughs
+                            ? AssetManager.WaterTroughTilesheetClean
+                            : AssetManager.WaterTroughTilesheet).Name;
                     var tileSheet = new TileSheet(
                         "z_waterTroughTilesheet",
                         indoorsMap,
@@ -550,7 +587,7 @@ namespace AnimalsNeedWater
                     indoorsMap.TileSheets.Any(ts => ts.Id.Equals("z_wateringSystemTilesheet"))) continue;
                 
                 var wateringSystemTilesheetImageSource = Helper.ModContent
-                    .GetInternalAssetName("assets/wateringSystemTilesheet.png").Name;
+                    .GetInternalAssetName(AssetManager.WateringSystemTilesheet).Name;
                 var wateringSystemTilesheet = new TileSheet(
                     "z_wateringSystemTilesheet",
                     indoorsMap,

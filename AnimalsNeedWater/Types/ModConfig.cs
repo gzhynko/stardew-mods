@@ -69,6 +69,11 @@ namespace AnimalsNeedWater.Types
         /// Whether troughs should have a cleaner texture.
         /// </summary>
         public bool CleanerTroughs { get; set; } = false;
+
+        /// <summary>
+        /// The price of the water bowl object at Marnie's animal shop. Defaults to zero.
+        /// </summary>
+        public int MarnieWaterBowlPrice { get; set; } = 0;
         
         /// <summary>
         /// Setup the Generic Mod Config Menu API.
@@ -101,6 +106,9 @@ namespace AnimalsNeedWater.Types
             api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding, val => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding = (int)val, () => "Watered Trough With Animals Inside", () => "The amount of friendship points player gets for watering a trough with animals inside the building (i.e. when animals see the player watering the trough).", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.NegativeFriendshipPointsForNotWateredTrough, val => config.NegativeFriendshipPointsForNotWateredTrough = (int)val, () => "Negative; Not Watered Trough", () => "The amount of friendship points player loses for not watering a trough.", interval: 1.0f);
+            
+            api.AddSectionTitle(manifest, () => "Miscellaneous");
+            api.AddNumberOption(manifest, () => config.MarnieWaterBowlPrice, val => config.MarnieWaterBowlPrice = (int)val, () => "Animal Shop Water Bowl Price", () => "The price of the water bowl object at Marnie's animal shop.", interval: 1.0f);
         }
     }
 }
