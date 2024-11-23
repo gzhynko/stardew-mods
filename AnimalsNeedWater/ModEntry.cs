@@ -149,6 +149,14 @@ namespace AnimalsNeedWater
             
             foreach (Building building in AnimalBuildings)
             {
+                var indoors = building.indoors.Value;
+                // if all animals that live here were able to drink water during the day, do not empty troughs
+                if (indoors.animals.Values.All(animal => ModData.FullAnimals.Contains(animal)))
+                {
+                    ModData.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
+                    return;
+                }
+                
                 // empty Water Bowl objects
                 var buildingObjects = building.GetIndoors().Objects.Values;
                 foreach (Object @object in buildingObjects)
@@ -441,8 +449,6 @@ namespace AnimalsNeedWater
         {
             LoadNewTileSheets();
             
-            ModData.FullAnimals = new List<FarmAnimal>();
-            
             // Check whether there is a festival today. If not, empty the troughs.
             if (!StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
             {
@@ -472,6 +478,7 @@ namespace AnimalsNeedWater
                 }
             }
             
+            ModData.FullAnimals = new List<FarmAnimal>();
             PlaceWateringSystems();
         }
 
