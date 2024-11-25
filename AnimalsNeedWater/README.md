@@ -19,7 +19,7 @@ See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWat
 | Chinese              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam))                                     |
 | French               | ✕                                                                                                                                                                         |
 | German               | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [Makytar](https://www.nexusmods.com/stardewvalley/users/51740796))       |
-| Hungarian            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [szatoka](https://www.nexusmods.com/stardewvalley/users/47532583))       |
+| Hungarian            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/hu.json) (credit to [szatoka](https://www.nexusmods.com/stardewvalley/users/47532583))       |
 | Italian              | ✕                                                                                                                                                                         |
 | Japanese             | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ja.json) (credit to [TinyCordelia](https://next.nexusmods.com/profile/TinyCordelia))         |
 | Korean               | ✕                                                                                                                                                                         |
@@ -28,7 +28,7 @@ See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWat
 | Spanish              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373))                       |
 | Turkish              | ✕                                                                                                                                                                         |
 
-Key: ✓ = full translation available, ~ = partial translation available.
+Key: ✓ = full translation available, ~ = partial translation available, ✕ = no translation yet.
 
 **Contributing**
 If you'd like to help me translate the mod, here's how:
