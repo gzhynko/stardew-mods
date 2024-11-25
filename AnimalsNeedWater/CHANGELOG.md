@@ -2,8 +2,9 @@
 
 ## 1.7.2
 Released November 25, 2024.
-- Fixed troughs occasionally not auto-refilling in Deluxe buildings.
+- Fix troughs occasionally not auto-refilling in Deluxe buildings.
 - Data like full animals is now persistent across save loads.
+- Add Hungarian translation (thanks to szatoka).
 
 ## 1.7.1
 Released November 22, 2024.
