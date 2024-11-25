@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AnimalsNeedWater.Content;
 using AnimalsNeedWater.Patching;
-using AnimalsNeedWater.Types;
+using AnimalsNeedWater.Models;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -25,6 +25,7 @@ namespace AnimalsNeedWater
         public static IModHelper ModHelper = null!;
         public static ModConfig Config = null!;
         public static IManifest Manifest = null!;
+        public static ModData Data = null!;
         
         public static Dictionary<string, TroughPlacementProfile> CurrentTroughPlacementProfiles = null!;
         
@@ -50,6 +51,7 @@ namespace AnimalsNeedWater
             
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+            helper.Events.GameLoop.Saving += OnSaving;
             helper.Events.GameLoop.Saved += HandleDayUpdate;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
@@ -145,26 +147,26 @@ namespace AnimalsNeedWater
         /// <summary> Empty water troughs in animal houses. </summary>
         private void EmptyWaterTroughs()
         {
-            ModData.BuildingsWithWateredTrough = new List<string>();
+            Data.BuildingsWithWateredTrough = new List<string>();
             
             foreach (Building building in AnimalBuildings)
             {
                 var indoors = building.indoors.Value;
                 // if all animals that live here were able to drink water during the day, do not empty troughs
-                if (indoors.animals.Values.All(animal => ModData.FullAnimals.Contains(animal)))
+                if (indoors.animals.Values.All(animal => Data.IsAnimalFull(animal)))
                 {
-                    ModData.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
-                    return;
+                    Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
+                    continue;
                 }
                 
                 // empty Water Bowl objects
                 var buildingObjects = building.GetIndoors().Objects.Values;
                 foreach (Object @object in buildingObjects)
                 {
-                    if (!@object.HasTypeId("(BC)") || @object.ItemId != ModData.WaterBowlItemId) 
+                    if (!@object.HasTypeId("(BC)") || @object.ItemId != ModConstants.WaterBowlItemId) 
                         continue;
-                    if (@object.modData.ContainsKey(ModData.WaterBowlItemModDataIsFullField)
-                        && @object.modData[ModData.WaterBowlItemModDataIsFullField] == "true")
+                    if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
+                        && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
                     {
                         Utility.EmptyWaterBowlObject(@object);
                     }
@@ -173,10 +175,11 @@ namespace AnimalsNeedWater
                 if (Config.UseWateringSystems)
                 {
                     // check if this building has a watering system
-                    if (CurrentTroughPlacementProfiles.TryGetValue(building.buildingType.Value.ToLower(), out var profile) && profile.BuildingHasWateringSystem(building.buildingType.Value.ToLower()))
+                    if (CurrentTroughPlacementProfiles.TryGetValue(building.buildingType.Value.ToLower(), out var profile) 
+                        && profile.BuildingHasWateringSystem(building.buildingType.Value.ToLower()))
                     {
-                        if (!ModData.BuildingsWithWateredTrough.Contains(building.GetIndoorsName().ToLower()))
-                            ModData.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
+                        if (!Data.BuildingsWithWateredTrough.Contains(building.GetIndoorsName().ToLower()))
+                            Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
                         
                         // do not proceed with emptying water troughs
                         continue;
@@ -200,7 +203,7 @@ namespace AnimalsNeedWater
             int animalCount = building.GetParentLocation().getAllFarmAnimals().Count(animal => animal.home.GetIndoorsName().Equals(indoorsGameLocation.NameOrUniqueName, StringComparison.CurrentCultureIgnoreCase));
             if (animalCount == 0)
             {
-                ModData.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
+                Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
                 return;
             }
 
@@ -258,10 +261,10 @@ namespace AnimalsNeedWater
                     var buildingObjects = building.GetIndoors().Objects.Values;
                     foreach (Object @object in buildingObjects)
                     {
-                        if (!@object.HasTypeId("(BC)") || @object.ItemId != ModData.WaterBowlItemId) 
+                        if (!@object.HasTypeId("(BC)") || @object.ItemId != ModConstants.WaterBowlItemId) 
                             continue;
-                        if (@object.modData.ContainsKey(ModData.WaterBowlItemModDataIsFullField)
-                            && @object.modData[ModData.WaterBowlItemModDataIsFullField] == "true")
+                        if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
+                            && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
                         {
                             hasFullWaterBowlObject = true;
                         }
@@ -271,8 +274,8 @@ namespace AnimalsNeedWater
                     
                     foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
                         .Where(animal =>
-                            ModData.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) == false &&
-                            ModData.FullAnimals.Contains(animal) == false)
+                            Data.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) == false &&
+                            Data.IsAnimalFull(animal) == false)
                         .Where(animal =>
                             !animalsLeftThirsty.Contains(animal)))
                     {
@@ -284,8 +287,8 @@ namespace AnimalsNeedWater
                 // Check for animals outside their buildings as well.
                 foreach (var animal in parentLocation.animals.Values)
                 {
-                    if ((ModData.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) ||
-                         ModData.FullAnimals.Contains(animal)) &&
+                    if ((Data.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower()) ||
+                         Data.IsAnimalFull(animal)) &&
                         animal.home.animalDoorOpen.Value) continue;
                 
                     if (animalsLeftThirsty.Contains(animal)) continue;
@@ -340,7 +343,7 @@ namespace AnimalsNeedWater
             
             TroughWateredMessage message = e.ReadAs<TroughWateredMessage>();
 
-            ModData.BuildingsWithWateredTrough.Add(message.BuildingUniqueName.ToLower());
+            Data.BuildingsWithWateredTrough.Add(message.BuildingUniqueName.ToLower());
             
             string locationName = message.BuildingUniqueName;
             Building building = Game1.getLocationFromName(locationName).ParentBuilding;
@@ -362,17 +365,40 @@ namespace AnimalsNeedWater
             }
         }
 
+        /// <summary>
+        /// Read any saved data (thirsty animals/watered buildings) from the savefile. 
+        /// </summary>
+        private void LoadSavedModData()
+        {
+            Data = Helper.Data.ReadSaveData<ModData>(ModConstants.ModDataSaveDataKey) ?? new ModData();
+            Data.ParseInternalFields();
+        }
+
+        /// <summary>
+        /// Write data to the savefile.
+        /// </summary>
+        private void SaveModData()
+        {
+            Helper.Data.WriteSaveData(ModConstants.ModDataSaveDataKey, Data);
+        }
+
         /// <summary> Raised after the save is loaded. </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
         {
+            LoadSavedModData();
             GetAnimalBuildings();
             CheckHomeStatus();
             LoadNewTileSheets();
             PlaceWateringSystems();
 
             HandleDayStart();
+        }
+
+        private void OnSaving(object? sender, SavingEventArgs e)
+        {
+            SaveModData();
         }
         
         private void OnDayEnding(object? sender, DayEndingEventArgs e)
@@ -462,8 +488,8 @@ namespace AnimalsNeedWater
                     if (GetProfileForBuilding(buildingName) == null)
                         continue;
                     
-                    if (!ModData.BuildingsWithWateredTrough.Contains(buildingName.ToLower()))
-                        ModData.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
+                    if (!Data.BuildingsWithWateredTrough.Contains(buildingName.ToLower()))
+                        Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
 
                     switch (building.buildingType.Value.ToLower())
                     {
@@ -478,7 +504,7 @@ namespace AnimalsNeedWater
                 }
             }
             
-            ModData.FullAnimals = new List<FarmAnimal>();
+            Data.ResetFullAnimals();
             PlaceWateringSystems();
         }
 

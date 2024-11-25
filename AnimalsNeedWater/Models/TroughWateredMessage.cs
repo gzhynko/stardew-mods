@@ -1,6 +1,6 @@
 using System;
 
-namespace AnimalsNeedWater.Types
+namespace AnimalsNeedWater.Models
 {
     public class TroughWateredMessage
     {

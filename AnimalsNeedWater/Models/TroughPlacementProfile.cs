@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace AnimalsNeedWater.Types
+namespace AnimalsNeedWater.Models
 {
     public class TroughPlacementProfile
     {

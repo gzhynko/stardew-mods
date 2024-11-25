@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AnimalsNeedWater.Types;
+using AnimalsNeedWater.Models;
 using StardewValley;
 // ReSharper disable InconsistentNaming
 
@@ -31,23 +31,23 @@ namespace AnimalsNeedWater
 
         public List<string> GetBuildingsWithWateredTrough()
         {
-            return ModData.BuildingsWithWateredTrough;
+            return ModEntry.Data.BuildingsWithWateredTrough;
         }
 
         public bool IsAnimalFull(FarmAnimal animal)
         {
-            return ModData.FullAnimals.Contains(animal);
+            return ModEntry.Data.IsAnimalFull(animal);
         }
         
         public bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
         {
-            var houseTroughFull = ModData.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower());
-            return houseTroughFull || ModData.FullAnimals.Contains(animal);
+            var houseTroughFull = ModEntry.Data.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower());
+            return houseTroughFull || ModEntry.Data.IsAnimalFull(animal);
         }
 
         public List<long> GetFullAnimals()
         {
-            return ModData.FullAnimals.ConvertAll(i => i.myID.Value);
+            return ModEntry.Data.FullAnimalsInternal;
         }
     }
 }

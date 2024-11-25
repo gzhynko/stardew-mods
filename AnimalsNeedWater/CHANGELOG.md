@@ -1,5 +1,10 @@
 # Version history for AnimalsNeedWater
 
+## 1.7.2
+Released November 25, 2024.
+- Fixed troughs occasionally not auto-refilling in Deluxe buildings.
+- Data like full animals is now persistent across save loads.
+
 ## 1.7.1
 Released November 22, 2024.
 - Troughs now remain full overnight if all animals inside the building were able to drink water during the day.

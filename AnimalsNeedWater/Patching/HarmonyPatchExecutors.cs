@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
-using AnimalsNeedWater.Types;
+using AnimalsNeedWater.Models;
 using Microsoft.Xna.Framework;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Extensions;
@@ -23,7 +22,9 @@ namespace AnimalsNeedWater.Patching
                 environment is not AnimalHouse && !__instance.home.animalDoorOpen.Value) return;
             
             // check whether BuildingsWithWateredTrough contains the building the animal lives in and whether it was able to drink outside or not
-            if ((__instance.home != null && ModData.BuildingsWithWateredTrough.Contains(__instance.home.indoors.Value.NameOrUniqueName.ToLower())) || ModData.FullAnimals.Contains(__instance))
+            if ((__instance.home != null 
+                 && ModEntry.Data.BuildingsWithWateredTrough.Contains(__instance.home.indoors.Value.NameOrUniqueName.ToLower())) 
+                || ModEntry.Data.IsAnimalFull(__instance))
             {
                 // increase friendship points
                 __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config.FriendshipPointsForWateredTrough);
@@ -51,7 +52,7 @@ namespace AnimalsNeedWater.Patching
             if (ModEntry.Config.AnimalsCanDrinkOutside 
                 && !__instance.isSwimming.Value 
                 && location.IsOutdoors 
-                && !ModData.FullAnimals.Contains(__instance) 
+                && !ModEntry.Data.IsAnimalFull(__instance) 
                 && Game1.random.NextDouble() < 0.002 // set a random chance of 0.2% each frame to pathfind
                 && FarmAnimal.NumPathfindingThisTick < FarmAnimal.MaxPathfindingPerTick)
             {
@@ -91,13 +92,13 @@ namespace AnimalsNeedWater.Patching
         private static void BehaviorAfterFindingWater(Character c, GameLocation environment)
         {
             // return if the animal is already on the list
-            if (ModData.FullAnimals.Contains((c as FarmAnimal)!))
+            if (ModEntry.Data.IsAnimalFull((c as FarmAnimal)!))
                 return;
             
             // do the 'happy' emote and add the animal to the Full Animals list
             c.doEmote(32);
             ((FarmAnimal)c).isEating.Value = true; // do the eating animation
-            ModData.FullAnimals.Add((c as FarmAnimal)!);
+            ModEntry.Data.AddFullAnimal((c as FarmAnimal)!);
         }
         
         public static bool GameLocationToolActionExecutor(Tool tool, int tileX, int tileY)
@@ -117,7 +118,7 @@ namespace AnimalsNeedWater.Patching
             // check if hit a water bowl object
             var objectHit = currentLocation.getObjectAtTile(tileX, tileY);
             // hit a bowl!
-            if (objectHit != null && objectHit.HasTypeId("(BC)") && objectHit.ItemId == ModData.WaterBowlItemId)
+            if (objectHit != null && objectHit.HasTypeId("(BC)") && objectHit.ItemId == ModConstants.WaterBowlItemId)
             {
                 Utility.FillWaterBowlObject(objectHit);
                 return false;
@@ -126,7 +127,7 @@ namespace AnimalsNeedWater.Patching
             // if did not hit any water bowl objects, check for trough tiles hits instead
             
             // skip if the building is watered
-            if (ModData.BuildingsWithWateredTrough.Contains(buildingUniqueName.ToLower()))
+            if (ModEntry.Data.BuildingsWithWateredTrough.Contains(buildingUniqueName.ToLower()))
                 return true;
             
             var buildingProfile = ModEntry.GetProfileForBuilding(buildingNameNoUnique);
@@ -141,7 +142,7 @@ namespace AnimalsNeedWater.Patching
             if (!troughHit)
                 return true;
             
-            ModData.BuildingsWithWateredTrough.Add(buildingUniqueName.ToLower());
+            ModEntry.Data.BuildingsWithWateredTrough.Add(buildingUniqueName.ToLower());
             ModEntry.SendTroughWateredMessage(buildingUniqueName.ToLower());
             UpdateBuildingTroughs(building);
         
@@ -162,7 +163,7 @@ namespace AnimalsNeedWater.Patching
             {
                 if (ModEntry.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
                 {
-                    animal.doEmote(ModData.LoveEmote);
+                    animal.doEmote(ModConstants.LoveEmote);
                 }
 
                 animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config
@@ -205,7 +206,7 @@ namespace AnimalsNeedWater.Patching
 
             foreach (TroughTile tile in profilePlacement.TroughTiles)
             {
-                var tileIndexToUse = ModData.BuildingsWithWateredTrough.Contains(buildingUniqueName.ToLower())
+                var tileIndexToUse = ModEntry.Data.BuildingsWithWateredTrough.Contains(buildingUniqueName.ToLower())
                     ? tile.FullIndex
                     : tile.EmptyIndex;
                 

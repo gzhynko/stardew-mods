@@ -1,7 +1,7 @@
 using StardewModdingAPI.Events;
 using StardewValley.GameData.BigCraftables;
 using StardewValley.GameData.Shops;
-using AnimalsNeedWater.Types;
+using AnimalsNeedWater.Models;
 using StardewModdingAPI;
 
 namespace AnimalsNeedWater.Content;
@@ -25,7 +25,7 @@ public class ContentEditor
                     Texture = ModEntry.ModHelper.ModContent.GetInternalAssetName(AssetManager.WaterBowlTextureSpritesheet).Name,
                     Price = ModEntry.Config.MarnieWaterBowlPrice,
                 };
-                editor.Data.Add(ModData.WaterBowlItemId, waterBowlAssetData);
+                editor.Data.Add(ModConstants.WaterBowlItemId, waterBowlAssetData);
             });
         }
         
@@ -55,8 +55,8 @@ public class ContentEditor
 
                 var waterBowlShopItemData = new ShopItemData
                 {
-                    Id = ModData.WaterBowlItemId,
-                    ItemId = ModData.WaterBowlItemId,
+                    Id = ModConstants.WaterBowlItemId,
+                    ItemId = ModConstants.WaterBowlItemId,
                     Price = ModEntry.Config.MarnieWaterBowlPrice,
                 };
                 animalShopData.Items.Add(waterBowlShopItemData);
