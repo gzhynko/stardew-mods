@@ -27,6 +27,7 @@ See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWat
 | Russian              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ru.json)                                                                                     |
 | Spanish              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373))                       |
 | Turkish              | ✕                                                                                                                                                                         |
+
 Key: ✓ = full translation available, ~ = partial translation available.
 
 **Contributing**
