@@ -2,7 +2,7 @@
 
 ## Install
 1. [Install the latest version of SMAPI](https://smapi.io/).
-2. Install Fish Exclusions [from Nexus mods](https://www.nexusmods.com/stardewvalley/mods/29787).
+2. Install Scythe Harvests More [from Nexus mods](https://www.nexusmods.com/stardewvalley/mods/29787).
 3. Run the game using SMAPI.
 
 ## Uninstall
