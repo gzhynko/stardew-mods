@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.7.3
+Upcoming
+- Add profile for Stardew Valley Expanded.
+
 ## 1.7.2
 Released November 25, 2024.
 - Fix troughs occasionally not auto-refilling in Deluxe buildings.

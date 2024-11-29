@@ -175,8 +175,8 @@ namespace AnimalsNeedWater
                 if (Config.UseWateringSystems)
                 {
                     // check if this building has a watering system
-                    if (CurrentTroughPlacementProfiles.TryGetValue(building.buildingType.Value.ToLower(), out var profile) 
-                        && profile.BuildingHasWateringSystem(building.buildingType.Value.ToLower()))
+                    var profile = GetProfileForBuilding(building.buildingType.Value);
+                    if (profile != null && profile.BuildingHasWateringSystem(building.buildingType.Value.ToLower()))
                     {
                         if (!Data.BuildingsWithWateredTrough.Contains(building.GetIndoorsName().ToLower()))
                             Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName().ToLower());
@@ -208,38 +208,36 @@ namespace AnimalsNeedWater
             }
 
             // empty the troughs
-            foreach (var (profileBuildingName, profile) in CurrentTroughPlacementProfiles)
+            var profile = GetProfileForBuilding(buildingName);
+            if (profile == null) return;
+
+            switch (buildingName.ToLower())
             {
-                if (!buildingName.Equals(profileBuildingName, StringComparison.CurrentCultureIgnoreCase)) continue;
+                case "coop":
+                    ChangeCoopTexture(building, true);
+                    break;
+                case "big coop":
+                    ChangeBigCoopTexture(building, true);
+                    break;
+            }
 
-                switch (buildingName.ToLower())
-                {
-                    case "coop":
-                        ChangeCoopTexture(building, true);
-                        break;
-                    case "big coop":
-                        ChangeBigCoopTexture(building, true);
-                        break;
-                }
+            var profileTroughTiles = profile.GetPlacementForBuildingName(buildingName).TroughTiles;
+            
+            foreach (TroughTile tile in profileTroughTiles)
+            {
+                indoorsGameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
+            }
 
-                var profileTroughTiles = profile.GetPlacementForBuildingName(profileBuildingName).TroughTiles;
-                
-                foreach (TroughTile tile in profileTroughTiles)
-                {
-                    indoorsGameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
-                }
+            Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
+            Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
+            TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
-                Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
-                Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
-                TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
-
-                foreach (TroughTile tile in profileTroughTiles)
-                {
-                    if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
-                        buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                    else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
-                        frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
-                }
+            foreach (TroughTile tile in profileTroughTiles)
+            {
+                if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
+                    buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
+                else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
+                    frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.EmptyIndex);
             }
         }
 

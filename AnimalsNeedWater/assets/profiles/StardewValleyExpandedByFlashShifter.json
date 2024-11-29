@@ -1,0 +1,123 @@
+{
+  "modUniqueId": "FlashShifter.StardewValleyExpandedCP",
+  "targetBuildings": ["FlashShifter.StardewValleyExpandedCP_PremiumCoop", "FlashShifter.StardewValleyExpandedCP_PremiumBarn"],
+  "placement": [
+    {
+      "troughTiles": [
+        {
+          "tileX": 2,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 25,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 26,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 25,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 26,
+          "tileY": 6,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ],
+      "wateringSystem": {
+        "tileX": 27,
+        "tileY": 7,
+        "layer": "Buildings",
+        "systemIndex": 0,
+        "tilesToRemove": [
+          {
+            "tileX": 27,
+            "tileY": 7,
+            "layer": "Buildings"
+          },
+          {
+            "tileX": 27,
+            "tileY": 6,
+            "layer": "Front"
+          }
+        ]
+      }
+    },
+    {
+      "troughTiles": [
+        {
+          "tileX": 3,
+          "tileY": 4,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 2,
+          "tileY": 13,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 23,
+          "tileY": 7,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        },
+        {
+          "tileX": 23,
+          "tileY": 4,
+          "layer": "Buildings",
+          "emptyIndex": 6,
+          "fullIndex": 8
+        },
+        {
+          "tileX": 24,
+          "tileY": 4,
+          "layer": "Buildings",
+          "emptyIndex": 7,
+          "fullIndex": 9
+        },
+        {
+          "tileX": 23,
+          "tileY": 3,
+          "layer": "Front",
+          "emptyIndex": 1,
+          "fullIndex": 4
+        },
+        {
+          "tileX": 24,
+          "tileY": 3,
+          "layer": "Front",
+          "emptyIndex": 2,
+          "fullIndex": 5
+        }
+      ],
+      "wateringSystem": {
+        "tileX": 3,
+        "tileY": 3,
+        "layer": "Front",
+        "systemIndex": 1,
+        "tilesToRemove": []
+      }
+    }
+  ]
+}
