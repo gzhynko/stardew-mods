@@ -9,4 +9,4 @@
 Simply removing mod's folder will work.
 
 ## See also
-- Fish Exclusions on [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/29787).
+- Scythe Harvests More on [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/29787).
