@@ -1,7 +1,7 @@
 # Version history for AnimalsNeedWater
 
 ## 1.7.3
-Upcoming
+Released November 30, 2024.
 - Add profile for Stardew Valley Expanded.
 
 ## 1.7.2
