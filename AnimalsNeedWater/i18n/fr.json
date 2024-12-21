@@ -1,0 +1,17 @@
+{
+    /*
+        {{firstAnimalName}} - Display name of the first animal on the list.
+        {{secondAnimalName}} - Display name of the second animal on the list.
+        {{thirdAnimalName}} - Display name of the third animal on the list.
+        {{totalAmountExcludingFirstThree}} - Total amount (number) of animals on the list, excluding first three.
+    */
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "{{firstAnimalName}} a eu soif hier.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "{{firstAnimalName}} a eu soif hier.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} a eu soif hier.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} et {{secondAnimalName}} ont eu soif hier.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} and {{thirdAnimalName}} ont eu soif hier.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}}autres animaux ont eu soif hier.",
+    
+    "Items.Water_Bowl.name": "Bol d'eau",
+    "Items.Water_Bowl.description": "Peut être placé à l'intérieur des bâtiments abritant des animaux afin qu'ils puissent boire de l'eau même si le bâtiment n'est pas équipé d'abreuvoir."
+}
