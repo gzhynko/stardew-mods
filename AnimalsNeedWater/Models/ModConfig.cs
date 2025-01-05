@@ -64,6 +64,11 @@ namespace AnimalsNeedWater.Models
         /// Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).
         /// </summary>
         public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = false;
+
+        /// <summary>
+        /// Whether troughs can remain full if all animals inside a building were able to drink outside during the day.
+        /// </summary>
+        public bool TroughsCanRemainFull { get; set; } = true;
         
         /// <summary>
         /// Whether troughs should have a cleaner texture.
@@ -101,7 +106,8 @@ namespace AnimalsNeedWater.Models
             api.AddBoolOption(manifest, () => config.UseWateringSystems, val => config.UseWateringSystems = val, () => "Use Watering Systems", () => "Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).");
             api.AddBoolOption(manifest, () => config.AnimalsCanDrinkOutside, val => config.AnimalsCanDrinkOutside = val, () => "Animals Can Drink Outside", () => "Whether animals can drink outside.");
             api.AddBoolOption(manifest, () => config.AnimalsCanOnlyDrinkFromWaterBodies, val => config.AnimalsCanOnlyDrinkFromWaterBodies = val, () => "Animals Can Only Drink From Water Bodies", () => "Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).");
-            
+            api.AddBoolOption(manifest, () => config.TroughsCanRemainFull, val => config.TroughsCanRemainFull = val, () => "Troughs Can Remain Full", () => "Whether troughs can remain full if all animals inside a building were able to drink outside during the day.");
+
             api.AddSectionTitle(manifest, () => "Friendship");
             api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);
             api.AddNumberOption(manifest, () => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding, val => config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding = (int)val, () => "Watered Trough With Animals Inside", () => "The amount of friendship points player gets for watering a trough with animals inside the building (i.e. when animals see the player watering the trough).", interval: 1.0f);

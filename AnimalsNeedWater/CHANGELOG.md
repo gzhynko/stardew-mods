@@ -1,5 +1,11 @@
 # Version history for AnimalsNeedWater
 
+## 1.7.4
+Released January 5, 2025.
+- Add French translation (thanks to Caranud).
+- Update Chinese translation (thanks to Kasakana).
+- Make functionality added in 1.7.1 (troughs remain full if all animals drank outside) toggleable.
+
 ## 1.7.3
 Released November 30, 2024.
 - Add profile for Stardew Valley Expanded.
