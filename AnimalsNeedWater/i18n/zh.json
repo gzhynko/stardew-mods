@@ -4,5 +4,8 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}}昨天被渴坏了。",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}}和{{secondAnimalName}}昨天都渴坏了。",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}，{{secondAnimalName}}和{{thirdAnimalName}}昨天都渴坏了。",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}，{{secondAnimalName}}, {{thirdAnimalName}}和其它{{totalAmountExcludingFirstThree}}只动物昨天都渴坏了。"
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}，{{secondAnimalName}}, {{thirdAnimalName}}和其它{{totalAmountExcludingFirstThree}}只动物昨天都渴坏了。",
+    
+    "Items.Water_Bowl.name": "水碗",
+    "Items.Water_Bowl.description": "可以放置在动物建筑物内，这样即使建筑物内没有水槽，动物也可以喝水。"
 }
