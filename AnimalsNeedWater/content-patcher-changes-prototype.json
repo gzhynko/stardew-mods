@@ -1,0 +1,51 @@
+{
+  "Changes": [
+    {
+      "Action": "Load",
+      "Target": "Mods/{{ModId}}/barn_trough_placement",
+      "FromFile": "assets/placements/barn_trough_placement.json"
+    },
+    {
+      "Action": "Load",
+      "Target": "Mods/{{ModId}}/barn_trough_tilesheet",
+      "FromFile": "assets/tilesheets/barn_trough_tilesheet.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Mods/{{ModId}}/barn_empty_sprite",
+      "FromFile": "assets/sprites/barn_empty_sprite.png"
+    },
+    
+    {
+      "Action": "EditData",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughPlacements",
+      "Entries": {
+        "{{ModId}}": {
+          "File": "Mods/{{ModId}}/barn_trough_placement",
+          "Buildings": ["barn"]
+        }
+      }
+    },
+    {
+      "Action": "EditData",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughTilesheets",
+      "Entries": {
+        "{{ModId}}": {
+          "File": "Mods/{{ModId}}/barn_trough_tilesheet",
+          "Buildings": ["barn"]
+        }
+      }
+    },
+    {
+      "Action": "EditData",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/EmptyBuildingSprites",
+      "Entries": {
+        "{{ModId}}": {
+          "File": "Mods/{{ModId}}/barn_empty_sprite",
+          "Buildings": ["barn"]
+          
+        }
+      }
+    }
+  ]
+}

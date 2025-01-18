@@ -125,7 +125,7 @@ namespace AnimalsNeedWater
                         Monitor.Log(
                             $"Warning: target building {profileTargetBuilding} of profile for mod " +
                             $"{profile.ModUniqueId} is already covered by a previously loaded profile for mod " +
-                            $"{CurrentTroughPlacementProfiles[profileTargetBuilding]}. Skipping this building."
+                            $"{CurrentTroughPlacementProfiles[profileTargetBuilding].ModUniqueId}. Skipping this building."
                             , LogLevel.Warn);
                     }
                 }
