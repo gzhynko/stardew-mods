@@ -1,10 +1,9 @@
+using AnimalsNeedWater.Core.Models;
 using StardewModdingAPI.Events;
 using StardewValley.GameData.BigCraftables;
 using StardewValley.GameData.Shops;
-using AnimalsNeedWater.Models;
-using StardewModdingAPI;
 
-namespace AnimalsNeedWater.Content;
+namespace AnimalsNeedWater.Core.Content;
 
 public class ContentEditor
 {

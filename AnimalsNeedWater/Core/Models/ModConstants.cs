@@ -1,4 +1,4 @@
-namespace AnimalsNeedWater.Models;
+namespace AnimalsNeedWater.Core.Models;
 
 public static class ModConstants
 {

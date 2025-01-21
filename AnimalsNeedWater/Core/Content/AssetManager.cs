@@ -1,4 +1,4 @@
-namespace AnimalsNeedWater.Content;
+namespace AnimalsNeedWater.Core.Content;
 
 public class AssetManager
 {

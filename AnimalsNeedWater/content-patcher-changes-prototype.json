@@ -12,6 +12,11 @@
     },
     {
       "Action": "Load",
+      "Target": "Mods/{{ModId}}/barn_watering_system_tilesheet",
+      "FromFile": "assets/tilesheets/barn_watering_system_tilesheet.png"
+    },
+    {
+      "Action": "Load",
       "Target": "Mods/{{ModId}}/barn_empty_sprite",
       "FromFile": "assets/sprites/barn_empty_sprite.png"
     },
@@ -32,6 +37,16 @@
       "Entries": {
         "{{ModId}}": {
           "File": "Mods/{{ModId}}/barn_trough_tilesheet",
+          "Buildings": ["barn"]
+        }
+      }
+    },
+    {
+      "Action": "EditData",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/WateringSystemTilesheets",
+      "Entries": {
+        "{{ModId}}": {
+          "File": "Mods/{{ModId}}/barn_watering_system_tilesheet",
           "Buildings": ["barn"]
         }
       }

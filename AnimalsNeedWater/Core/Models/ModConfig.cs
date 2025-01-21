@@ -1,7 +1,7 @@
 using System;
 using StardewModdingAPI;
 
-namespace AnimalsNeedWater.Models
+namespace AnimalsNeedWater.Core.Models
 {
     public interface IGenericModConfigMenuApi
     {

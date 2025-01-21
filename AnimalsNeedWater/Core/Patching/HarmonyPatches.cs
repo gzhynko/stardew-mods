@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using StardewValley;
-using System;
+﻿using System;
 using HarmonyLib;
+using Microsoft.Xna.Framework;
 using StardewModdingAPI;
+using StardewValley;
+
 // ReSharper disable InconsistentNaming
 
-namespace AnimalsNeedWater.Patching
+namespace AnimalsNeedWater.Core.Patching
 {
     internal class HarmonyPatches
     {

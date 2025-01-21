@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AnimalsNeedWater.Models;
+using AnimalsNeedWater.Core.Models;
 using StardewModdingAPI;
 
-namespace AnimalsNeedWater
+namespace AnimalsNeedWater.Core
 {
     public class TroughPlacementProfiles
     {

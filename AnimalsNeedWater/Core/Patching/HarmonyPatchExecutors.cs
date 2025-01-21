@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using AnimalsNeedWater.Models;
+using AnimalsNeedWater.Core.Models;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
@@ -9,9 +9,10 @@ using StardewValley.Pathfinding;
 using StardewValley.Tools;
 using xTile.Layers;
 using xTile.Tiles;
+
 // ReSharper disable InconsistentNaming
 
-namespace AnimalsNeedWater.Patching
+namespace AnimalsNeedWater.Core.Patching
 {
     public static class HarmonyPatchExecutors
     {
@@ -120,7 +121,7 @@ namespace AnimalsNeedWater.Patching
             // hit a bowl!
             if (objectHit != null && objectHit.HasTypeId("(BC)") && objectHit.ItemId == ModConstants.WaterBowlItemId)
             {
-                Utility.FillWaterBowlObject(objectHit);
+                Utils.FillWaterBowlObject(objectHit);
                 return false;
             }
 

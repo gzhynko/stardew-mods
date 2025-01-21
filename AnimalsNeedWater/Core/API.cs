@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using AnimalsNeedWater.Models;
+using AnimalsNeedWater.Core.Models;
 using StardewValley;
 // ReSharper disable InconsistentNaming
 
-namespace AnimalsNeedWater
+namespace AnimalsNeedWater.Core
 {
     public interface IAnimalsNeedWaterAPI
     {

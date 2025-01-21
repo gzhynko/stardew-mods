@@ -1,6 +1,4 @@
-using System;
-
-namespace AnimalsNeedWater.Models
+namespace AnimalsNeedWater.Core.Models
 {
     public class TroughWateredMessage
     {

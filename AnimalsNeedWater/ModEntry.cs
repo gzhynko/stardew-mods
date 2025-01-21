@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnimalsNeedWater.Content;
-using AnimalsNeedWater.Patching;
-using AnimalsNeedWater.Models;
+using AnimalsNeedWater.Core;
+using AnimalsNeedWater.Core.Content;
+using AnimalsNeedWater.Core.Models;
+using AnimalsNeedWater.Core.Patching;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -15,6 +16,7 @@ using xTile.Dimensions;
 using xTile.Layers;
 using xTile.Tiles;
 using Object = StardewValley.Object;
+using Utility = StardewValley.Utility;
 
 namespace AnimalsNeedWater
 {
@@ -168,7 +170,7 @@ namespace AnimalsNeedWater
                     if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
                         && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
                     {
-                        Utility.EmptyWaterBowlObject(@object);
+                        Utils.EmptyWaterBowlObject(@object);
                     }
                 }
                 

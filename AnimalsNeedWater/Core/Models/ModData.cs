@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using StardewValley;
 
-namespace AnimalsNeedWater.Models
+namespace AnimalsNeedWater.Core.Models
 {
     /// <summary> Contains global variables and constants for the mod. </summary>
     public class ModData

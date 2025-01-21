@@ -1,9 +1,9 @@
-using AnimalsNeedWater.Models;
+using AnimalsNeedWater.Core.Models;
 using StardewValley;
 
-namespace AnimalsNeedWater;
+namespace AnimalsNeedWater.Core;
 
-public class Utility
+public static class Utils
 {
     public static void EmptyWaterBowlObject(Object waterBowl)
     {
