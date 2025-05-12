@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AnimalsNeedWater.Core.Models;
 using StardewValley;
 // ReSharper disable InconsistentNaming
@@ -15,6 +16,7 @@ namespace AnimalsNeedWater.Core
         bool IsAnimalFull(FarmAnimal animal);
         bool DoesAnimalHaveAccessToWater(FarmAnimal animal);
         List<long> GetFullAnimals();
+        bool IsTileWaterTrough(int tileX, int tileY);
     }
 
     public class API : IAnimalsNeedWaterAPI
@@ -48,6 +50,22 @@ namespace AnimalsNeedWater.Core
         public List<long> GetFullAnimals()
         {
             return ModEntry.Data.FullAnimalsInternal;
+        }
+
+        public bool IsTileWaterTrough(int tileX, int tileY)
+        {
+            var building = Game1.currentLocation?.ParentBuilding;
+            if (building == null)
+                return false;
+
+            var buildingType = building.buildingType?.Value;
+            var buildingProfile = ModEntry.GetProfileForBuilding(buildingType);
+            if (buildingProfile == null)
+                return false;
+
+            var placement = buildingProfile.GetPlacementForBuildingName(buildingType);
+            return placement.TroughTiles.Any(t => t.TileX == tileX && t.TileY == tileY);
+
         }
     }
 }
