@@ -1,0 +1,65 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace AnimalsNeedWater.Core.Models;
+
+public class LegacyPlacementProfile
+{
+    [JsonProperty("modUniqueId")]
+    public string? ModUniqueId { get; set; }
+    [JsonProperty("targetBuildings")]
+    public List<string>? TargetBuildings { get; set; }
+    [JsonProperty("placement")]
+    public List<BuildingTroughPlacement> Placement { get; set; } = new ();
+
+    public BuildingTroughPlacement GetPlacementForBuildingName(string buildingName) =>
+        Placement[TargetBuildings!.ConvertAll(s => s.ToLower()).IndexOf(buildingName.ToLower())];
+    public bool BuildingHasWateringSystem(string buildingName) =>
+        GetPlacementForBuildingName(buildingName).WateringSystem != null;
+}
+
+public class BuildingTroughPlacement
+{
+    [JsonProperty("troughTiles")]
+    public List<TroughTile> TroughTiles = new ();
+    [JsonProperty("wateringSystem")]
+    public WateringSystemTile? WateringSystem;
+}
+    
+public class TroughTile
+{
+    [JsonProperty("tileX")]
+    public int TileX { get; set; }
+    [JsonProperty("tileY")]
+    public int TileY { get; set; }
+    [JsonProperty("layer")]
+    public string? Layer { get; set; }
+    [JsonProperty("emptyIndex")]
+    public int EmptyIndex { get; set; }
+    [JsonProperty("fullIndex")]
+    public int FullIndex { get; set; }
+}
+
+public class WateringSystemTile
+{
+    [JsonProperty("tileX")]
+    public int TileX { get; set; }
+    [JsonProperty("tileY")]
+    public int TileY { get; set; }
+    [JsonProperty("layer")]
+    public string? Layer { get; set; }
+    [JsonProperty("systemIndex")]
+    public int SystemIndex { get; set; }
+    [JsonProperty("tilesToRemove")]
+    public List<SimplifiedTile> TilesToRemove { get; set; } = new ();
+}
+
+public class SimplifiedTile
+{
+    [JsonProperty("tileX")]
+    public int TileX { get; set; }
+    [JsonProperty("tileY")]
+    public int TileY { get; set; }
+    [JsonProperty("layer")]
+    public string? Layer { get; set; }
+}

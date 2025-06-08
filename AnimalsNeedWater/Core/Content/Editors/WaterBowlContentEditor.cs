@@ -3,9 +3,9 @@ using StardewModdingAPI.Events;
 using StardewValley.GameData.BigCraftables;
 using StardewValley.GameData.Shops;
 
-namespace AnimalsNeedWater.Core.Content;
+namespace AnimalsNeedWater.Core.Content.Editors;
 
-public class ContentEditor
+public class WaterBowlContentEditor
 {
     public static void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {

@@ -1,8 +1,6 @@
 {
-  "modUniqueId": "",
-  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
+  "placement": {
+    "coop": {
       "troughTiles": [
         {
           "tileX": 10,
@@ -13,7 +11,7 @@
         }
       ]
     },
-    {
+    "big coop": {
       "troughTiles": [
         {
           "tileX": 14,
@@ -24,7 +22,7 @@
         }
       ]
     },
-    {
+    "deluxe coop": {
       "troughTiles": [
         {
           "tileX": 20,
@@ -49,7 +47,7 @@
         "tilesToRemove": []
       }
     },
-    {
+    "barn": {
       "troughTiles": [
         {
           "tileX": 2,
@@ -88,7 +86,7 @@
         }
       ]
     },
-    {
+    "big barn": {
       "troughTiles": [
         {
           "tileX": 19,
@@ -134,7 +132,7 @@
         }
       ]
     },
-    {
+    "deluxe barn": {
       "troughTiles": [
         {
           "tileX": 1,
@@ -198,5 +196,5 @@
         ]
       }
     }
-  ]
+  }
 }
