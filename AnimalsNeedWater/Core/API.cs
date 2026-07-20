@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AnimalsNeedWater.Core.Models;
 using StardewValley;
 // ReSharper disable InconsistentNaming
@@ -21,17 +22,17 @@ public class API : IAnimalsNeedWaterAPI
 {
     public List<long> GetAnimalsLeftThirstyYesterday()
     {
-        return ModEntry.AnimalsLeftThirstyYesterday.ConvertAll(i => i.myID.Value);
+        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.ConvertAll(i => i.myID.Value);
     }
 
     public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
     {
-        return ModEntry.AnimalsLeftThirstyYesterday.Contains(animal);
+        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.Contains(animal);
     }
 
     public List<string> GetBuildingsWithWateredTrough()
     {
-        return ModEntry.Data.BuildingsWithWateredTrough;
+        return ModEntry.Data.BuildingsWithWateredTrough.ToList();
     }
 
     public bool IsAnimalFull(FarmAnimal animal)
@@ -41,12 +42,13 @@ public class API : IAnimalsNeedWaterAPI
     
     public bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
     {
-        var houseTroughFull = ModEntry.Data.BuildingsWithWateredTrough.Contains(animal.home.GetIndoorsName().ToLower());
-        return houseTroughFull || ModEntry.Data.IsAnimalFull(animal);
+        if (animal.home == null) return ModEntry.Data.IsAnimalFull(animal);
+        
+        return ModEntry.TroughManager.IsWatered(animal.home) || ModEntry.Data.IsAnimalFull(animal);
     }
 
     public List<long> GetFullAnimals()
     {
-        return ModEntry.Data.FullAnimalsInternal;
+        return ModEntry.Data.FullAnimals.ToList();
     }
 }

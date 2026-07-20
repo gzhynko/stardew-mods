@@ -1,8 +1,10 @@
 ﻿using System;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Buildings;
 
 // ReSharper disable InconsistentNaming
 
@@ -68,5 +70,18 @@ internal class HarmonyPatches
         {
             ModEntry.ModMonitor.Log($"Failed in { nameof(OnLocationChanged) }:\n{ e }", LogLevel.Error);
         }
+    }
+
+    public static void BuildingDrawPostfix(Building __instance, SpriteBatch b)
+    {
+        try
+        {
+            HarmonyPatchExecutors.BuildingDrawPostfix(__instance, b);
+        }
+        catch (Exception e)
+        {
+            ModEntry.ModMonitor.LogOnce($"Failed in { nameof(BuildingDrawPostfix) }:\n{ e }", LogLevel.Error);
+        }
+
     }
 }

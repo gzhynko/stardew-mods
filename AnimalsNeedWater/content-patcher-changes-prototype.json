@@ -1,64 +1,80 @@
 {
+  "Format": "2.3.0",
   "Changes": [
+    // the content patcher pack's own interior replacements (what the pack already ships today)
     {
       "Action": "Load",
-      "Target": "Mods/{{ModId}}/barn_trough_placement",
-      "FromFile": "assets/placements/barn_trough_placement.json"
+      "Target": "Maps/Coop, Maps/Barn3",
+      "FromFile": "assets/maps/{{TargetWithoutPath}}.tmx"
+    },
+
+    // optional custom art for ANW features, loaded under the pack's own asset names 
+    {
+      "Action": "Load",
+      "Target": "Mods/{{ModId}}/ANW/troughTilesheet",
+      "FromFile": "assets/anw/troughTilesheet.png"
     },
     {
       "Action": "Load",
-      "Target": "Mods/{{ModId}}/barn_trough_tilesheet",
-      "FromFile": "assets/tilesheets/barn_trough_tilesheet.png"
+      "Target": "Mods/{{ModId}}/ANW/wateringSystemTilesheet",
+      "FromFile": "assets/anw/wateringSystemTilesheet.png"
     },
     {
+      // small decal drawn over the building EXTERIOR while its trough is empty. can e.g. be seasonal via
+      // {{Season}} tokens or a later EditImage
       "Action": "Load",
-      "Target": "Mods/{{ModId}}/barn_watering_system_tilesheet",
-      "FromFile": "assets/tilesheets/barn_watering_system_tilesheet.png"
+      "Target": "Mods/{{ModId}}/ANW/coopEmptyTroughOverlay",
+      "FromFile": "assets/anw/coopEmptyTroughOverlay_{{Season}}.png"
     },
-    {
-      "Action": "Load",
-      "Target": "Mods/{{ModId}}/barn_empty_sprite",
-      "FromFile": "assets/sprites/barn_empty_sprite.png"
-    },
-    
+
+    // anw profile
     {
       "Action": "EditData",
       "Target": "Mods/GZhynko.AnimalsNeedWater/TroughPlacements",
       "Entries": {
-        "{{ModId}}": {
-          "File": "Mods/{{ModId}}/barn_trough_placement",
-          "Buildings": ["barn"]
-        }
-      }
-    },
-    {
-      "Action": "EditData",
-      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughTilesheets",
-      "Entries": {
-        "{{ModId}}": {
-          "File": "Mods/{{ModId}}/barn_trough_tilesheet",
-          "Buildings": ["barn"]
-        }
-      }
-    },
-    {
-      "Action": "EditData",
-      "Target": "Mods/GZhynko.AnimalsNeedWater/WateringSystemTilesheets",
-      "Entries": {
-        "{{ModId}}": {
-          "File": "Mods/{{ModId}}/barn_watering_system_tilesheet",
-          "Buildings": ["barn"]
-        }
-      }
-    },
-    {
-      "Action": "EditData",
-      "Target": "Mods/GZhynko.AnimalsNeedWater/EmptyBuildingSprites",
-      "Entries": {
-        "{{ModId}}": {
-          "File": "Mods/{{ModId}}/barn_empty_sprite",
-          "Buildings": ["barn"]
-          
+
+        "Barn": {
+          "TroughTiles": [
+            { "TileX": 2, "TileY": 6, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 },
+            { "TileX": 13, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 6, "FullIndex": 8 },
+            { "TileX": 14, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 7, "FullIndex": 9 },
+            { "TileX": 13, "TileY": 2, "Layer": "Front", "EmptyIndex": 1, "FullIndex": 4 },
+            { "TileX": 14, "TileY": 2, "Layer": "Front", "EmptyIndex": 2, "FullIndex": 5 }
+          ],
+          "TroughTexture": "Mods/{{ModId}}/ANW/troughTilesheet"
+        },
+
+        // troughs + watering system
+        "Deluxe Barn": {
+          "TroughTiles": [
+            { "TileX": 1, "TileY": 7, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 },
+            { "TileX": 23, "TileY": 13, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 },
+            { "TileX": 21, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 6, "FullIndex": 8 },
+            { "TileX": 22, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 7, "FullIndex": 9 },
+            { "TileX": 21, "TileY": 2, "Layer": "Front", "EmptyIndex": 1, "FullIndex": 4 },
+            { "TileX": 22, "TileY": 2, "Layer": "Front", "EmptyIndex": 2, "FullIndex": 5 }
+          ],
+          "TroughTexture": "Mods/{{ModId}}/ANW/troughTilesheet",
+          "WateringSystem": {
+            "TileX": 23, "TileY": 3, "Layer": "Buildings", "SystemIndex": 0,
+            "TilesToRemove": [
+              { "TileX": 23, "TileY": 3, "Layer": "Buildings" },
+              { "TileX": 23, "TileY": 2, "Layer": "Front" }
+            ]
+          },
+          "WateringSystemTexture": "Mods/{{ModId}}/ANW/wateringSystemTilesheet"
+        },
+
+        // omit ExteriorEmptyOverlay entirely for no exterior indication
+        "Coop": {
+          "TroughTiles": [
+            { "TileX": 10, "TileY": 5, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 }
+          ],
+          "ExteriorEmptyOverlay": {
+            "Texture": "Mods/{{ModId}}/ANW/coopEmptyTroughOverlay",
+            "SourceRect": { "X": 0, "Y": 0, "Width": 32, "Height": 16 },
+            "DrawOffset": { "X": 48, "Y": 112 }
+          }
         }
       }
     }

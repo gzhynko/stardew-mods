@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "FlashShifter.StardewValleyExpandedCP",
-  "targetBuildings": ["FlashShifter.StardewValleyExpandedCP_PremiumCoop", "FlashShifter.StardewValleyExpandedCP_PremiumBarn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "FlashShifter.StardewValleyExpandedCP",
+  "Entries": {
+    "FlashShifter.StardewValleyExpandedCP_PremiumCoop": {
+      "TroughTiles": [
         {
           "tileX": 2,
           "tileY": 5,
@@ -40,27 +39,29 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 27,
-        "tileY": 7,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 27,
-            "tileY": 7,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 27,
-            "tileY": 6,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 27,
+          "tileY": 7,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 27,
+              "tileY": 7,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 27,
+              "tileY": 6,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "FlashShifter.StardewValleyExpandedCP_PremiumBarn": {
+      "TroughTiles": [
         {
           "tileX": 3,
           "tileY": 4,
@@ -111,13 +112,15 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 3,
-        "tileY": 3,
-        "layer": "Front",
-        "systemIndex": 1,
-        "tilesToRemove": []
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 3,
+          "tileY": 3,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
     }
-  ]
+  }
 }

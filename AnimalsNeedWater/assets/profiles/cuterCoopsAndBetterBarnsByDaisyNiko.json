@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "DaisyNiko.CCBB",
-  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "DaisyNiko.CCBB",
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 12,
           "tileY": 4,
@@ -41,8 +40,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 15,
           "tileY": 4,
@@ -80,8 +79,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 23,
           "tileY": 4,
@@ -153,27 +152,29 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 22,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 22,
-            "tileY": 3,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 22,
-            "tileY": 2,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 22,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 22,
+              "tileY": 3,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 22,
+              "tileY": 2,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 13,
           "tileY": 3,
@@ -211,8 +212,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 17,
           "tileY": 3,
@@ -278,8 +279,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 22,
           "tileY": 4,
@@ -316,24 +317,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 8,
-        "tileY": 10,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 8,
-            "tileY": 10,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 8,
-            "tileY": 9,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 8,
+          "tileY": 10,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 8,
+              "tileY": 10,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 8,
+              "tileY": 9,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

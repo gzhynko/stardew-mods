@@ -34,10 +34,18 @@ public class ModConfig
     /// </summary>
     public bool UseWateringSystems { get; set; } = true;
 
+    [Obsolete("Use ChangeBuildingTextureIfTroughIsEmpty instead")]
+    public bool? ReplaceCoopTextureIfTroughIsEmpty
+    {
+        get => null;
+        set { if (value.HasValue) ChangeBuildingTextureIfTroughIsEmpty = value.Value; }
+    }
+    public bool ShouldSerializeReplaceCoopTextureIfTroughIsEmpty() => false;
+
     /// <summary>
-    /// Whether to replace coop's and big coop's textures when troughs inside them are empty.
+    /// Whether to change building textures (e.g., coop and big coop) when troughs inside are empty.
     /// </summary>
-    public bool ReplaceCoopTextureIfTroughIsEmpty { get; set; } = true;
+    public bool ChangeBuildingTextureIfTroughIsEmpty { get; set; } = true;
 
     /// <summary>
     /// The amount of friendship points player gets for watering a trough.
@@ -103,7 +111,7 @@ public class ModConfig
         api.AddSectionTitle(manifest, () => "Visual");
         api.AddBoolOption(manifest, () => config.ShowLoveBubblesOverAnimalsWhenWateredTrough, val => config.ShowLoveBubblesOverAnimalsWhenWateredTrough = val, () => "Show Love Bubbles", () => "Whether to show \"love\" bubbles over animals inside the building when watered the trough.");
         api.AddBoolOption(manifest, () => config.ShowAnimalsLeftThirstyMessage, val => config.ShowAnimalsLeftThirstyMessage = val, () => "Show Number of Animals Left Thirsty Message", () => "Whether to show a message (bottom left corner of screen) in the morning telling how many animals (if any) were left thirsty last night.");
-        api.AddBoolOption(manifest, () => config.ReplaceCoopTextureIfTroughIsEmpty, val => config.ReplaceCoopTextureIfTroughIsEmpty = val, () => "Replace Coop Texture If Trough Is Empty", () => "Whether to replace coop's and big coop's textures when troughs inside them are empty.");
+        api.AddBoolOption(manifest, () => config.ChangeBuildingTextureIfTroughIsEmpty, val => config.ChangeBuildingTextureIfTroughIsEmpty = val, () => "Change Building Texture If Trough Is Empty", () => "Whether to change building textures (e.g. coop and big coop) when troughs inside are empty.");
         api.AddBoolOption(manifest, () => config.CleanerTroughs, val => config.CleanerTroughs = val, () => "Cleaner Troughs", () => "Whether troughs should have a cleaner texture. Note: Won't change until a day update.");
             
         api.AddSectionTitle(manifest, () => "Functionality");

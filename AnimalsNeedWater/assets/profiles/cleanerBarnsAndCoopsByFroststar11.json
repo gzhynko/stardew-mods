@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "Froststar11.CleanBarnsCoops",
-  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "Froststar11.CleanBarnsCoops",
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 10,
           "tileY": 5,
@@ -13,8 +12,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 14,
           "tileY": 5,
@@ -24,8 +23,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 1,
           "tileY": 6,
@@ -34,16 +33,18 @@
           "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 1,
-        "tileY": 5,
-        "layer": "Front",
-        "systemIndex": 2,
-        "tilesToRemove": []
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 1,
+          "tileY": 5,
+          "layer": "Front",
+          "systemIndex": 2,
+          "tilesToRemove": []
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 13,
           "tileY": 3,
@@ -74,8 +75,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 17,
           "tileY": 3,
@@ -106,8 +107,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 21,
           "tileY": 3,
@@ -137,13 +138,15 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 23,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": []
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 23,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": []
+        }
+      ]
     }
-  ]
+  }
 }

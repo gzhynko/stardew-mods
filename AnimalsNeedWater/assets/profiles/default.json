@@ -1,7 +1,7 @@
 {
-  "placement": {
+  "Entries": {
     "coop": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 10,
           "tileY": 5,
@@ -9,10 +9,15 @@
           "emptyIndex": 0,
           "fullIndex": 3
         }
-      ]
+      ],
+      "ExteriorEmptyOverlay": {
+        "Texture": "Mods/GZhynko.AnimalsNeedWater/Defaults/coopEmptyTroughOverlay",
+        "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+        "DrawOffset": { "X": 0, "Y": 0 }
+      }
     },
     "big coop": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 14,
           "tileY": 5,
@@ -20,10 +25,15 @@
           "emptyIndex": 0,
           "fullIndex": 3
         }
-      ]
+      ],
+      "ExteriorEmptyOverlay": {
+        "Texture": "Mods/GZhynko.AnimalsNeedWater/Defaults/bigCoopEmptyTroughOverlay",
+        "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+        "DrawOffset": { "X": 0, "Y": 0 }
+      }
     },
     "deluxe coop": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 3,
@@ -39,16 +49,18 @@
           "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 20,
-        "tileY": 2,
-        "layer": "Front",
-        "systemIndex": 1,
-        "tilesToRemove": []
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 20,
+          "tileY": 2,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
     },
     "barn": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 2,
           "tileY": 6,
@@ -87,7 +99,7 @@
       ]
     },
     "big barn": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 19,
           "tileY": 3,
@@ -133,7 +145,7 @@
       ]
     },
     "deluxe barn": {
-      "troughTiles": [
+      "TroughTiles": [
         {
           "tileX": 1,
           "tileY": 7,
@@ -177,24 +189,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 23,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 23,
-            "tileY": 3,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 23,
-            "tileY": 2,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 23,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 23,
+              "tileY": 3,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 23,
+              "tileY": 2,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
   }
 }

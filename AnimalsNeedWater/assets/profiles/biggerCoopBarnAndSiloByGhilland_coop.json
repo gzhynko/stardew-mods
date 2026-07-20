@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "Ghilminion_Ghilland.Big.Coop",
-  "targetBuildings": ["coop", "big coop", "deluxe coop"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "Ghilminion_Ghilland.Big.Coop",
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 15,
           "tileY": 3,
@@ -41,8 +40,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 8,
@@ -80,8 +79,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 1,
           "tileY": 6,
@@ -153,24 +152,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 26,
-        "tileY": 15,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 26,
-            "tileY": 15,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 26,
-            "tileY": 14,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 26,
+          "tileY": 15,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 26,
+              "tileY": 15,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 26,
+              "tileY": 14,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

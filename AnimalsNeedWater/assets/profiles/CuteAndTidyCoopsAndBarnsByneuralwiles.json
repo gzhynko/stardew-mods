@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "neuralwiles.CuteAndTidyCoopsAndBarns",
-  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "neuralwiles.CuteAndTidyCoopsAndBarns",
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 4,
           "tileY": 3,
@@ -13,8 +12,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 13,
           "tileY": 8,
@@ -24,8 +23,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 19,
           "tileY": 3,
@@ -34,17 +33,18 @@
           "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 19,
-        "tileY": 2,
-        "layer": "Front",
-        "systemIndex": 1,
-        "tilesToRemove": [
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 19,
+          "tileY": 2,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 4,
           "tileY": 7,
@@ -75,8 +75,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 4,
           "tileY": 7,
@@ -107,8 +107,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 3,
           "tileY": 7,
@@ -138,24 +138,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 5,
-        "tileY": 7,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 5,
-            "tileY": 7,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 5,
-            "tileY": 6,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 5,
+          "tileY": 7,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 5,
+              "tileY": 7,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 5,
+              "tileY": 6,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }
