@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "Lnh.LeisureCoop",
-  "targetBuildings": ["coop", "big coop", "deluxe coop"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "Lnh.LeisureCoop",
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 14,
           "tileY": 3,
@@ -27,8 +26,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 16,
           "tileY": 3,
@@ -45,8 +44,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 18,
           "tileY": 3,
@@ -97,24 +96,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 5,
-        "tileY": 10,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 5,
-            "tileY": 10,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 5,
-            "tileY": 9,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 5,
+          "tileY": 10,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 5,
+              "tileY": 10,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 5,
+              "tileY": 9,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

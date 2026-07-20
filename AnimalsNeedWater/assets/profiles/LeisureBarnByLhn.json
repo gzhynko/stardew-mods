@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "Lnh.LeisureBarn",
-  "targetBuildings": ["barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "Lnh.LeisureBarn",
+  "Entries": {
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 12,
@@ -34,8 +33,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 12,
@@ -59,8 +58,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 12,
@@ -97,24 +96,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 5,
-        "tileY": 8,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 5,
-            "tileY": 8,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 5,
-            "tileY": 7,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 5,
+          "tileY": 8,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 5,
+              "tileY": 8,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 5,
+              "tileY": 7,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

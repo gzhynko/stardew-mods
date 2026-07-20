@@ -2,16 +2,23 @@ namespace AnimalsNeedWater.Core.Content;
 
 public class AssetManager
 {
-    private const string BuildingsBasePath = "assets/buildings";
-    private const string TroughsBasePath = "assets/troughs";
-    private const string ItemsBasePath = "assets/items";
-    
-    public const string CoopEmptyWaterTrough = $"{BuildingsBasePath}/Coop_emptyWaterTrough.png";
-    public const string Coop2EmptyWaterTrough = $"{BuildingsBasePath}/Coop2_emptyWaterTrough.png";
+    public const string TroughPlacementsAssetName = "Mods/GZhynko.AnimalsNeedWater/TroughPlacements";
 
-    public const string WateringSystemTilesheet = $"{TroughsBasePath}/wateringSystemTilesheet.png";
-    public const string WaterTroughTilesheet = $"{TroughsBasePath}/waterTroughTilesheet.png";
-    public const string WaterTroughTilesheetClean = $"{TroughsBasePath}/waterTroughTilesheet_clean.png";
+    // mod file paths
+    public const string CoopEmptyWaterTroughOverlay = "assets/buildings/Coop_emptyWaterTroughOverlay.png";
+    public const string Coop2EmptyWaterTroughOverlay = "assets/buildings/Coop2_emptyWaterTroughOverlay.png";
 
-    public const string WaterBowlTextureSpritesheet = $"{ItemsBasePath}/waterBowl.png";
+    public const string WateringSystemTilesheet = "assets/troughs/wateringSystemTilesheet.png";
+    public const string WaterTroughTilesheet = "assets/troughs/waterTroughTilesheet.png";
+    public const string WaterTroughTilesheetClean = "assets/troughs/waterTroughTilesheet_clean.png";
+
+    public const string WaterBowlTextureSpritesheet = "assets/items/waterBowl.png";
+
+    // game asset names for the default assets above 
+    public const string CoopEmptyWaterTroughOverlayAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/coopEmptyTroughOverlay";
+    public const string BigCoopEmptyWaterTroughOverlayAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/bigCoopEmptyTroughOverlay";
+
+    public const string WateringSystemTilesheetAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/wateringSystemTilesheet";
+    public const string WaterTroughTilesheetAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/troughTilesheet";
+    public const string WaterTroughTilesheetCleanAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/troughTilesheetClean";
 }

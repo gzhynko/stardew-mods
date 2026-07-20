@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "Ghilminion_Ghilland.Bigger.Barn",
-  "targetBuildings": ["barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "Ghilminion_Ghilland.Bigger.Barn",
+  "Entries": {
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 19,
           "tileY": 3,
@@ -41,8 +40,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 25,
           "tileY": 3,
@@ -108,8 +107,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 37,
           "tileY": 3,
@@ -146,24 +145,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 40,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 40,
-            "tileY": 3,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 40,
-            "tileY": 2,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 40,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 40,
+              "tileY": 3,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 40,
+              "tileY": 2,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

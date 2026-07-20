@@ -1,5 +1,11 @@
+using System;
+using AnimalsNeedWater.Core.Content.Models;
 using AnimalsNeedWater.Core.Models;
 using StardewValley;
+using StardewValley.Buildings;
+using xTile.Layers;
+using xTile.Tiles;
+using Object = StardewValley.Object;
 
 namespace AnimalsNeedWater.Core;
 

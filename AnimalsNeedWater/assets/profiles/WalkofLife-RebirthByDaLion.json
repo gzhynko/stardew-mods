@@ -1,9 +1,8 @@
 {
-  "modUniqueId": "DaLion.Professions",
-  "targetBuildings": ["deluxe coop", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "RequiredModId": "DaLion.Professions",
+  "Entries": {
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 3,
@@ -12,24 +11,25 @@
           "fullIndex": 3
         },
         {
-            "tileX": 1,
-            "tileY": 6,
-            "layer": "Buildings",
-            "emptyIndex": 0,
-            "fullIndex": 3
+          "tileX": 1,
+          "tileY": 6,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 20,
-        "tileY": 2,
-        "layer": "Front",
-        "systemIndex": 1,
-        "tilesToRemove": [
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 20,
+          "tileY": 2,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 21,
           "tileY": 3,
@@ -59,24 +59,26 @@
           "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 23,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 23,
-            "tileY": 3,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 23,
-            "tileY": 2,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 23,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 23,
+              "tileY": 3,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 23,
+              "tileY": 2,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }

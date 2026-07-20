@@ -1,9 +1,7 @@
 {
-  "modUniqueId": "",
-  "targetBuildings": ["coop", "big coop", "deluxe coop", "barn", "big barn", "deluxe barn"],
-  "placement": [
-    {
-      "troughTiles": [
+  "Entries": {
+    "coop": {
+      "TroughTiles": [
         {
           "tileX": 10,
           "tileY": 5,
@@ -11,10 +9,15 @@
           "emptyIndex": 0,
           "fullIndex": 3
         }
-      ]
+      ],
+      "ExteriorEmptyOverlay": {
+        "Texture": "Mods/GZhynko.AnimalsNeedWater/Defaults/coopEmptyTroughOverlay",
+        "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+        "DrawOffset": { "X": 0, "Y": 0 }
+      }
     },
-    {
-      "troughTiles": [
+    "big coop": {
+      "TroughTiles": [
         {
           "tileX": 14,
           "tileY": 5,
@@ -22,10 +25,15 @@
           "emptyIndex": 0,
           "fullIndex": 3
         }
-      ]
+      ],
+      "ExteriorEmptyOverlay": {
+        "Texture": "Mods/GZhynko.AnimalsNeedWater/Defaults/bigCoopEmptyTroughOverlay",
+        "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+        "DrawOffset": { "X": 0, "Y": 0 }
+      }
     },
-    {
-      "troughTiles": [
+    "deluxe coop": {
+      "TroughTiles": [
         {
           "tileX": 20,
           "tileY": 3,
@@ -41,16 +49,18 @@
           "fullIndex": 3
         }
       ],
-      "wateringSystem": {
-        "tileX": 20,
-        "tileY": 2,
-        "layer": "Front",
-        "systemIndex": 1,
-        "tilesToRemove": []
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 20,
+          "tileY": 2,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
     },
-    {
-      "troughTiles": [
+    "barn": {
+      "TroughTiles": [
         {
           "tileX": 2,
           "tileY": 6,
@@ -88,8 +98,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "big barn": {
+      "TroughTiles": [
         {
           "tileX": 19,
           "tileY": 3,
@@ -134,8 +144,8 @@
         }
       ]
     },
-    {
-      "troughTiles": [
+    "deluxe barn": {
+      "TroughTiles": [
         {
           "tileX": 1,
           "tileY": 7,
@@ -179,24 +189,26 @@
           "fullIndex": 5
         }
       ],
-      "wateringSystem": {
-        "tileX": 23,
-        "tileY": 3,
-        "layer": "Buildings",
-        "systemIndex": 0,
-        "tilesToRemove": [
-          {
-            "tileX": 23,
-            "tileY": 3,
-            "layer": "Buildings"
-          },
-          {
-            "tileX": 23,
-            "tileY": 2,
-            "layer": "Front"
-          }
-        ]
-      }
+      "WateringSystemTiles": [
+        {
+          "tileX": 23,
+          "tileY": 3,
+          "layer": "Buildings",
+          "systemIndex": 0,
+          "tilesToRemove": [
+            {
+              "tileX": 23,
+              "tileY": 3,
+              "layer": "Buildings"
+            },
+            {
+              "tileX": 23,
+              "tileY": 2,
+              "layer": "Front"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }
