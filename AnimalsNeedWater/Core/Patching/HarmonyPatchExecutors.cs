@@ -3,6 +3,7 @@ using System.Linq;
 using AnimalsNeedWater.Core.Models;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Extensions;
@@ -18,9 +19,12 @@ namespace AnimalsNeedWater.Core.Patching;
 public static class HarmonyPatchExecutors
 {
     private const int LOVE_EMOTE_ID = 20;
+    private const int HAPPY_EMOTE_ID = 32;
 
     public static void AnimalDayUpdateExecutor(FarmAnimal __instance, GameLocation environment)
     {
+        if (!Context.IsMainPlayer) return;
+        
         if (__instance.home != null &&
             !((AnimalHouse)__instance.home.indoors.Value).animals.ContainsKey(__instance.myID.Value) &&
             environment is not AnimalHouse && !__instance.home.animalDoorOpen.Value) return;
@@ -44,7 +48,7 @@ public static class HarmonyPatchExecutors
             return false;
         }
 
-        if (!Game1.IsMasterGame) // do not run if not host
+        if (!Context.IsMainPlayer) // do not run if not host
         {
             __result = false;
             return false;
@@ -99,14 +103,19 @@ public static class HarmonyPatchExecutors
     /// <summary> Animal behavior after finding a water tile and pathfinding to it. </summary>
     private static void BehaviorAfterFindingWater(Character c, GameLocation environment)
     {
+        if (!Context.IsMainPlayer) return;
+        
+        var animal = (c as FarmAnimal)!;
         // return if the animal is already on the list
-        if (ModEntry.Data.IsAnimalFull((c as FarmAnimal)!))
+        if (ModEntry.Data.IsAnimalFull(animal))
             return;
 
         // do the 'happy' emote and add the animal to the Full Animals list
-        c.doEmote(32);
-        ((FarmAnimal)c).isEating.Value = true; // do the eating animation
-        ModEntry.Data.AddFullAnimal((c as FarmAnimal)!);
+        c.doEmote(HAPPY_EMOTE_ID);
+        animal.isEating.Value = true; // do the eating animation
+        
+        ModEntry.ThirstTracker.AddFullAnimal(animal.myID.Value);
+        ModEntry.MessageBridge.SendAddFullAnimalMessage(animal);
     }
 
     public static bool GameLocationToolActionExecutor(Tool tool, int tileX, int tileY)
@@ -152,7 +161,7 @@ public static class HarmonyPatchExecutors
         currentLocation.playSound("slosh");
 
         ModEntry.TroughManager.MarkWatered(building);
-        ModEntry.MessageBridge.SendTroughWateredMessage(buildingUniqueName);
+        ModEntry.MessageBridge.SendTroughWateredMessage(building);
         ModEntry.TroughVisuals.ApplyTroughTiles(building);
 
         // give additional friendship to animals currently here

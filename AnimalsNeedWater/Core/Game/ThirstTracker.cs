@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnimalsNeedWater.Core.Models;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Extensions;
@@ -11,11 +12,22 @@ namespace AnimalsNeedWater.Core.Game;
 
 public class ThirstTracker
 {
-    public List<FarmAnimal> AnimalsLeftThirstyYesterday = new List<FarmAnimal>();
+    public List<ThirstyAnimalInfo> AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
+
+    
+    
+    public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
+    {
+        return AnimalsLeftThirstyYesterday.Any(info => info.Id == animal.myID.Value);
+    }
     
     public void FindThirstyAnimals()
     { 
-        AnimalsLeftThirstyYesterday = new List<FarmAnimal>();
+        // skip on farmhands to avoid double-deducting friendship points
+        // host syncs this state with farmhands on day start
+        if (!Context.IsMainPlayer) return;
+        
+        AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
 
         foreach (var locationGroup in ModEntry.BuildingTracker.AnimalBuildingGroups)
         {
@@ -47,11 +59,16 @@ public class ThirstTracker
                 
                 foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
                     .Where(animal =>
-                        !ModEntry.Data.IsAnimalFull(animal) &&
-                        !AnimalsLeftThirstyYesterday.Contains(animal)))
+                        !ModEntry.Data.IsAnimalFull(animal) 
+                        && AnimalsLeftThirstyYesterday.All(info => info.Id != animal.myID.Value)))
                 {
                     animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
-                    AnimalsLeftThirstyYesterday.Add(animal);
+                    AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
+                    {
+                        Id = animal.myID.Value, 
+                        DisplayName = animal.displayName,
+                        IsMale = animal.isMale(),
+                    });
                 }
             }
 
@@ -63,10 +80,15 @@ public class ThirstTracker
                      ModEntry.Data.IsAnimalFull(animal)) &&
                     animal.home.animalDoorOpen.Value) continue;
             
-                if (AnimalsLeftThirstyYesterday.Contains(animal)) continue;
+                if (AnimalsLeftThirstyYesterday.Any(info => info.Id == animal.myID.Value)) continue;
                 
                 animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
-                AnimalsLeftThirstyYesterday.Add(animal);
+                AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
+                {
+                    Id = animal.myID.Value, 
+                    DisplayName = animal.displayName,
+                    IsMale = animal.isMale(),
+                });
             }
         }
     }
@@ -76,6 +98,11 @@ public class ThirstTracker
         ModEntry.Data.ResetFullAnimals();
     }
 
+    public void AddFullAnimal(long animalId)
+    {
+        ModEntry.Data.FullAnimals.Add(animalId);
+    }
+    
     public void ShowLeftThirstyMessage()
     {
         if (AnimalsLeftThirstyYesterday.Count == 0)
@@ -87,10 +114,10 @@ public class ThirstTracker
             case 1 when ModEntry.ModHelper.ModRegistry.IsLoaded("Paritee.GenderNeutralFarmAnimals"):
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender";
                 break;
-            case 1 when AnimalsLeftThirstyYesterday[0].isMale():
+            case 1 when AnimalsLeftThirstyYesterday[0].IsMale:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male";
                 break;
-            case 1 when !AnimalsLeftThirstyYesterday[0].isMale():
+            case 1 when !AnimalsLeftThirstyYesterday[0].IsMale:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female";
                 break;
             case 2:
@@ -104,9 +131,9 @@ public class ThirstTracker
                 break;
         }
         
-        var firstAnimalName = AnimalsLeftThirstyYesterday[0].displayName;
-        var secondAnimalName = AnimalsLeftThirstyYesterday.Count > 1 ? AnimalsLeftThirstyYesterday[1].displayName : "";
-        var thirdAnimalName = AnimalsLeftThirstyYesterday.Count > 2 ? AnimalsLeftThirstyYesterday[2].displayName : "";
+        var firstAnimalName = AnimalsLeftThirstyYesterday[0].DisplayName;
+        var secondAnimalName = AnimalsLeftThirstyYesterday.Count > 1 ? AnimalsLeftThirstyYesterday[1].DisplayName : "";
+        var thirdAnimalName = AnimalsLeftThirstyYesterday.Count > 2 ? AnimalsLeftThirstyYesterday[2].DisplayName : "";
         Game1.showGlobalMessage(ModEntry.ModHelper.Translation.Get(
             i18Key,
             new

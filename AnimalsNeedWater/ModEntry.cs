@@ -43,6 +43,7 @@ public class ModEntry : Mod
         Config = Helper.ReadConfig<ModConfig>();
         
         helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
         helper.Events.GameLoop.Saving += OnSaving;
         helper.Events.GameLoop.DayEnding += OnDayEnding;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
@@ -58,7 +59,6 @@ public class ModEntry : Mod
         helper.Events.Content.AssetsInvalidated += PlacementRegistry.OnAssetsInvalidated;
         helper.Events.Content.AssetsInvalidated += TroughVisuals.OnAssetsInvalidated;
     }
-
 
     public void SaveConfig(ModConfig newConfig)
     {
@@ -123,7 +123,7 @@ public class ModEntry : Mod
     {
         if (!Context.IsMainPlayer)
         {
-            Data ??= new ModData();
+            Data = new ModData();
             return;
         }
         Data = Helper.Data.ReadSaveData<ModData>(ModConstants.ModDataSaveDataKey) ?? new ModData();
@@ -137,6 +137,14 @@ public class ModEntry : Mod
         if (!Context.IsMainPlayer) return;
         Helper.Data.WriteSaveData(ModConstants.ModDataSaveDataKey, Data);
     }
+    
+    private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
+    {
+        if (Context.IsMainPlayer) return;
+        
+        // farmhand pulls state from host
+        MessageBridge.SendRequestStateMessage(Game1.player.UniqueMultiplayerID);
+    }
 
     /// <summary> Raised after the save is loaded. </summary>
     /// <param name="sender">The event sender.</param>
@@ -144,31 +152,39 @@ public class ModEntry : Mod
     private void OnDayStarted(object? sender, DayStartedEventArgs e)
     {
         LoadSavedModData();
-        
         BuildingTracker.Refresh();
-        BuildingTracker.CheckHomeStatus();
-        
-        // if today's a festival, give the player a treat by filling all water troughs (just like with animal food in vanilla)
-        if (!StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
+
+        if (Context.IsMainPlayer)
         {
-            TroughManager.EmptyWaterTroughs();
+            BuildingTracker.CheckHomeStatus();
+
+            // if today's a festival, give the player a treat by filling all water troughs (just like with animal food in vanilla)
+            if (!StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
+            {
+                TroughManager.EmptyWaterTroughs();
+            }
+            else
+            {
+                TroughManager.FillAllWaterTroughs();
+            }
+            
+            ThirstTracker.ResetFullAnimals();
+            
+            MessageBridge.SendStateSyncMessage(Data.BuildingsWithWateredTrough, Data.FullAnimals);
+            MessageBridge.SendThirstyAnimalsMessage(ThirstTracker.AnimalsLeftThirstyYesterday);
+            
+            // notify player of any animals left thirsty.
+            // farmhands, if any, do this when receiving the ThirstyAnimalsMessage sent above
+            if (Config.ShowAnimalsLeftThirstyMessage)
+            {
+                ThirstTracker.ShowLeftThirstyMessage();
+            }
         }
-        else
-        {
-            TroughManager.FillAllWaterTroughs();
-        }
-        
-        ThirstTracker.ResetFullAnimals();
+
         
         foreach (Building building in BuildingTracker.AnimalBuildings)
         {
             TroughVisuals.ReapplyVisuals(building);
-        }
-
-        // notify player of animals left thirsty, if any
-        if (Config.ShowAnimalsLeftThirstyMessage)
-        {
-            ThirstTracker.ShowLeftThirstyMessage();
         }
     }
 
@@ -179,6 +195,7 @@ public class ModEntry : Mod
     
     private void OnDayEnding(object? sender, DayEndingEventArgs e)
     {
+        if (!Context.IsMainPlayer) return; // only host computes the list; this is then broadcast to farmhands on day start
         ThirstTracker.FindThirstyAnimals();
     }
     

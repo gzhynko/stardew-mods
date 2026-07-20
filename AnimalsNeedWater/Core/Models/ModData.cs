@@ -11,7 +11,6 @@ public class ModData
     public HashSet<string> BuildingsWithWateredTrough { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     public HashSet<long> FullAnimals { get; set; } = new HashSet<long>();
         
-    public void AddFullAnimal(FarmAnimal animal) => FullAnimals.Add(animal.myID.Value);
     public bool IsAnimalFull(FarmAnimal animal) => FullAnimals.Contains(animal.myID.Value);
     public void ResetFullAnimals() => FullAnimals = new HashSet<long>();
 }

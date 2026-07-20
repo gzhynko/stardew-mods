@@ -24,7 +24,7 @@ public class TroughManager
     {
         return ModEntry.Data.BuildingsWithWateredTrough.Contains(building.GetIndoorsName());
     }
-
+    
     public void FillAllWaterTroughs()
     {
         foreach (Building building in ModEntry.BuildingTracker.AnimalBuildings)
@@ -78,7 +78,7 @@ public class TroughManager
             }
 
             // if no animals live here, do not empty the water trough
-            int animalCount = building.GetParentLocation().getAllFarmAnimals().Count(animal => animal.home.GetIndoorsName().Equals(building.GetIndoorsName(), StringComparison.OrdinalIgnoreCase));
+            int animalCount = building.GetParentLocation().getAllFarmAnimals().Count(animal => animal.home != null && animal.home.GetIndoorsName().Equals(building.GetIndoorsName(), StringComparison.OrdinalIgnoreCase));
             if (animalCount == 0)
             {
                 MarkWatered(building);

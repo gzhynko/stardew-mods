@@ -22,12 +22,12 @@ public class API : IAnimalsNeedWaterAPI
 {
     public List<long> GetAnimalsLeftThirstyYesterday()
     {
-        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.ConvertAll(i => i.myID.Value);
+        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.ConvertAll(i => i.Id);
     }
 
     public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
     {
-        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.Contains(animal);
+        return ModEntry.ThirstTracker.WasAnimalLeftThirstyYesterday(animal);
     }
 
     public List<string> GetBuildingsWithWateredTrough()
