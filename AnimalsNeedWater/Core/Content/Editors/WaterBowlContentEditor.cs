@@ -22,7 +22,7 @@ public class WaterBowlContentEditor
                     DisplayName = $"[LocalizedText Strings\\\\BigCraftables:{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.name]",
                     Description = $"[LocalizedText Strings\\\\BigCraftables:{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description]",
                     Texture = ModEntry.ModHelper.ModContent.GetInternalAssetName(AssetManager.WaterBowlTextureSpritesheet).Name,
-                    Price = ModEntry.Config.MarnieWaterBowlPrice,
+                    Price = 0, // sells for 0
                 };
                 editor.Data.Add(ModConstants.WaterBowlItemId, waterBowlAssetData);
             });
@@ -44,7 +44,7 @@ public class WaterBowlContentEditor
         }
         
         // add the water bowl to Marnie's shop inventory
-        if (e.NameWithoutLocale.IsEquivalentTo("Data/Shops"))
+        if (ModEntry.Config.MarnieSellsWaterBowl && e.NameWithoutLocale.IsEquivalentTo("Data/Shops"))
         {
             e.Edit(asset =>
             {
