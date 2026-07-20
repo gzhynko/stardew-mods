@@ -20,9 +20,32 @@ public class TroughManager
         ModEntry.Data.BuildingsWithWateredTrough.Remove(building.GetIndoorsName());
     }
     
-    public bool IsWatered(Building building)
+    public bool BuildingHasTroughsWatered(Building building)
     {
         return ModEntry.Data.BuildingsWithWateredTrough.Contains(building.GetIndoorsName());
+    }
+    
+    public bool BuildingHasFullWaterBowl(Building building)
+    {
+        var hasFullWaterBowlObject = false;
+        var buildingObjects = building.GetIndoors().Objects.Values;
+        foreach (Object @object in buildingObjects)
+        {
+            if (!@object.HasTypeId("(BC)") || @object.ItemId != ModConstants.WaterBowlItemId) 
+                continue;
+            if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
+                && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
+            {
+                hasFullWaterBowlObject = true;
+            }
+        }
+
+        return hasFullWaterBowlObject;
+    }
+
+    public bool IsWatered(Building building)
+    {
+        return BuildingHasTroughsWatered(building) ||  BuildingHasFullWaterBowl(building);
     }
     
     public void FillAllWaterTroughs()
@@ -36,32 +59,44 @@ public class TroughManager
             MarkWatered(building);
         }
     }
+
+
+    public void EmptyWaterBowls(Building building)
+    {
+        var buildingObjects = building.GetIndoors().Objects.Values;
+        foreach (Object obj in buildingObjects)
+        {
+            if (!obj.HasTypeId("(BC)") || obj.ItemId != ModConstants.WaterBowlItemId) 
+                continue;
+            if (obj.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
+                && obj.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
+            {
+                Utils.EmptyWaterBowlObject(obj);
+            }
+        }
+    }
     
     public void EmptyWaterTroughs()
     {
+        var previouslyWatered = new HashSet<string>(
+            ModEntry.Data.BuildingsWithWateredTrough, StringComparer.OrdinalIgnoreCase);
         ModEntry.Data.BuildingsWithWateredTrough.Clear();
         
         foreach (Building building in ModEntry.BuildingTracker.AnimalBuildings)
         {
             var indoors = building.indoors.Value;
-            // if all animals that live here were able to drink water during the day, do not empty troughs
-            if (ModEntry.Config.TroughsCanRemainFull && indoors.animals.Values.All(animal => ModEntry.Data.IsAnimalFull(animal)))
+            var allDrankOutside = ModEntry.Config.TroughsCanRemainFull && indoors.animals.Values.All(a => ModEntry.Data.IsAnimalFull(a));
+
+            if (!allDrankOutside)
+            {
+                EmptyWaterBowls(building);
+            }
+            
+            // preserve trough only if it was actually full yesterday
+            if (allDrankOutside && previouslyWatered.Contains(building.GetIndoorsName()))
             {
                 MarkWatered(building);
                 continue;
-            }
-            
-            // empty Water Bowl objects
-            var buildingObjects = building.GetIndoors().Objects.Values;
-            foreach (Object obj in buildingObjects)
-            {
-                if (!obj.HasTypeId("(BC)") || obj.ItemId != ModConstants.WaterBowlItemId) 
-                    continue;
-                if (obj.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
-                    && obj.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
-                {
-                    Utils.EmptyWaterBowlObject(obj);
-                }
             }
             
             if (ModEntry.Config.UseWateringSystems)
@@ -86,5 +121,4 @@ public class TroughManager
             }
         }
     }
-
 }

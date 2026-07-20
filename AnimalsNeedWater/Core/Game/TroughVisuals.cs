@@ -104,7 +104,7 @@ public class TroughVisuals
 
         foreach (TroughTile tile in buildingProfile.TroughTiles)
         {
-            var tileIndexToUse = ModEntry.TroughManager.IsWatered(building)
+            var tileIndexToUse = ModEntry.TroughManager.BuildingHasTroughsWatered(building)
                 ? tile.FullIndex
                 : tile.EmptyIndex;
                 
@@ -192,7 +192,7 @@ public class TroughVisuals
         if (buildingProfile.ExteriorEmptyOverlay == null) 
             return;
         
-        if (ModEntry.TroughManager.IsWatered(building))
+        if (ModEntry.TroughManager.BuildingHasTroughsWatered(building))
             return;
 
         // should be handled by ReapplyVisuals normally

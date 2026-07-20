@@ -1,5 +1,14 @@
 # Version history for AnimalsNeedWater
 
+## 1.8.0
+Upcoming
+- Rewrite to make the mod content pipeline-native. This allows other creators to add compatibility profiles for their custom buildings or redesigns using Content Patcher, add custom sprites for ANW to use, etc.
+- Animals now have a chance to emote when it is 1. after 3 PM, 2. the animal has not drank outside yet, and 3. the animal's home hasn't been watered yet. (configurable)
+- Fix miscellaneous multiplayer bugs.
+- Empty trough state for buildings is now an overlay instead of a full texture replacement.
+- Play a "slosh" cue when watering an animal trough or a bowl.
+- Various performance improvements.
+
 ## 1.7.4
 Released January 5, 2025.
 - Add French translation (thanks to Caranud).

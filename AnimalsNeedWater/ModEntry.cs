@@ -126,7 +126,9 @@ public class ModEntry : Mod
             Data = new ModData();
             return;
         }
+        
         Data = Helper.Data.ReadSaveData<ModData>(ModConstants.ModDataSaveDataKey) ?? new ModData();
+        Data.RestoreComparers();
     }
 
     /// <summary>
@@ -168,9 +170,10 @@ public class ModEntry : Mod
                 TroughManager.FillAllWaterTroughs();
             }
             
+            Data.BuildingsWithBonusAwardedToday.Clear();
             ThirstTracker.ResetFullAnimals();
             
-            MessageBridge.SendStateSyncMessage(Data.BuildingsWithWateredTrough, Data.FullAnimals);
+            MessageBridge.SendStateSyncMessage(Data.BuildingsWithWateredTrough, Data.BuildingsWithBonusAwardedToday, Data.FullAnimals);
             MessageBridge.SendThirstyAnimalsMessage(ThirstTracker.AnimalsLeftThirstyYesterday);
             
             // notify player of any animals left thirsty.

@@ -1,5 +1,6 @@
 using System;
 using StardewModdingAPI;
+using StardewValley;
 
 namespace AnimalsNeedWater.Core.Models;
 
@@ -26,7 +27,10 @@ public class ModConfig
     public bool ShowAnimalsLeftThirstyMessage { get; set; } = true;
         
     [Obsolete("Use UseWateringSystems instead")]
-    public bool? WateringSystemInDeluxeBuildings { get; set; }
+    public bool? WateringSystemInDeluxeBuildings {
+        get => null;
+        set { if (value.HasValue) UseWateringSystems = value.Value; }
+    }
     public bool ShouldSerializeWateringSystemInDeluxeBuildings() => false;
 
     /// <summary>
@@ -74,7 +78,7 @@ public class ModConfig
     public bool AnimalsCanOnlyDrinkFromWaterBodies { get; set; } = false;
 
     /// <summary>
-    /// Whether troughs can remain full if all animals inside a building were able to drink outside during the day.
+    /// Whether in-building water sources (troughs, bowls) can remain full if all animals living in that building were able to drink outside during the day.
     /// </summary>
     public bool TroughsCanRemainFull { get; set; } = true;
         
@@ -87,11 +91,22 @@ public class ModConfig
     /// Whether Marnie sells the water bowl. Defaults to true.
     /// </summary>
     public bool MarnieSellsWaterBowl { get; set; } = true;
+    
     /// <summary>
     /// The price of the water bowl object at Marnie's animal shop. Defaults to zero.
     /// </summary>
     public int MarnieWaterBowlPrice { get; set; } = 0;
-        
+    
+    /// <summary>
+    /// Whether to indicate that an animal is still thirsty by periodically showing an emote above it. Defaults to true.
+    /// </summary>
+    public bool ShowThirstyEmotes { get; set; } = true;
+    
+    /// <summary>
+    /// The time cutoff in HHMM after which animals can start showing emotes indicating they are still thirsty. Defaults to 1500 (3pm).
+    /// </summary>
+    public int ThirstyEmoteStartTime { get; set; } = 1500;
+    
     /// <summary>
     /// Setup the Generic Mod Config Menu API.
     /// </summary>
@@ -108,17 +123,27 @@ public class ModConfig
             mod.SaveConfig(config);
         }, () => mod.SaveConfig(config));
             
-        api.AddSectionTitle(manifest, () => "Visual");
+        api.AddSectionTitle(manifest, () => "Appearance");
+        api.AddBoolOption(manifest, () => config.ChangeBuildingTextureIfTroughIsEmpty, val => config.ChangeBuildingTextureIfTroughIsEmpty = val, () => "Change Building Texture If Trough Is Empty", () => "Whether to change building textures (e.g. coop and big coop) when troughs inside are empty.");
+        api.AddBoolOption(manifest, () => config.CleanerTroughs, val => config.CleanerTroughs = val, () => "Cleaner Troughs", () => "Whether troughs should have a cleaner texture.");
+
+        api.AddSectionTitle(manifest, () => "Notifications");
         api.AddBoolOption(manifest, () => config.ShowLoveBubblesOverAnimalsWhenWateredTrough, val => config.ShowLoveBubblesOverAnimalsWhenWateredTrough = val, () => "Show Love Bubbles", () => "Whether to show \"love\" bubbles over animals inside the building when watered the trough.");
         api.AddBoolOption(manifest, () => config.ShowAnimalsLeftThirstyMessage, val => config.ShowAnimalsLeftThirstyMessage = val, () => "Show Number of Animals Left Thirsty Message", () => "Whether to show a message (bottom left corner of screen) in the morning telling how many animals (if any) were left thirsty last night.");
-        api.AddBoolOption(manifest, () => config.ChangeBuildingTextureIfTroughIsEmpty, val => config.ChangeBuildingTextureIfTroughIsEmpty = val, () => "Change Building Texture If Trough Is Empty", () => "Whether to change building textures (e.g. coop and big coop) when troughs inside are empty.");
-        api.AddBoolOption(manifest, () => config.CleanerTroughs, val => config.CleanerTroughs = val, () => "Cleaner Troughs", () => "Whether troughs should have a cleaner texture. Note: Won't change until a day update.");
+        api.AddBoolOption(manifest, () => config.ShowThirstyEmotes, val => config.ShowThirstyEmotes = val, () => "Show Thirsty Emotes", () => "Whether to indicate that an animal is still thirsty by periodically showing an emote above it.");
+        api.AddNumberOption(manifest,
+            () => config.ThirstyEmoteStartTime,
+            val => config.ThirstyEmoteStartTime = (int)val,
+            () => "Thirsty Emote Start Time",
+            () => "Animals may start showing a thirsty emote after this time. Only applies if Show Thirsty Emotes is on.",
+            min: 600f, max: 2600f, interval: 100f,
+            formatValue: val => Game1.getTimeOfDayString((int)val));
             
-        api.AddSectionTitle(manifest, () => "Functionality");
+        api.AddSectionTitle(manifest, () => "Water Sources");
         api.AddBoolOption(manifest, () => config.UseWateringSystems, val => config.UseWateringSystems = val, () => "Use Watering Systems", () => "Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).");
         api.AddBoolOption(manifest, () => config.AnimalsCanDrinkOutside, val => config.AnimalsCanDrinkOutside = val, () => "Animals Can Drink Outside", () => "Whether animals can drink outside.");
         api.AddBoolOption(manifest, () => config.AnimalsCanOnlyDrinkFromWaterBodies, val => config.AnimalsCanOnlyDrinkFromWaterBodies = val, () => "Animals Can Only Drink From Water Bodies", () => "Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).");
-        api.AddBoolOption(manifest, () => config.TroughsCanRemainFull, val => config.TroughsCanRemainFull = val, () => "Troughs Can Remain Full", () => "Whether troughs can remain full if all animals inside a building were able to drink outside during the day.");
+        api.AddBoolOption(manifest, () => config.TroughsCanRemainFull, val => config.TroughsCanRemainFull = val, () => "Troughs Can Remain Full", () => "Whether in-building water sources (troughs, bowls) can remain full if all animals living in that building were able to drink outside during the day.");
 
         api.AddSectionTitle(manifest, () => "Friendship");
         api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);

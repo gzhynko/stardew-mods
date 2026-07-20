@@ -19,6 +19,7 @@ namespace AnimalsNeedWater.Core.Patching;
 public static class HarmonyPatchExecutors
 {
     private const int LOVE_EMOTE_ID = 20;
+    private const int SAD_EMOTE_ID = 28;
     private const int HAPPY_EMOTE_ID = 32;
 
     public static void AnimalDayUpdateExecutor(FarmAnimal __instance, GameLocation environment)
@@ -29,7 +30,8 @@ public static class HarmonyPatchExecutors
             !((AnimalHouse)__instance.home.indoors.Value).animals.ContainsKey(__instance.myID.Value) &&
             environment is not AnimalHouse && !__instance.home.animalDoorOpen.Value) return;
 
-        // check whether the building the animal lives in is watered and whether the animal was able to drink outside or not
+        // check whether the building the animal lives in is watered (or has a full water bowl)
+        // and whether the animal was able to drink outside or not
         if ((__instance.home != null
              && ModEntry.TroughManager.IsWatered(__instance.home))
             || ModEntry.Data.IsAnimalFull(__instance))
@@ -72,6 +74,19 @@ public static class HarmonyPatchExecutors
             __instance.controller = new PathFindController(__instance, location, WaterEndPointFunction, -1,
                 BehaviorAfterFindingWater, 200, Point.Zero);
         }
+        
+        // randomly show an emote if animal is still thirsty and it is after ThirstyEmoteStartTime
+        if (ModEntry.Config.ShowThirstyEmotes
+            && Game1.timeOfDay >= Math.Clamp(ModEntry.Config.ThirstyEmoteStartTime, 600, 2600)
+            && !__instance.IsEmoting
+            && __instance.home != null
+            && Game1.random.NextDouble() < 0.0004 // roughly 1/5 the drink-outside rate
+            && !ModEntry.Data.IsAnimalFull(__instance)
+            && !ModEntry.TroughManager.IsWatered(__instance.home)) // keep this last to minimize latency in hot path
+        {
+            __instance.doEmote(SAD_EMOTE_ID);
+        }
+
 
         __result = true;
         return true;
@@ -118,6 +133,31 @@ public static class HarmonyPatchExecutors
         ModEntry.MessageBridge.SendAddFullAnimalMessage(animal);
     }
 
+    private static void AwardWateringBonusInLocation(GameLocation location)
+    {
+        foreach (FarmAnimal animal in location.animals.Values)
+        {
+            if (ModEntry.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
+            {
+                animal.doEmote(LOVE_EMOTE_ID);
+            }
+
+            animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config
+                .AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
+        }
+    }
+    
+    private static void TryAwardWateringBonus(Building building, GameLocation location)
+    {
+        var name = building.GetIndoorsName();
+        if (ModEntry.Data.BuildingsWithBonusAwardedToday.Contains(name))
+            return;
+        
+        ModEntry.Data.BuildingsWithBonusAwardedToday.Add(name);
+        AwardWateringBonusInLocation(location);
+    }
+
+
     public static bool GameLocationToolActionExecutor(Tool tool, int tileX, int tileY)
     {
         GameLocation currentLocation = Game1.currentLocation;
@@ -137,15 +177,21 @@ public static class HarmonyPatchExecutors
         // hit a bowl!
         if (objectHit != null && objectHit.HasTypeId("(BC)") && objectHit.ItemId == ModConstants.WaterBowlItemId)
         {
-            Utils.FillWaterBowlObject(objectHit);
-            currentLocation.playSound("slosh");
-            return false;
+            bool wasThisFull = objectHit.modData.TryGetValue(ModConstants.WaterBowlItemModDataIsFullField, out var v) && v == "true";
+            if (!wasThisFull)
+            {
+                Utils.FillWaterBowlObject(objectHit);
+                currentLocation.playSound("slosh");
+                TryAwardWateringBonus(building, currentLocation); // give additional friendship to animals currently here
+            }
+
+            return !wasThisFull;
         }
 
         // if did not hit any water bowl objects, check for trough tiles hits instead
 
-        // skip if the building is watered
-        if (ModEntry.TroughManager.IsWatered(building))
+        // skip if the building's troughs are watered
+        if (ModEntry.TroughManager.BuildingHasTroughsWatered(building))
             return true;
 
         // execute original method if this building should not be affected by this mod
@@ -163,19 +209,9 @@ public static class HarmonyPatchExecutors
         ModEntry.TroughManager.MarkWatered(building);
         ModEntry.MessageBridge.SendTroughWateredMessage(building);
         ModEntry.TroughVisuals.ApplyTroughTiles(building);
-
-        // give additional friendship to animals currently here
-        foreach (FarmAnimal animal in currentLocation.animals.Values)
-        {
-            if (ModEntry.Config.ShowLoveBubblesOverAnimalsWhenWateredTrough)
-            {
-                animal.doEmote(LOVE_EMOTE_ID);
-            }
-
-            animal.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config
-                .AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding);
-        }
-
+        
+        TryAwardWateringBonus(building, currentLocation); // give additional friendship to animals currently here
+        
         // skip original method
         return false;
     }

@@ -13,8 +13,6 @@ namespace AnimalsNeedWater.Core.Game;
 public class ThirstTracker
 {
     public List<ThirstyAnimalInfo> AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
-
-    
     
     public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
     {
@@ -38,22 +36,6 @@ public class ThirstTracker
             // OR the building has a full Water Bowl inside it.
             foreach (Building building in buildingsInLocation)
             {
-                // check if there are any full water bowls inside
-                var hasFullWaterBowlObject = false;
-                var buildingObjects = building.GetIndoors().Objects.Values;
-                foreach (Object @object in buildingObjects)
-                {
-                    if (!@object.HasTypeId("(BC)") || @object.ItemId != ModConstants.WaterBowlItemId) 
-                        continue;
-                    if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
-                        && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
-                    {
-                        hasFullWaterBowlObject = true;
-                    }
-                }
-                if (hasFullWaterBowlObject)
-                    continue;
-                
                 if (ModEntry.TroughManager.IsWatered(building))
                     continue;
                 
