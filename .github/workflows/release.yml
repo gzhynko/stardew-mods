@@ -1,0 +1,38 @@
+name: release mod on new tag
+
+on:
+  push:
+    tags: ['*-v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with: { fetch-tags: false }
+      - id: resolve
+        env:
+          TAG: ${{ github.ref_name }} # e.g. AnimalsNeedWater-v1.8.0
+        run: |
+          key="${TAG%-v*}"
+          case "$key" in
+            AnimalsNeedWater)       proj="AnimalsNeedWater/AnimalsNeedWater.csproj" ;;
+            CropGrowthAdjustments)  proj="CropGrowthAdjustments/CropGrowthAdjustments.csproj" ;;
+            DialogueBoxRedesign)    proj="DialogueBoxRedesign/DialogueBoxRedesign.csproj" ;;
+            EventBlackBars)         proj="EventBlackBars/EventBlackBars.csproj" ;;
+            FishExclusions)         proj="FishExclusions/FishExclusions.csproj" ;;
+            ScytheHarvestsMore)     proj="ScytheHarvestsMore/ScytheHarvestsMore.csproj" ;;
+            *) echo "unk mod key: $key" >&2; exit 1 ;;
+          esac
+          echo "project=$proj" >> "$GITHUB_OUTPUT"
+      - uses: Pathoschild/SMAPI-ModBuildWorkflow/add-build-environment@0a8b012b28a8449d6a5a3678f7a88f99492bb63e # v1
+      - run: dotnet build "$PROJECT" --configuration Release
+        env:
+          PROJECT: ${{ steps.resolve.outputs.project }}
+      - uses: Pathoschild/SMAPI-ModBuildWorkflow/upload-release-artifacts@0a8b012b28a8449d6a5a3678f7a88f99492bb63e # v1
+        with:
+          create_attestations: true

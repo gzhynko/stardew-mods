@@ -1,0 +1,45 @@
+name: build mod(s) on push to master
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      projects: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3
+        id: filter
+        with:
+          filters: |
+            "AnimalsNeedWater/AnimalsNeedWater.csproj": ['AnimalsNeedWater/**', 'Directory.Build.props']
+            "CropGrowthAdjustments/CropGrowthAdjustments.csproj": ['CropGrowthAdjustments/**', 'Directory.Build.props']
+            "DialogueBoxRedesign/DialogueBoxRedesign.csproj": ['DialogueBoxRedesign/**', 'Directory.Build.props']
+            "EventBlackBars/EventBlackBars.csproj": ['EventBlackBars/**', 'Directory.Build.props']
+            "FishExclusions/FishExclusions.csproj": ['FishExclusions/**', 'Directory.Build.props']
+            "ScytheHarvestsMore/ScytheHarvestsMore.csproj": ['ScytheHarvestsMore/**', 'Directory.Build.props']
+
+  build:
+    needs: detect
+    if: needs.detect.outputs.projects != '[]'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJSON(needs.detect.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with: { fetch-tags: false }
+      - uses: Pathoschild/SMAPI-ModBuildWorkflow/add-build-environment@0a8b012b28a8449d6a5a3678f7a88f99492bb63e # v1
+      - run: dotnet build "$PROJECT"
+        env:
+          PROJECT: ${{ matrix.project }}
