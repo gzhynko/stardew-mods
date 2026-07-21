@@ -1,7 +1,7 @@
 # Version history for AnimalsNeedWater
 
 ## 1.8.1
-Upcoming.
+Released July 21, 2026.
 - Sprinklers can now fill water bowls on day start. (configurable)
 - Multiplayer: key animal emotes and per-building first watering bonus are now synced across all players; fixed some split-screen state handling.
 - Fix potential transient bugs with animal houses not having indoors locations.

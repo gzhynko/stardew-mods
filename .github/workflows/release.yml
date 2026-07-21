@@ -10,7 +10,7 @@ jobs:
     permissions:
       id-token: write
       attestations: write
-      contents: read
+      contents: write # needed to publish a GitHub Release
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with: { fetch-tags: false }
@@ -36,3 +36,13 @@ jobs:
       - uses: Pathoschild/SMAPI-ModBuildWorkflow/upload-release-artifacts@0a8b012b28a8449d6a5a3678f7a88f99492bb63e # v1
         with:
           create_attestations: true
+      - name: publish to Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" _releases/*.zip --clobber # on re-run replace assets on the existing release
+          else
+            gh release create "$TAG" _releases/*.zip --title "$TAG" --generate-notes
+          fi
