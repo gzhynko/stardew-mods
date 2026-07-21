@@ -38,8 +38,9 @@ public class ThirstTracker
             {
                 if (ModEntry.TroughManager.IsWatered(building))
                     continue;
-                
-                foreach (var animal in ((AnimalHouse) building.indoors.Value).animals.Values
+                if (building.indoors.Value is not AnimalHouse animalHouse) continue;
+
+                foreach (var animal in animalHouse.animals.Values
                     .Where(animal =>
                         !ModEntry.Data.IsAnimalFull(animal) 
                         && AnimalsLeftThirstyYesterday.All(info => info.Id != animal.myID.Value)))

@@ -189,7 +189,12 @@ public class ModEntry : Mod
             {
                 TroughManager.FillAllWaterTroughs();
             }
-            
+
+            foreach (Building building in BuildingTracker.AnimalBuildings)
+            {
+                TroughManager.FillSprinklerCoveredBowls(building);
+            }
+
             Data.BuildingsWithBonusAwardedToday.Clear();
             ThirstTracker.ResetFullAnimals();
             

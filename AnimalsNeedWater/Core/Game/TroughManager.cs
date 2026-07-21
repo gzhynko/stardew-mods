@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnimalsNeedWater.Core.Models;
+using Microsoft.Xna.Framework;
 using StardewValley.Buildings;
 using StardewValley.Extensions;
 using Object = StardewValley.Object;
@@ -27,20 +28,21 @@ public class TroughManager
     
     public bool BuildingHasFullWaterBowl(Building building)
     {
-        var hasFullWaterBowlObject = false;
-        var buildingObjects = building.GetIndoors().Objects.Values;
-        foreach (Object @object in buildingObjects)
+        var indoors = building.GetIndoors();
+        if (indoors == null) return false;
+
+        foreach (Object @object in indoors.Objects.Values)
         {
             if (!@object.HasTypeId("(BC)") || @object.ItemId != ModConstants.WaterBowlItemId) 
                 continue;
             if (@object.modData.ContainsKey(ModConstants.WaterBowlItemModDataIsFullField)
                 && @object.modData[ModConstants.WaterBowlItemModDataIsFullField] == "true")
             {
-                hasFullWaterBowlObject = true;
+                return true;
             }
         }
 
-        return hasFullWaterBowlObject;
+        return false;
     }
 
     public bool IsWatered(Building building)
@@ -60,6 +62,35 @@ public class TroughManager
         }
     }
 
+    public void FillSprinklerCoveredBowls(Building building)
+    {
+        if (!ModEntry.Config.SprinklersFillWaterBowls) return;
+
+        var indoors = building.GetIndoors();
+        if (indoors == null) return;
+
+        // gather every tile any sprinkler in here covers
+        var covered = new HashSet<Vector2>();
+        foreach (var obj in indoors.Objects.Values)
+        {
+            if (!obj.IsSprinkler()) continue;
+            foreach (var t in obj.GetSprinklerTiles())
+            {
+                covered.Add(t);
+            }
+        }
+        if (covered.Count == 0) return;
+
+        foreach (var obj in indoors.Objects.Values)
+        {
+            if (obj.HasTypeId("(BC)") 
+                && obj.ItemId == ModConstants.WaterBowlItemId
+                && covered.Contains(obj.TileLocation))
+            {
+                Utils.FillWaterBowlObject(obj);
+            }
+        }
+    }
 
     public void EmptyWaterBowls(Building building)
     {

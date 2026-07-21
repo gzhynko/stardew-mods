@@ -1,5 +1,10 @@
 # Version history for AnimalsNeedWater
 
+## 1.8.1
+Upcoming.
+- Sprinklers can now fill water bowls on day start. (configurable)
+- Fix potential transient bugs with animal houses not having indoors locations.
+
 ## 1.8.0
 Released July 20, 2026.
 - Rewrite to make the mod content pipeline-native. This allows other creators to add compatibility profiles for their custom buildings or redesigns using Content Patcher, add custom sprites for ANW to use, etc.

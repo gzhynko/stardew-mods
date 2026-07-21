@@ -26,15 +26,18 @@ public static class HarmonyPatchExecutors
     {
         if (!Context.IsMainPlayer) return;
         
-        if (__instance.home != null &&
-            !((AnimalHouse)__instance.home.indoors.Value).animals.ContainsKey(__instance.myID.Value) &&
-            environment is not AnimalHouse && !__instance.home.animalDoorOpen.Value) return;
+        var home = __instance.home;
+
+        if (home?.indoors.Value is AnimalHouse animalHouse
+            && !animalHouse.animals.ContainsKey(__instance.myID.Value)
+            && environment is not AnimalHouse
+            && !home.animalDoorOpen.Value)
+            return;
 
         // check whether the building the animal lives in is watered (or has a full water bowl)
         // and whether the animal was able to drink outside or not
-        if ((__instance.home != null
-             && ModEntry.TroughManager.IsWatered(__instance.home))
-            || ModEntry.Data.IsAnimalFull(__instance))
+        bool watered = home?.indoors.Value is AnimalHouse && ModEntry.TroughManager.IsWatered(home);
+        if (watered || ModEntry.Data.IsAnimalFull(__instance)) 
         {
             // increase friendship points
             __instance.friendshipTowardFarmer.Value += Math.Abs(ModEntry.Config.FriendshipPointsForWateredTrough);

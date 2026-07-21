@@ -108,6 +108,11 @@ public class ModConfig
     public int ThirstyEmoteStartTime { get; set; } = 1500;
     
     /// <summary>
+    /// Whether sprinklers can fill water bowls on day start. Defaults to true.
+    /// </summary>
+    public bool SprinklersFillWaterBowls { get; set; } = true;
+
+    /// <summary>
     /// Setup the Generic Mod Config Menu API.
     /// </summary>
     public static void SetUpModConfigMenu(ModConfig config, ModEntry mod)
@@ -144,6 +149,7 @@ public class ModConfig
         api.AddBoolOption(manifest, () => config.AnimalsCanDrinkOutside, val => config.AnimalsCanDrinkOutside = val, () => "Animals Can Drink Outside", () => "Whether animals can drink outside.");
         api.AddBoolOption(manifest, () => config.AnimalsCanOnlyDrinkFromWaterBodies, val => config.AnimalsCanOnlyDrinkFromWaterBodies = val, () => "Animals Can Only Drink From Water Bodies", () => "Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).");
         api.AddBoolOption(manifest, () => config.TroughsCanRemainFull, val => config.TroughsCanRemainFull = val, () => "Troughs Can Remain Full", () => "Whether in-building water sources (troughs, bowls) can remain full if all animals living in that building were able to drink outside during the day.");
+        api.AddBoolOption(manifest, () => config.SprinklersFillWaterBowls, val => config.SprinklersFillWaterBowls = val, () => "Sprinklers Fill Water Bowls", () => "Whether sprinklers can fill water bowls on day start.");
 
         api.AddSectionTitle(manifest, () => "Friendship");
         api.AddNumberOption(manifest, () => config.FriendshipPointsForWateredTrough, val => config.FriendshipPointsForWateredTrough = (int)val, () => "Watered Trough", () => "The amount of friendship points player gets for watering a trough.", interval: 1.0f);
