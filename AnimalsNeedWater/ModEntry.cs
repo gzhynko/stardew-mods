@@ -32,6 +32,7 @@ public class ModEntry : Mod
     public static TroughManager TroughManager = new TroughManager();
     public static TroughVisuals TroughVisuals = new TroughVisuals();
     public static ThirstTracker ThirstTracker = new ThirstTracker();
+    public static AnimalEmotes AnimalEmotes = new AnimalEmotes();
     public static MessageBridge MessageBridge = new MessageBridge();
 
     /// <summary> The mod entry point, called after the mod is first loaded. </summary>
@@ -52,6 +53,7 @@ public class ModEntry : Mod
         helper.Events.GameLoop.Saving += OnSaving;
         helper.Events.GameLoop.DayEnding += OnDayEnding;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
+        helper.Events.GameLoop.UpdateTicked += AnimalEmotes.OnUpdateTicked;
         
         helper.Events.World.BuildingListChanged += OnBuildingListChanged;
         
@@ -66,6 +68,8 @@ public class ModEntry : Mod
         helper.Events.Content.AssetsInvalidated += TroughVisuals.OnAssetsInvalidated;
         
         helper.Events.Display.RenderedWorld += PlacementDiagnostics.OnRenderedWorld;
+
+        helper.Events.Player.Warped += TroughVisuals.OnWarped;
         
         helper.ConsoleCommands.Add("anw_toggle_overlay", "toggle the placement debug overlay.", TogglePlacementDebugOverlayCallback);
     }
@@ -119,12 +123,6 @@ public class ModEntry : Mod
             new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalBehaviors))
         );
 
-        ModMonitor.VerboseLog("Patching Game1.OnLocationChanged.");
-        harmony.Patch(
-            AccessTools.Method(typeof(Game1), nameof(Game1.OnLocationChanged)),
-            new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.OnLocationChanged))
-        );
-        
         ModMonitor.VerboseLog("Patching Building.draw.");
         harmony.Patch(
             AccessTools.Method(typeof(Building), nameof(Building.draw), new []{ typeof(SpriteBatch) }),
@@ -143,8 +141,14 @@ public class ModEntry : Mod
     {
         if (!Context.IsMainPlayer)
         {
-            Data = new ModData();
-            return;
+            if (Context.ScreenId == 0)
+            {
+                // host will send a state sync, so reset for now to avoid inconsistencies 
+                Data = new ModData();
+            }
+
+            // if secondary player in a split screen, dont mess with shared data
+            return; 
         }
         
         Data = Helper.Data.ReadSaveData<ModData>(ModConstants.ModDataSaveDataKey) ?? new ModData();
@@ -162,9 +166,10 @@ public class ModEntry : Mod
     
     private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
     {
-        if (Context.IsMainPlayer) return;
+        LoadSavedModData();
         
         // farmhand pulls state from host
+        if (Context.IsMainPlayer) return;
         MessageBridge.SendRequestStateMessage(Game1.player.UniqueMultiplayerID);
     }
 
@@ -173,7 +178,6 @@ public class ModEntry : Mod
     /// <param name="e">The event data.</param>
     private void OnDayStarted(object? sender, DayStartedEventArgs e)
     {
-        LoadSavedModData();
         BuildingTracker.Refresh();
 
         if (Context.IsMainPlayer)
@@ -187,7 +191,7 @@ public class ModEntry : Mod
             }
             else
             {
-                TroughManager.FillAllWaterTroughs();
+                TroughManager.WaterAllBuildings();
             }
 
             foreach (Building building in BuildingTracker.AnimalBuildings)
@@ -224,6 +228,7 @@ public class ModEntry : Mod
     private void OnDayEnding(object? sender, DayEndingEventArgs e)
     {
         if (!Context.IsMainPlayer) return; // only host computes the list; this is then broadcast to farmhands on day start
+        BuildingTracker.Refresh();
         ThirstTracker.FindThirstyAnimals();
     }
     
@@ -243,6 +248,7 @@ public class ModEntry : Mod
         {
             if (removed.GetIndoors() is not AnimalHouse) continue;
             TroughManager.ClearWatered(removed);
+            TroughManager.ClearBonus(removed);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using AnimalsNeedWater.Core.Models;
 
-namespace AnimalsNeedWater.Core.Models;
+namespace AnimalsNeedWater.Core.Multiplayer.Models;
 
 public class ThirstyAnimalsMessage
 {

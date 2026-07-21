@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace AnimalsNeedWater.Core.Models;
+namespace AnimalsNeedWater.Core.Multiplayer.Models;
 
 public class RequestStateMessage
 {

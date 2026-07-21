@@ -24,7 +24,8 @@ public class WaterBowlContentEditor
                     Texture = ModEntry.ModHelper.ModContent.GetInternalAssetName(AssetManager.WaterBowlTextureSpritesheet).Name,
                     Price = 0, // sells for 0
                 };
-                editor.Data.Add(ModConstants.WaterBowlItemId, waterBowlAssetData);
+                
+                editor.Data[ModConstants.WaterBowlItemId] = waterBowlAssetData;
             });
         }
         
@@ -34,12 +35,10 @@ public class WaterBowlContentEditor
             e.Edit(asset =>
             {
                 var editor = asset.AsDictionary<string, string>();
-                editor.Data.Add(
-                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.name", 
-                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.name"));
-                editor.Data.Add(
-                    $"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description", 
-                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.description"));
+                editor.Data[$"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.name"] = 
+                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.name");
+                editor.Data[$"{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description"] =  
+                    ModEntry.ModHelper.Translation.Get("Items.Water_Bowl.description");
             });
         }
         
@@ -50,7 +49,8 @@ public class WaterBowlContentEditor
             {
                 var editor = asset.AsDictionary<string, ShopData>();
 
-                var animalShopData = editor.Data["AnimalShop"];
+                if (!editor.Data.TryGetValue("AnimalShop", out var animalShopData))
+                    return;
 
                 var waterBowlShopItemData = new ShopItemData
                 {

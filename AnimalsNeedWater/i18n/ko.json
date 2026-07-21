@@ -1,0 +1,11 @@
+{
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "어제 {{firstAnimalName}} 은(는) 목이 말랐습니다.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "어제 {{firstAnimalName}} 은(는) 목이 말랐습니다.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} 은(는) 목이 말랐습니다.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "어제 {{firstAnimalName}}과(와) {{secondAnimalName}} 은(는) 목이 말랐습니다.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "어제 {{firstAnimalName}}, {{secondAnimalName}}과(와) {{thirdAnimalName}} 은(는) 목이 말랐습니다.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "어제 {{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}}과(와) 그 외{{totalAmountExcludingFirstThree}} 명의 동물들이 목이 말랐습니다.",
+
+  "Items.Water_Bowl.name": "물 그릇",
+  "Items.Water_Bowl.description": "그릇이 제공되지 않는 축사 안에 배치하면 동물들이 물을 마실 수 있도록 해줍니다."
+}

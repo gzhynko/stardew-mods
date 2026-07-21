@@ -11,7 +11,7 @@ public class BuildingTracker
 {
     public List<Building> AnimalBuildings = new List<Building>();
     // group buildings by their parent location
-    public IEnumerable<IGrouping<GameLocation, Building>> AnimalBuildingGroups => AnimalBuildings.GroupBy(b => b.GetParentLocation());
+    public IEnumerable<IGrouping<GameLocation, Building>> AnimalBuildingGroups = [];
 
     public void Refresh()
     {
@@ -26,6 +26,7 @@ public class BuildingTracker
                 }
             }
         }
+        AnimalBuildingGroups = AnimalBuildings.GroupBy(b => b.GetParentLocation()).ToArray(); // materialize
     }
     
     public void CheckHomeStatus()

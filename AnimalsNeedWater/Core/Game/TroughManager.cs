@@ -15,10 +15,25 @@ public class TroughManager
     {
         ModEntry.Data.BuildingsWithWateredTrough.Add(building.GetIndoorsName());
     }
+    
+    public void MarkWateredName(string name)
+    {
+        ModEntry.Data.BuildingsWithWateredTrough.Add(name);
+    }
 
     public void ClearWatered(Building building)
     {
         ModEntry.Data.BuildingsWithWateredTrough.Remove(building.GetIndoorsName());
+    }
+
+    public void MarkBonusAwardedName(string name)
+    {
+        ModEntry.Data.BuildingsWithBonusAwardedToday.Add(name);
+    }
+    
+    public void ClearBonus(Building building)
+    {
+        ModEntry.Data.BuildingsWithBonusAwardedToday.Remove(building.GetIndoorsName());
     }
     
     public bool BuildingHasTroughsWatered(Building building)
@@ -49,11 +64,25 @@ public class TroughManager
     {
         return BuildingHasTroughsWatered(building) ||  BuildingHasFullWaterBowl(building);
     }
-    
-    public void FillAllWaterTroughs()
+
+    public void WaterAllBuildings()
     {
         foreach (Building building in ModEntry.BuildingTracker.AnimalBuildings)
         {
+            // fill bowls before the profile check
+            var indoors = building.GetIndoors();
+            if (indoors != null)
+            {
+                foreach (var obj in indoors.Objects.Values)
+                {
+                    if (obj.HasTypeId("(BC)")
+                        && obj.ItemId == ModConstants.WaterBowlItemId)
+                    {
+                        Utils.FillWaterBowlObject(obj);
+                    }
+                }
+            }
+
             var buildingName = building.buildingType.Value;
             if (!ModEntry.PlacementRegistry.TryGetPlacement(buildingName, out _))
                 continue;
@@ -115,7 +144,7 @@ public class TroughManager
         
         foreach (Building building in ModEntry.BuildingTracker.AnimalBuildings)
         {
-            var indoors = building.indoors.Value;
+            var indoors = building.GetIndoors();
             var allDrankOutside = ModEntry.Config.TroughsCanRemainFull && indoors.animals.Values.All(a => ModEntry.Data.IsAnimalFull(a));
 
             if (!allDrankOutside)

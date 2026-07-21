@@ -26,6 +26,7 @@ public class ThirstTracker
         if (!Context.IsMainPlayer) return;
         
         AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
+        var added = new HashSet<long>();
 
         foreach (var locationGroup in ModEntry.BuildingTracker.AnimalBuildingGroups)
         {
@@ -38,14 +39,18 @@ public class ThirstTracker
             {
                 if (ModEntry.TroughManager.IsWatered(building))
                     continue;
-                if (building.indoors.Value is not AnimalHouse animalHouse) continue;
+                if (building.GetIndoors() is not AnimalHouse animalHouse) continue;
 
                 foreach (var animal in animalHouse.animals.Values
                     .Where(animal =>
                         !ModEntry.Data.IsAnimalFull(animal) 
-                        && AnimalsLeftThirstyYesterday.All(info => info.Id != animal.myID.Value)))
+                        && !added.Contains(animal.myID.Value)))
                 {
+                    added.Add(animal.myID.Value);
+
                     animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
+                    animal.friendshipTowardFarmer.Value = Math.Clamp(animal.friendshipTowardFarmer.Value, 0, 1000);
+                    
                     AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
                     {
                         Id = animal.myID.Value, 
@@ -58,14 +63,15 @@ public class ThirstTracker
             // Check for animals outside their buildings as well.
             foreach (var animal in parentLocation.animals.Values)
             {
-                if (animal.home != null &&
-                    (ModEntry.TroughManager.IsWatered(animal.home) ||
-                     ModEntry.Data.IsAnimalFull(animal)) &&
-                    animal.home.animalDoorOpen.Value) continue;
+                if (ModEntry.Data.IsAnimalFull(animal) // drank outside, or
+                     || (animal.home != null && ModEntry.TroughManager.IsWatered(animal.home) && animal.home.animalDoorOpen.Value)) // has home + home watered + door open
+                    continue;
             
-                if (AnimalsLeftThirstyYesterday.Any(info => info.Id == animal.myID.Value)) continue;
-                
+                if (!added.Add(animal.myID.Value)) continue;
+
                 animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
+                animal.friendshipTowardFarmer.Value = Math.Clamp(animal.friendshipTowardFarmer.Value, 0, 1000);
+
                 AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
                 {
                     Id = animal.myID.Value, 

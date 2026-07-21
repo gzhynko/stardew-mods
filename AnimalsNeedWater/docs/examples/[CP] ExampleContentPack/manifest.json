@@ -1,0 +1,17 @@
+{
+  "Name": "YourPackName",
+  "Author": "YourName",
+  "Version": "1.0.0",
+  "Description": "An example content pack for ContentPatcher that extends ANW.",
+  "UniqueID": "YourName.YourPackName",
+  "UpdateKeys": [ "Nexus:???" ],
+  "ContentPackFor": {
+    "UniqueID": "Pathoschild.ContentPatcher"
+  },
+  "Dependencies": [
+    {
+      "UniqueID": "GZhynko.AnimalsNeedWater",
+      "IsRequired": false
+    }
+  ]
+}

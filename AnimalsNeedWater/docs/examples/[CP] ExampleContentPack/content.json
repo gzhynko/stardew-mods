@@ -1,16 +1,17 @@
 {
-  "Format": "2.3.0",
+  "Format": "2.9.0",
   "Changes": [
-    // the content patcher pack's own interior replacements (what the pack already ships today)
+    // your pack's own interior replacements, if any
     {
       "Action": "Load",
       "Target": "Maps/Coop, Maps/Barn3",
       "FromFile": "assets/maps/{{TargetWithoutPath}}.tmx"
     },
 
-    // optional custom art for ANW features, loaded under the pack's own asset names
+    // custom art for Animals Need Water (ANW) features; each of these is optional. If omitted, ANW uses its default art.
     {
       "Action": "Load",
+      // Note the custom asset name. The {{ModId}} is replaced by your pack's UniqueID defined in the manifest. this pattern helps avoid conflicts.
       "Target": "Mods/{{ModId}}/ANW/troughTilesheet",
       "FromFile": "assets/anw/troughTilesheet.png"
     },
@@ -27,10 +28,10 @@
       "FromFile": "assets/anw/coopEmptyTroughOverlay_{{Season}}.png"
     },
 
-    // anw profile
+    // A full profile for ANW.
     {
       "Action": "EditData",
-      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughPlacements",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughPlacements", // this asset name should not be changed
       "Entries": {
 
         "Barn": {
@@ -41,7 +42,7 @@
             { "TileX": 13, "TileY": 2, "Layer": "Front", "EmptyIndex": 1, "FullIndex": 4 },
             { "TileX": 14, "TileY": 2, "Layer": "Front", "EmptyIndex": 2, "FullIndex": 5 }
           ],
-          "TroughTexture": "Mods/{{ModId}}/ANW/troughTilesheet"
+          "TroughTexture": "Mods/{{ModId}}/ANW/troughTilesheet" // if you loaded a tilesheet above, put the asset name here. Omit if using default art.
         },
 
         // troughs + watering system
@@ -64,20 +65,51 @@
               ]
             }
           ],
-          "WateringSystemTexture": "Mods/{{ModId}}/ANW/wateringSystemTilesheet"
+          "WateringSystemTexture": "Mods/{{ModId}}/ANW/wateringSystemTilesheet" // if you loaded a tilesheet above, put the asset name here. Omit if using default art.
         },
 
-        // omit ExteriorEmptyOverlay entirely for no exterior indication
         "Coop": {
           "TroughTiles": [
             { "TileX": 10, "TileY": 5, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 }
           ],
+          // this adds a custom overlay; leave the field out entirely if you don't want an exterior indicator
           "ExteriorEmptyOverlay": {
             "Texture": "Mods/{{ModId}}/ANW/coopEmptyTroughOverlay",
+            
+            // SourceRect is in your overlay sprite's pixels, unscaled; the rect's bottom-left corner is anchored to the building footprint's bottom-left, shifted by DrawOffset (again in sprite pixels).
+            // 
+            // Note the vanilla coop/big coop sprites are 128px in height, but they include a 16px tall row of ancillaries at the bottom (e.g. door and doorway). 
+            // Your overlay's size should not include that row, and the same for the Height field below.
+            //
+            // see https://github.com/gzhynko/stardew-mods/tree/master/AnimalsNeedWater/assets/buildings for examples of overlay sprites for Coop and Big Coop.
             "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
             "DrawOffset": { "X": 0, "Y": 0 }
           }
         }
+      },
+      // this is optional but recommended - only applies the edit when the user has ANW installed
+      "When": {
+        "HasMod": "GZhynko.AnimalsNeedWater"
+      }
+    },
+
+    // You can also do edits to existing (e.g. vanilla) buildings without changing their placements.
+    // This example adds a custom exterior overlay for the empty trough state; useful if your pack changes just the exterior building texture
+    {
+      "Action": "EditData",
+      "Target": "Mods/GZhynko.AnimalsNeedWater/TroughPlacements", // this asset name should not be changed
+      "Fields": {
+        // note the lack of TroughTiles
+        "Big Coop": {
+          "ExteriorEmptyOverlay": {
+            "Texture": "Mods/{{ModId}}/ANW/coopEmptyTroughOverlay", // your custom asset loaded as shown above
+            "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+            "DrawOffset": { "X": 0, "Y": 0 }
+          }
+        }
+      },
+      "When": {
+        "HasMod": "GZhynko.AnimalsNeedWater"
       }
     }
   ]

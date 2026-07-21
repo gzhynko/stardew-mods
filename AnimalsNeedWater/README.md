@@ -5,13 +5,9 @@
  -  Install Animals Need Water [from Nexus mods](https://www.nexusmods.com/stardewvalley/mods/6196).
  -  Run the game using SMAPI.
 
-## Uninstall
-Simply removing mod's folder will work.
-
-## API
-**Animals Need Water** provides an API allowing modders to access data like *which animals were left thirsty yesterday* or *coops/barns with watered troughs*.
-
-See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/API-documentation.md) for more info.
+## For mod authors
+- To make your mod compatible with ANW content-wise (map changes, recolors, etc.), see the example Content Patcher content pack in [examples](./docs/examples). 
+- To access ANW state at runtime from your SMAPI mod, see the [API docs](./API-documentation.md).
 
 ## Translating
 | Language             | Status                                                                                                                                                                                                     |
@@ -22,7 +18,7 @@ See [API docs](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWat
 | Hungarian            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/hu.json) (credit to [szatoka](https://www.nexusmods.com/stardewvalley/users/47532583))                                        |
 | Italian              | ✕                                                                                                                                                                                                          |
 | Japanese             | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ja.json) (credit to [TinyCordelia](https://next.nexusmods.com/profile/TinyCordelia))                                          |
-| Korean               | ✕                                                                                                                                                                                                          |
+| Korean            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ko.json) (credit to seint_s)                                        |
 | Brazilian Portuguese | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/pt-BR.json) (credit to [tramontina](https://www.nexusmods.com/stardewvalley/users/36215665))                                  |
 | Russian              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ru.json)                                                                                                                      |
 | Spanish              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373))                                                        |

@@ -44,31 +44,17 @@ internal class HarmonyPatches
 
     /// <summary> Patch for the GameLocation.performToolAction method. </summary>
     [HarmonyPriority(500)]
-    public static bool GameLocationToolAction(Tool t, int tileX, int tileY)
+    public static bool GameLocationToolAction(GameLocation __instance, Tool t, int tileX, int tileY)
     { 
         try
         {
-            return HarmonyPatchExecutors.GameLocationToolActionExecutor(t, tileX, tileY);
+            return HarmonyPatchExecutors.GameLocationToolActionExecutor(__instance, t, tileX, tileY);
         }
         catch (Exception e)
         {
             ModEntry.ModMonitor.Log($"Failed in { nameof(GameLocationToolAction) }:\n{ e }", LogLevel.Error);
                 
             return true;
-        }
-    }
-
-    /// <summary> Patch for the OnLocationChanged method. </summary>
-    [HarmonyPriority(500)]
-    public static void OnLocationChanged(GameLocation oldLocation, GameLocation newLocation)
-    {
-        try
-        {
-            HarmonyPatchExecutors.OnLocationChangedExecutor(oldLocation, newLocation);
-        }
-        catch (Exception e)
-        {
-            ModEntry.ModMonitor.Log($"Failed in { nameof(OnLocationChanged) }:\n{ e }", LogLevel.Error);
         }
     }
 
@@ -82,6 +68,5 @@ internal class HarmonyPatches
         {
             ModEntry.ModMonitor.LogOnce($"Failed in { nameof(BuildingDrawPostfix) }:\n{ e }", LogLevel.Error);
         }
-
     }
 }

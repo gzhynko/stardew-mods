@@ -10,6 +10,7 @@
 [Rr]elease/
 [Bb]in/
 [Oo]bj/
+_releases/
 
 # Visual Studio cache/options
 .vs/

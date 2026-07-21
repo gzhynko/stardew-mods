@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AnimalsNeedWater.Core.Models;
+using AnimalsNeedWater.Core.Multiplayer.Models;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -15,11 +16,14 @@ public class MessageBridge
     private const string RequestStateMessageType = "RequestStateMessage";
     private const string ThirstyAnimalsMessageType = "ThirstyAnimalsMessage";
     private const string AddFullAnimalMessageType = "AddFullAnimalMessage";
+    private const string BonusAwardedMessageType = "BonusAwardedMessage";
     
     public void OnModMessageReceived(object? sender, ModMessageReceivedEventArgs e)
     {
         if (e.FromModID != ModEntry.Manifest.UniqueID) return;
 
+        var playerLocationName = Game1.currentLocation?.NameOrUniqueName;
+        
         switch (e.Type)
         {
             case TroughWateredMessageType:
@@ -28,22 +32,27 @@ public class MessageBridge
                 string locationName = troughWateredMessage.BuildingUniqueName;
                 var location = Game1.getLocationFromName(locationName);
 
+                ModEntry.TroughManager.MarkWateredName(locationName);
+                
                 var targetBuilding = location?.ParentBuilding;
                 if (targetBuilding == null)
                     return;
                 
-                ModEntry.TroughManager.MarkWatered(targetBuilding);
-        
-                var currentLocationName = Game1.currentLocation?.NameOrUniqueName;
-                if (currentLocationName == null)
+                if (playerLocationName == null)
                     return;
                 
                 // immediately sync visual state if in same building
-                if (string.Equals(currentLocationName, locationName,
+                if (string.Equals(playerLocationName, locationName,
                         StringComparison.OrdinalIgnoreCase))
                 {
                     ModEntry.TroughVisuals.ApplyTroughTiles(targetBuilding);
                 }
+                
+                break;
+            
+            case BonusAwardedMessageType:
+                BonusAwardedMessage bonusAwardedMessage = e.ReadAs<BonusAwardedMessage>();
+                ModEntry.TroughManager.MarkBonusAwardedName(bonusAwardedMessage.BuildingUniqueName);
                 
                 break;
             
@@ -85,6 +94,19 @@ public class MessageBridge
                 
                 AddFullAnimalMessage addFullAnimalMessage = e.ReadAs<AddFullAnimalMessage>();
                 ModEntry.ThirstTracker.AddFullAnimal(addFullAnimalMessage.AnimalId);
+
+                var targetAnimal = Utility.getAnimal(addFullAnimalMessage.AnimalId);
+                var targetAnimalLocationName = targetAnimal?.currentLocation?.NameOrUniqueName;
+                if (targetAnimal == null || targetAnimalLocationName == null) return;
+                
+                if (playerLocationName == null)
+                    return;
+                
+                if (string.Equals(playerLocationName, targetAnimalLocationName,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    ModEntry.AnimalEmotes.EmoteDrankOutside(targetAnimal);
+                }
                 
                 break;
             
@@ -102,7 +124,12 @@ public class MessageBridge
     
     public void SendTroughWateredMessage(Building building)
     {
-        SendMessageToOwnMod(new TroughWateredMessage(building.GetIndoors().NameOrUniqueName), TroughWateredMessageType);
+        SendMessageToOwnMod(new TroughWateredMessage(building.GetIndoorsName()), TroughWateredMessageType);
+    }
+    
+    public void SendBonusAwardedMessage(string buildingName)
+    {
+        SendMessageToOwnMod(new BonusAwardedMessage(buildingName), BonusAwardedMessageType);
     }
     
     public void SendStateSyncMessage(HashSet<string> buildings, HashSet<string> bonuses, HashSet<long> fullAnimals, long? receiverId = null)

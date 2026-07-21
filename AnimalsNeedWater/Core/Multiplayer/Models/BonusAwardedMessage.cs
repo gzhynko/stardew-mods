@@ -1,10 +1,10 @@
 namespace AnimalsNeedWater.Core.Multiplayer.Models;
 
-public class TroughWateredMessage
+public class BonusAwardedMessage
 {
     public readonly string BuildingUniqueName;
 
-    public TroughWateredMessage(string buildingUniqueName)
+    public BonusAwardedMessage(string buildingUniqueName)
     {
         BuildingUniqueName = buildingUniqueName;
     }

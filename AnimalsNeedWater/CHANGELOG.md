@@ -3,7 +3,9 @@
 ## 1.8.1
 Upcoming.
 - Sprinklers can now fill water bowls on day start. (configurable)
+- Multiplayer: key animal emotes and per-building first watering bonus are now synced across all players; fixed some split-screen state handling.
 - Fix potential transient bugs with animal houses not having indoors locations.
+- Add Korean translation (thanks to @seint_s).
 
 ## 1.8.0
 Released July 20, 2026.

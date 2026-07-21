@@ -18,7 +18,7 @@ public class PlacementRegistry
     
     // diagnostics
     private readonly Dictionary<string, string> _baseSource = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, TroughPlacement> _baseContent = new Dictionary<string, TroughPlacement>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _baseContentJson = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     
     public void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
@@ -71,7 +71,7 @@ public class PlacementRegistry
     private Dictionary<string, TroughPlacement> BuildBaseContent()
     {
         var result = new Dictionary<string, TroughPlacement>(StringComparer.OrdinalIgnoreCase);
-        _baseContent.Clear();
+        _baseContentJson.Clear();
         _baseSource.Clear();
         
         // load default first
@@ -88,7 +88,7 @@ public class PlacementRegistry
             result[entry.Key] = entry.Value;
             
             // diagnostics
-            _baseContent[entry.Key] = entry.Value;
+            _baseContentJson[entry.Key] = JsonConvert.SerializeObject(entry.Value);
             _baseSource[entry.Key] = "default";
         }
         
@@ -121,7 +121,7 @@ public class PlacementRegistry
                 result[entry.Key] = entry.Value;
                 
                 // diagnostics
-                _baseContent[entry.Key] = entry.Value;
+                _baseContentJson[entry.Key] = JsonConvert.SerializeObject(entry.Value);
                 _baseSource[entry.Key] = bundledProfile.RequiredModId ?? "unknown";
             }
         }
@@ -140,10 +140,10 @@ public class PlacementRegistry
             string resolvedMessage;
             if (_baseSource.TryGetValue(entry.Key, out var baseSourceForKey))
             {
-                if (!_baseContent.TryGetValue(entry.Key, out var baseContentForKey))
+                if (!_baseContentJson.TryGetValue(entry.Key, out var baseJsonForKey))
                     continue;
 
-                var matches = JsonConvert.SerializeObject(entry.Value).Equals(JsonConvert.SerializeObject(baseContentForKey));
+                var matches = JsonConvert.SerializeObject(entry.Value).Equals(baseJsonForKey);
                 resolvedMessage = matches ? baseSourceForKey : $"content pack (overrides {baseSourceForKey})";
             }
             else

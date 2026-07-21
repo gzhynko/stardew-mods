@@ -33,7 +33,7 @@ public class TroughVisuals
         if (!ModEntry.PlacementRegistry.TryGetPlacement(buildingName, out var buildingProfile))
             return;
         
-        var indoorsMap = building.indoors.Value.Map;
+        var indoorsMap = building.GetIndoors().Map;
 
         // trough tilesheet
         var troughSource = buildingProfile.TroughTexture ?? AssetManager.WaterTroughTilesheetAssetName;
@@ -88,7 +88,7 @@ public class TroughVisuals
         if (buildingProfile.TroughTiles.Count == 0) 
             return;
 
-        GameLocation indoorsGameLocation = building.indoors.Value;
+        GameLocation indoorsGameLocation = building.GetIndoors();
 
         foreach (TroughTile tile in buildingProfile.TroughTiles)
         {
@@ -136,7 +136,7 @@ public class TroughVisuals
         if (buildingProfile.WateringSystemTiles.Count == 0) 
             return;
         
-        GameLocation indoorsGameLocation = building.indoors.Value;
+        GameLocation indoorsGameLocation = building.GetIndoors();
 
         foreach (WateringSystemTile tile in buildingProfile.WateringSystemTiles)
         {
@@ -189,7 +189,7 @@ public class TroughVisuals
         }
         catch (Exception e)
         {
-            ModEntry.ModMonitor.LogOnce($"Unable to load exterior overlay texture for building {buildingName}: {e}", LogLevel.Warn);
+            ModEntry.ModMonitor.LogOnce($"Unable to load exterior overlay texture {buildingProfile.ExteriorEmptyOverlay.Texture} for building {buildingName}: {e.Message}", LogLevel.Warn);
         }
 
         _overlayTexturesCache[buildingProfile.ExteriorEmptyOverlay.Texture] = tex;
@@ -245,5 +245,14 @@ public class TroughVisuals
             vector2_2 = data.DrawOffset * 4f;
         var origin = new Vector2(0.0f, overlaySourceRect.Height);
         spriteBatch.Draw(overlayTex, Game1.GlobalToLocal(Game1.viewport, vector2_1 + vector2_2 + overlayOffsetBottomLeft), overlaySourceRect, building.color * building.alpha, 0.0f, origin, 4f, SpriteEffects.None, layerDepth1);
+    }
+
+    public void OnWarped(object? sender, WarpedEventArgs e)
+    {
+        var building = e.NewLocation?.ParentBuilding;
+        if (e.NewLocation is not AnimalHouse || building == null)
+            return;
+        
+        ModEntry.TroughVisuals.ReapplyVisuals(building);
     }
 }
