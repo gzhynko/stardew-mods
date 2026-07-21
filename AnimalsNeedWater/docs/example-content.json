@@ -8,7 +8,7 @@
       "FromFile": "assets/maps/{{TargetWithoutPath}}.tmx"
     },
 
-    // optional custom art for ANW features, loaded under the pack's own asset names 
+    // optional custom art for ANW features, loaded under the pack's own asset names
     {
       "Action": "Load",
       "Target": "Mods/{{ModId}}/ANW/troughTilesheet",
@@ -55,13 +55,15 @@
             { "TileX": 22, "TileY": 2, "Layer": "Front", "EmptyIndex": 2, "FullIndex": 5 }
           ],
           "TroughTexture": "Mods/{{ModId}}/ANW/troughTilesheet",
-          "WateringSystem": {
-            "TileX": 23, "TileY": 3, "Layer": "Buildings", "SystemIndex": 0,
-            "TilesToRemove": [
-              { "TileX": 23, "TileY": 3, "Layer": "Buildings" },
-              { "TileX": 23, "TileY": 2, "Layer": "Front" }
-            ]
-          },
+          "WateringSystemTiles": [
+            {
+              "TileX": 23, "TileY": 3, "Layer": "Buildings", "SystemIndex": 0,
+              "TilesToRemove": [
+                { "TileX": 23, "TileY": 3, "Layer": "Buildings" },
+                { "TileX": 23, "TileY": 2, "Layer": "Front" }
+              ]
+            }
+          ],
           "WateringSystemTexture": "Mods/{{ModId}}/ANW/wateringSystemTilesheet"
         },
 
@@ -72,8 +74,8 @@
           ],
           "ExteriorEmptyOverlay": {
             "Texture": "Mods/{{ModId}}/ANW/coopEmptyTroughOverlay",
-            "SourceRect": { "X": 0, "Y": 0, "Width": 32, "Height": 16 },
-            "DrawOffset": { "X": 48, "Y": 112 }
+            "SourceRect": { "X": 0, "Y": 0, "Width": 96, "Height": 112 },
+            "DrawOffset": { "X": 0, "Y": 0 }
           }
         }
       }

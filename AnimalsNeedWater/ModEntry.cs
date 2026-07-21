@@ -2,6 +2,7 @@
 using AnimalsNeedWater.Core.Content;
 using AnimalsNeedWater.Core.Content.Editors;
 using AnimalsNeedWater.Core.Content.Loaders;
+using AnimalsNeedWater.Core.Diagnostics;
 using AnimalsNeedWater.Core.Game;
 using AnimalsNeedWater.Core.Models;
 using AnimalsNeedWater.Core.Multiplayer;
@@ -25,6 +26,7 @@ public class ModEntry : Mod
     public static ModData Data = new ModData();
 
     public static PlacementRegistry PlacementRegistry = new PlacementRegistry();
+    public static PlacementDiagnostics PlacementDiagnostics = new PlacementDiagnostics();
     
     public static BuildingTracker BuildingTracker = new BuildingTracker();
     public static TroughManager TroughManager = new TroughManager();
@@ -43,7 +45,10 @@ public class ModEntry : Mod
         Config = Helper.ReadConfig<ModConfig>();
         
         helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        
         helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+        helper.Events.GameLoop.SaveLoaded += PlacementRegistry.OnSaveLoaded;
+        
         helper.Events.GameLoop.Saving += OnSaving;
         helper.Events.GameLoop.DayEnding += OnDayEnding;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
@@ -54,16 +59,32 @@ public class ModEntry : Mod
         
         helper.Events.Content.AssetRequested += WaterBowlContentEditor.OnAssetRequested;
         helper.Events.Content.AssetRequested += DefaultAssetLoader.OnAssetRequested;
-        
         helper.Events.Content.AssetRequested += PlacementRegistry.OnAssetRequested;
+        
         helper.Events.Content.AssetsInvalidated += PlacementRegistry.OnAssetsInvalidated;
+        helper.Events.Content.AssetsInvalidated += PlacementDiagnostics.OnAssetsInvalidated;
         helper.Events.Content.AssetsInvalidated += TroughVisuals.OnAssetsInvalidated;
+        
+        helper.Events.Display.RenderedWorld += PlacementDiagnostics.OnRenderedWorld;
+        
+        helper.ConsoleCommands.Add("anw_toggle_overlay", "toggle the placement debug overlay.", TogglePlacementDebugOverlayCallback);
+    }
+
+    private void TogglePlacementDebugOverlayCallback(string arg1, string[] arg2)
+    {
+        PlacementDiagnostics.ToggleDebugOverlay();
     }
 
     public void SaveConfig(ModConfig newConfig)
     {
         Config = newConfig;
         Helper.WriteConfig(newConfig);
+        
+        // reflect changes immediately
+        Helper.GameContent.InvalidateCache(AssetManager.WaterTroughTilesheetAssetName);
+        Helper.GameContent.InvalidateCache("Data/Shops");
+        foreach (var b in BuildingTracker.AnimalBuildings)
+            TroughVisuals.ReapplyVisuals(b);
     }
 
     /// <summary> Get ANW's API </summary>
@@ -182,11 +203,11 @@ public class ModEntry : Mod
                 ThirstTracker.ShowLeftThirstyMessage();
             }
         }
-
         
         foreach (Building building in BuildingTracker.AnimalBuildings)
         {
             TroughVisuals.ReapplyVisuals(building);
+            PlacementDiagnostics.ValidateAndReport(building);
         }
     }
 
@@ -208,7 +229,9 @@ public class ModEntry : Mod
         foreach (var added in e.Added)
         {
             if (added.GetIndoors() is not AnimalHouse) continue;
+            
             TroughVisuals.ReapplyVisuals(added);
+            PlacementDiagnostics.ValidateAndReport(added);
         }
 
         foreach (var removed in e.Removed)

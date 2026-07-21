@@ -36,10 +36,7 @@ public class TroughVisuals
         var indoorsMap = building.indoors.Value.Map;
 
         // trough tilesheet
-        var troughSource = buildingProfile.TroughTexture
-                     ?? (ModEntry.Config.CleanerTroughs
-                         ? AssetManager.WaterTroughTilesheetCleanAssetName
-                         : AssetManager.WaterTroughTilesheetAssetName);
+        var troughSource = buildingProfile.TroughTexture ?? AssetManager.WaterTroughTilesheetAssetName;
         
         var existingTrough = indoorsMap.TileSheets.FirstOrDefault(ts => ts.Id == "z_waterTroughTilesheet");
         if (existingTrough == null)
@@ -98,20 +95,34 @@ public class TroughVisuals
             indoorsGameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
         }
 
+        Layer backLayer = indoorsGameLocation.Map.GetLayer("Back");
         Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
         Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
         TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
 
         foreach (TroughTile tile in buildingProfile.TroughTiles)
         {
+            Layer layerToUse;
+            switch (tile.Layer?.ToLower())
+            {
+                case "back":
+                    layerToUse = backLayer;
+                    break;
+                case "buildings":
+                    layerToUse = buildingsLayer;
+                    break;
+                case "front":
+                    layerToUse = frontLayer;
+                    break;
+                default:
+                    continue;
+            }
+            
             var tileIndexToUse = ModEntry.TroughManager.BuildingHasTroughsWatered(building)
                 ? tile.FullIndex
                 : tile.EmptyIndex;
-                
-            if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
-                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
-            else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
-                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
+            
+            layerToUse.Tiles[tile.TileX, tile.TileY] = new StaticTile(layerToUse, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
         }
     }
     
@@ -135,16 +146,30 @@ public class TroughVisuals
             }
         }
 
+        Layer backLayer = indoorsGameLocation.Map.GetLayer("Back");
         Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
         Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
         TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
 
         foreach (WateringSystemTile tile in buildingProfile.WateringSystemTiles)
         {
-            if (tile.Layer!.Equals("Buildings", StringComparison.OrdinalIgnoreCase))
-                buildingsLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(buildingsLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.SystemIndex);
-            else if (tile.Layer.Equals("Front", StringComparison.OrdinalIgnoreCase))
-                frontLayer.Tiles[tile.TileX, tile.TileY] = new StaticTile(frontLayer, tilesheet, BlendMode.Alpha, tileIndex: tile.SystemIndex);
+            Layer layerToUse;
+            switch (tile.Layer?.ToLower())
+            {
+                case "back":
+                    layerToUse = backLayer;
+                    break;
+                case "buildings":
+                    layerToUse = buildingsLayer;
+                    break;
+                case "front":
+                    layerToUse = frontLayer;
+                    break;
+                default:
+                    continue;
+            }
+            
+            layerToUse.Tiles[tile.TileX, tile.TileY] = new StaticTile(layerToUse, tilesheet, BlendMode.Alpha, tileIndex: tile.SystemIndex);
         }
     }
 

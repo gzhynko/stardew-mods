@@ -12,12 +12,19 @@ public class DefaultAssetLoader
         [AssetManager.CoopEmptyWaterTroughOverlayAssetName] = AssetManager.CoopEmptyWaterTroughOverlay,
         [AssetManager.BigCoopEmptyWaterTroughOverlayAssetName] = AssetManager.Coop2EmptyWaterTroughOverlay,
         [AssetManager.WateringSystemTilesheetAssetName] = AssetManager.WateringSystemTilesheet,
-        [AssetManager.WaterTroughTilesheetAssetName] = AssetManager.WaterTroughTilesheet,
-        [AssetManager.WaterTroughTilesheetCleanAssetName] = AssetManager.WaterTroughTilesheetClean,
     };
 
     public static void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
+        if (e.NameWithoutLocale.IsEquivalentTo(AssetManager.WaterTroughTilesheetAssetName))
+        {
+            var file = ModEntry.Config.CleanerTroughs
+                ? AssetManager.WaterTroughTilesheetClean
+                : AssetManager.WaterTroughTilesheet;
+            e.LoadFromModFile<Texture2D>(file, AssetLoadPriority.Medium);
+            return;
+        }
+
         if (DefaultAssets.TryGetValue(e.NameWithoutLocale.BaseName, out var modFilePath))
         {
             e.LoadFromModFile<Texture2D>(modFilePath, AssetLoadPriority.Medium);

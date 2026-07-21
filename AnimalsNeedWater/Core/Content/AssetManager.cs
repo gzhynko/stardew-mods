@@ -20,5 +20,4 @@ public class AssetManager
 
     public const string WateringSystemTilesheetAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/wateringSystemTilesheet";
     public const string WaterTroughTilesheetAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/troughTilesheet";
-    public const string WaterTroughTilesheetCleanAssetName = "Mods/GZhynko.AnimalsNeedWater/Defaults/troughTilesheetClean";
 }
