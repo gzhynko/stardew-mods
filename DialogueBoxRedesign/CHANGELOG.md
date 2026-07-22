@@ -1,7 +1,7 @@
 # Version history for DialogueBoxRedesign
 
 ## 1.3.0
-Upcoming.
+Released July 22, 2026.
 - Redesigned the question box to match the dialogue box's style.
 - Improved slide-out anim for the backdrop.
 - Added options to toggle the redesign of the dialogue box (ChangeDialogueDesign) and the question box (ChangeQuestionDesign) separately.
