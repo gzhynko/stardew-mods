@@ -1,5 +1,15 @@
 # Version history for DialogueBoxRedesign
 
+## 1.3.0
+Upcoming.
+- Redesigned the question box to match the dialogue box's style.
+- Improved slide-out anim for the backdrop.
+- Added options to toggle the redesign of the dialogue box (ChangeDialogueDesign) and the question box (ChangeQuestionDesign) separately.
+- Added an option to draw an outline around the text instead of a shadow for better contrast (DrawTextOutline).
+- Added an option to adjust how far the background gradient extends above the box for better contrast (BoxBackgroundGradientLead).
+- Fixed portrait shake not respecting character data introduced in Stardew Valley 1.6.
+- Fixed wrong portrait potentially being shown for other players in multiplayer.
+
 ## 1.2.0
 Released March 23, 2024.
 - Updated for SMAPI 4.0 and Stardew Valley 1.6
