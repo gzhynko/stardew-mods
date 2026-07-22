@@ -1,46 +1,39 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 
-//ReSharper disable InconsistentNaming
+namespace EventBlackBars;
 
-namespace EventBlackBars
+public class HarmonyPatches
 {
-    public class HarmonyPatches
+    public static void DrawAfterMap(SpriteBatch b)
     {
-        /// <summary> Patch for the Event.exitEvent method. </summary>
-        public static void EventEnd(Event __instance)
-        {
-            if (__instance.isFestival || __instance.isWedding) return;
-            
-            ModEntry.Instance.StartMovingBars(Direction.MoveOut);
-        }
+        if (!ModEntry.RenderBars) return;
 
-        public static void DrawAfterMap(SpriteBatch b)
+        try
         {
-            if (!ModEntry.RenderBars) return;
-            
-            var viewportWidth = ModEntry.GraphicsDevice.Viewport.Width;
-            var viewportHeight = ModEntry.GraphicsDevice.Viewport.Height;
-            
-            // Top bar
-            b.Draw(ModEntry.BlackRectangle, new Vector2(0, 0), null,
-                Color.White, 0f, Vector2.Zero, new Vector2(viewportWidth, ModEntry.BarHeight),
-                SpriteEffects.None, 0.0f);
-            
-            // Bottom bar
-            b.Draw(ModEntry.BlackRectangle, new Vector2(0, viewportHeight - ModEntry.BarHeight), null,
-                Color.White, 0f, Vector2.Zero, new Vector2(viewportWidth, ModEntry.BarHeight),
-                SpriteEffects.None, 0.0f);
+            ModEntry.DrawBars(b);
         }
-        
-        /// <summary> Patch for the GameLocation.startEvent method. </summary>
-        public static void EventStart(Event evt)
+        catch (Exception e)
         {
-            if (evt.isFestival || evt.isWedding) return;
-            
+            ModEntry.ModMonitor.Log($"Failed in {nameof(DrawAfterMap)}:\n{e}", LogLevel.Error);
+        }
+    }
+
+    /// <summary> Patch for the GameLocation.startEvent method. </summary>
+    public static void EventStart(Event evt)
+    {
+        if (evt.isFestival || evt.isWedding) return;
+
+        try
+        {
             ModEntry.Instance.StartMovingBars(Direction.MoveIn);
+        }
+        catch (Exception e)
+        {
+            ModEntry.ModMonitor.Log($"Failed in {nameof(EventStart)}:\n{e}", LogLevel.Error);
         }
     }
 }

@@ -2,7 +2,7 @@
     <PropertyGroup>
         <AssemblyName>EventBlackBars</AssemblyName>
         <RootNamespace>EventBlackBars</RootNamespace>
-        <Version>1.0.3</Version>
+        <Version>1.1.2</Version>
         <TargetFramework>net6.0</TargetFramework>
         <EnableHarmony>true</EnableHarmony>
     </PropertyGroup>

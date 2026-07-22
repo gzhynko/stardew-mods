@@ -1,5 +1,10 @@
 # Version history for EventBlackBars
 
+## 1.1.2
+Upcoming.
+- Improve bar logic at end of events (both immediate and smooth bars stay on the screen all thru event fade-out).
+- Smooth bars now slide off the screen after event end, not during fade-out.
+
 ## 1.1.1
 Released April 7, 2024.
 - Fixed Skip button appearing under the bars.
