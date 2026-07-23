@@ -4,10 +4,10 @@
   "Version": "1.0.0",
   "Description": "An example adjustment content pack for the CropGrowthAdjustments mod (makes grapes grow all year round).",
   "UniqueID": "GZhynko.CGA.ExampleAdjustment",
-  "MinimumApiVersion": "3.0",
+  "MinimumApiVersion": "4.2.0",
   "UpdateKeys": [ "Nexus:???" ],
   "ContentPackFor": {
     "UniqueID": "GZhynko.CropGrowthAdjustments",
-    "MinimumVersion": "1.1.0"
+    "MinimumVersion": "2.0.0"
    }
 }
