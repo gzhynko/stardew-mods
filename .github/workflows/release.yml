@@ -44,5 +44,5 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" _releases/*.zip --clobber # on re-run replace assets on the existing release
           else
-            gh release create "$TAG" _releases/*.zip --title "$TAG" --generate-notes
+            gh release create "$TAG" _releases/*.zip --title "$TAG"
           fi
