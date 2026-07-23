@@ -5,8 +5,5 @@
 2. Install Scythe Harvests More [from Nexus mods](https://www.nexusmods.com/stardewvalley/mods/29787).
 3. Run the game using SMAPI.
 
-## Uninstall
-Simply removing mod's folder will work.
-
 ## See also
 - Scythe Harvests More on [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/29787).

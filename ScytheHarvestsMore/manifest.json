@@ -1,10 +1,10 @@
 {
   "Name": "ScytheHarvestsMore",
   "Author": "GZhynko",
-  "Version": "1.0.0",
+  "Version": "%ProjectVersion%",
   "Description": "Allows the iridium scythe to harvest more items.",
   "UniqueID": "GZhynko.ScytheHarvestsMore",
   "EntryDll": "ScytheHarvestsMore.dll",
-  "MinimumApiVersion": "4.0.0",
+  "MinimumApiVersion": "4.2.0",
   "UpdateKeys": [ "Nexus:29787" ]
 }

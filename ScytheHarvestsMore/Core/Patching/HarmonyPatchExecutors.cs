@@ -1,17 +1,20 @@
 using Microsoft.Xna.Framework;
-using ScytheHarvestsMore.Models;
+using ScytheHarvestsMore.Core.Models;
 using StardewValley;
 using StardewValley.GameData.Machines;
+using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
 
-namespace ScytheHarvestsMore.Patching;
+// ReSharper disable InconsistentNaming
 
-public class HarmonyPatchExecutors
+namespace ScytheHarvestsMore.Core.Patching;
+
+internal static class HarmonyPatchExecutors
 {
     public static void FruitTreePerformToolAction(FruitTree __instance, Tool t, int explosion, Vector2 tileLocation)
     {
-        if (t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
+        if (t == null || t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
             return;
         if (!ModEntry.Config.HarvestFruitTrees)
             return;
@@ -19,15 +22,81 @@ public class HarmonyPatchExecutors
         __instance.shake(tileLocation, false);
     }
 
+    public static void HoeDirtPerformToolAction(HoeDirt __instance, Tool? t, Vector2 tileLocation)
+    {
+        if (t == null || t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
+            return;
+        if (!ModEntry.Config.HarvestGinger)
+            return;
+
+        var crop = __instance.crop;
+        if (crop == null || !crop.forageCrop.Value || crop.whichForageCrop.Value != Crop.forageCrop_gingerID)
+            return;
+        
+        // the scythe branch routes through Crop.harvest, which only shakes ginger.
+        // replicate the hoe harvest instead (this follows the Hoe branch of HoeDirt.performToolAction).
+        if (crop.hitWithHoe((int)tileLocation.X, (int)tileLocation.Y, __instance.Location, __instance))
+        {
+            t.getLastFarmerToUse()?.gainExperience(Farmer.foragingSkill, 7);
+            __instance.destroyCrop(showAnimation: true);
+        }
+    }
+
+    public static void BushPerformToolAction(Bush __instance, Tool? t, Vector2 tileLocation)
+    {
+        if (t == null || t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
+            return;
+        if (!ModEntry.Config.HarvestBerryBushes)
+            return;
+        
+        // the game already handles tea bushes (size 3); walnut bushes (size 4) shouldn't be scythed
+        if (__instance.size.Value is Bush.greenTeaBush or Bush.walnutBush)
+            return;
+
+        __instance.shake(tileLocation, doEvenIfStillShaking: false);
+    }
+    
+    public static void TreePerformToolAction(Tree __instance, Tool? t, Vector2 tileLocation)
+    {
+        if (t == null || t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
+            return;
+        if (!ModEntry.Config.ShakeTrees)
+            return;
+        
+        // only grown, non-stump trees drop anything when shaken
+        if (__instance.growthStage.Value < Tree.treeStage || __instance.stump.Value)
+            return;
+
+        __instance.shake(tileLocation, doEvenIfStillShaking: false);
+    }
+    
     public static void ObjectPerformToolAction(Object __instance, Tool? t)
     {
         if (t == null || t.QualifiedItemId != ModConstants.IridiumScytheQualifiedId)
             return;
         
+        if (__instance is CrabPot pot)
+        {
+            HarvestCrabPot(pot, t);
+            return;
+        }
+        
         if (__instance.GetMachineData() != null && __instance.readyForHarvest.Value)
             HarvestMachine(__instance);
         if (__instance.isForage())
             HarvestForage(__instance);
+    }
+    
+    private static void HarvestCrabPot(CrabPot pot, Tool t)
+    {
+        if (!ModEntry.Config.HarvestCrabPots)
+            return;
+        if (!pot.readyForHarvest.Value || pot.heldObject.Value == null)
+            return;
+
+        // CrabPot::checkForAction does the full harvest thing (catch, xp, stats,
+        // Crabbing Book double roll...), so we reuse it
+        pot.checkForAction(t.getLastFarmerToUse() ?? Game1.player);
     }
 
     private static void HarvestMachine(Object machine)

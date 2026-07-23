@@ -1,6 +1,7 @@
 using HarmonyLib;
-using ScytheHarvestsMore.Models;
-using ScytheHarvestsMore.Patching;
+using ScytheHarvestsMore.Core.Integrations.Config;
+using ScytheHarvestsMore.Core.Models;
+using ScytheHarvestsMore.Core.Patching;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley.TerrainFeatures;
@@ -39,6 +40,18 @@ public class ModEntry : Mod
             postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.FruitTreePerformToolAction))
         );
         harmony.Patch(
+            AccessTools.Method(typeof(HoeDirt), nameof(HoeDirt.performToolAction)),
+            postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.HoeDirtPerformToolAction))
+        );
+        harmony.Patch(
+            AccessTools.Method(typeof(Bush), nameof(Bush.performToolAction)),
+            postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.BushPerformToolAction))
+        );
+        harmony.Patch(
+            AccessTools.Method(typeof(Tree), nameof(Tree.performToolAction)),
+            postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.TreePerformToolAction))
+        );
+        harmony.Patch(
             AccessTools.Method(typeof(Object), nameof(Object.performToolAction)),
             postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.ObjectPerformToolAction))
         );
@@ -49,7 +62,7 @@ public class ModEntry : Mod
     /// <param name="e">The event data.</param>
     private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
     {
-        ModConfig.SetUpModConfigMenu(Config, this);
+        ConfigMenu.Register(Config, this);
 
         ApplyHarmonyPatches();
     }

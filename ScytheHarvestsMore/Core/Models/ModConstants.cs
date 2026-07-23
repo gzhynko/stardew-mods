@@ -1,4 +1,4 @@
-namespace ScytheHarvestsMore.Models;
+namespace ScytheHarvestsMore.Core.Models;
 
 public class ModConstants
 {
