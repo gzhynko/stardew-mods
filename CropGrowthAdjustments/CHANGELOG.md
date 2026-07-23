@@ -1,5 +1,13 @@
 # Version history for CropGrowthAdjustments
 
+## 2.0.0
+Upcoming.
+- Added SeasonsToHibernateIn: packs can now optionally specify seasons where the crop can be planted, does not die, but does not grow either.
+- Added more validation for content packs on game load to help with diagnostics.
+- Improved special sprite handling - should cause less errors and mod conflicts.
+- Fixed various issues stemming from harmony patches on crop planting.
+- Fixed smaller miscellaneous bugs.
+
 ## 1.4.0
 Released April 5, 2024.
 - Fixed errors when JsonAssets is installed.
