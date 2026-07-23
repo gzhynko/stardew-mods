@@ -1,7 +1,7 @@
 # Version history for FishExclusions
 
 ## 1.4.0
-Upcoming.
+Released July 23, 2026.
 - Add new console commands to list, add, and remove exclusions.
 - Add support for more specific weather matching (e.g Green Rain, Festival).
 - Qualified item ids now work properly.

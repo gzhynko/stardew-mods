@@ -1,7 +1,7 @@
 # Version history for ScytheHarvestsMore
 
 ## 1.1.0
-Upcoming.
+Released July 23, 2026.
 - Add ability to harvest ginger crops.
 - Add ability to harvest berry bushes.
 - Add ability to shake (wild) trees.
