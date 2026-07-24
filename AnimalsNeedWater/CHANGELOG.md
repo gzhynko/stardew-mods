@@ -1,5 +1,9 @@
 # Version history for AnimalsNeedWater
 
+## 1.8.2
+Upcoming.
+- Placement profile tiles are no longer locked to being in default map layers (Back, Buildings, Front...) and now support custom layers.
+
 ## 1.8.1
 Released July 21, 2026.
 - Sprinklers can now fill water bowls on day start. (configurable)

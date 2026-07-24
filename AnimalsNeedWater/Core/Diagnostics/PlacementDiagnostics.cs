@@ -69,27 +69,17 @@ public class PlacementDiagnostics
     private void ValidateTile(string buildingName, xTile.Map map, string? layerName,
         int x, int y, int[] tilesheetIndices, int frameCount, string kind)
     {
-        var l = layerName?.ToLowerInvariant();
-
-        var layer = l switch
-        {
-            "back"      => map.GetLayer("Back"),
-            "buildings" => map.GetLayer("Buildings"),
-            "front"     => map.GetLayer("Front"),
-            _           => null
-        };
+        var layer = Utils.ResolveLayer(map, layerName);
 
         if (layer == null)
         {
-            bool isKnownLayer = l is "back" or "buildings" or "front";
-            ModEntry.ModMonitor.Log(isKnownLayer
-                    ? $"{buildingName}: map has no '{layerName}' layer for {kind} tile ({x},{y})."
-                    : $"{buildingName}: {kind} tile ({x},{y}) uses unsupported layer '{layerName}'. Use Back, Buildings, or Front",
+            ModEntry.ModMonitor.Log(
+                $"{buildingName}: map has no layer '{layerName}' for {kind} tile ({x},{y}).",
                 LogLevel.Warn);
             return;
         }
 
-        if (x < 0 || y < 0 || x >= layer.LayerWidth || y >= layer.LayerHeight)
+        if (!Utils.InBounds(layer, x, y))
         {
             ModEntry.ModMonitor.Log(
                 $"{buildingName}: {kind} tile ({x},{y}) is outside the map ({layer.LayerWidth}x{layer.LayerHeight})",

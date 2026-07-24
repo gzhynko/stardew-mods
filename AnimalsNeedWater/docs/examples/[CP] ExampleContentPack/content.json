@@ -36,6 +36,7 @@
 
         "Barn": {
           "TroughTiles": [
+            // "Layer" can be any layer within your map, including custom ones. Make sure it is actually drawn by the game (i.e., not Paths) or the troughs won't show up.
             { "TileX": 2, "TileY": 6, "Layer": "Buildings", "EmptyIndex": 0, "FullIndex": 3 },
             { "TileX": 13, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 6, "FullIndex": 8 },
             { "TileX": 14, "TileY": 3, "Layer": "Buildings", "EmptyIndex": 7, "FullIndex": 9 },

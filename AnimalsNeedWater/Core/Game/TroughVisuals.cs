@@ -72,6 +72,7 @@ public class TroughVisuals
                 sheetSize, new Size(16, 16));
             indoorsMap.AddTileSheet(sheet);
         }
+        // change the tilesheet img if something replaced it
         else if (!existingWateringSys.ImageSource.Equals(wateringSystemSource, StringComparison.OrdinalIgnoreCase))
         {
             existingWateringSys.ImageSource = wateringSystemSource;
@@ -89,40 +90,20 @@ public class TroughVisuals
             return;
 
         GameLocation indoorsGameLocation = building.GetIndoors();
-
-        foreach (TroughTile tile in buildingProfile.TroughTiles)
-        {
-            indoorsGameLocation.removeTile(tile.TileX, tile.TileY, tile.Layer);
-        }
-
-        Layer backLayer = indoorsGameLocation.Map.GetLayer("Back");
-        Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
-        Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
         TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
+        if (tilesheet == null) return;
+        
+        bool watered = ModEntry.TroughManager.BuildingHasTroughsWatered(building);
 
         foreach (TroughTile tile in buildingProfile.TroughTiles)
         {
-            Layer layerToUse;
-            switch (tile.Layer?.ToLower())
-            {
-                case "back":
-                    layerToUse = backLayer;
-                    break;
-                case "buildings":
-                    layerToUse = buildingsLayer;
-                    break;
-                case "front":
-                    layerToUse = frontLayer;
-                    break;
-                default:
-                    continue;
-            }
+            var layer = Utils.ResolveLayer(indoorsGameLocation.Map, tile.Layer);
+            if (layer == null || !Utils.InBounds(layer, tile.TileX, tile.TileY))
+                continue;
             
-            var tileIndexToUse = ModEntry.TroughManager.BuildingHasTroughsWatered(building)
-                ? tile.FullIndex
-                : tile.EmptyIndex;
-            
-            layerToUse.Tiles[tile.TileX, tile.TileY] = new StaticTile(layerToUse, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
+            // replace the tile w/o remove first (removeTile was kind of unnecessary)
+            var tileIndexToUse = watered ? tile.FullIndex : tile.EmptyIndex;
+            layer.Tiles[tile.TileX, tile.TileY] = new StaticTile(layer, tilesheet, BlendMode.Alpha, tileIndex: tileIndexToUse);
         }
     }
     
@@ -137,39 +118,27 @@ public class TroughVisuals
             return;
         
         GameLocation indoorsGameLocation = building.GetIndoors();
-
+        TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
+        if (tilesheet == null) return;
+        
+        // separately clear the tiles the profile wants removed
         foreach (WateringSystemTile tile in buildingProfile.WateringSystemTiles)
         {
-            foreach (var tileToRemove in tile.TilesToRemove)
+            foreach (var toRemove in tile.TilesToRemove)
             {
-                indoorsGameLocation.removeTile(tileToRemove.TileX, tileToRemove.TileY, tileToRemove.Layer);
+                var fromLayer = Utils.ResolveLayer(indoorsGameLocation.Map, toRemove.Layer);
+                if (fromLayer != null && Utils.InBounds(fromLayer, toRemove.TileX, toRemove.TileY))
+                    fromLayer.Tiles[toRemove.TileX, toRemove.TileY] = null;
             }
         }
 
-        Layer backLayer = indoorsGameLocation.Map.GetLayer("Back");
-        Layer buildingsLayer = indoorsGameLocation.Map.GetLayer("Buildings");
-        Layer frontLayer = indoorsGameLocation.Map.GetLayer("Front");
-        TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_wateringSystemTilesheet");
-
         foreach (WateringSystemTile tile in buildingProfile.WateringSystemTiles)
         {
-            Layer layerToUse;
-            switch (tile.Layer?.ToLower())
-            {
-                case "back":
-                    layerToUse = backLayer;
-                    break;
-                case "buildings":
-                    layerToUse = buildingsLayer;
-                    break;
-                case "front":
-                    layerToUse = frontLayer;
-                    break;
-                default:
-                    continue;
-            }
-            
-            layerToUse.Tiles[tile.TileX, tile.TileY] = new StaticTile(layerToUse, tilesheet, BlendMode.Alpha, tileIndex: tile.SystemIndex);
+            var layer = Utils.ResolveLayer(indoorsGameLocation.Map, tile.Layer);
+            if (layer == null || !Utils.InBounds(layer, tile.TileX, tile.TileY))
+                continue;
+
+            layer.Tiles[tile.TileX, tile.TileY] = new StaticTile(layer, tilesheet, BlendMode.Alpha, tileIndex: tile.SystemIndex);
         }
     }
 
