@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>IncubatePufferfishEggs</AssemblyName>
-    <RootNamespace>IncubatePufferfishEggs</RootNamespace>
-    <Version>1.0.4</Version>
-    <TargetFramework>net6.0</TargetFramework>
-    <EnableHarmony>true</EnableHarmony>
-  </PropertyGroup>
-</Project>

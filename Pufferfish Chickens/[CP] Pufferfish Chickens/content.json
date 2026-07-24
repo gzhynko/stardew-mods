@@ -1,9 +1,183 @@
 {
-  "Format": "1.14.0",
-	
-  "Changes": 
-   [
-   
+  "Format": "2.9.0",
+  "Changes": [
+
+    // Textures --
+    {
+      "Action": "Load",
+      "Target": "Mods/GZhynko.PufferfishChickens/PufferChick, Mods/GZhynko.PufferfishChickens/BabyPufferChick, Mods/GZhynko.PufferfishChickens/PufferfishEgg, Mods/GZhynko.PufferfishChickens/LargePufferfishEgg, Mods/GZhynko.PufferfishChickens/PufferfishMayonnaise",
+      "FromFile": "assets/{{TargetWithoutPath}}.png"
+    },
+
+    // Items --
+    {
+      "Action": "EditData",
+      "Target": "Data/Objects",
+      "Entries": {
+        "GZhynko.PufferfishChickens_PufferfishEgg": {
+          "Name": "Pufferfish Egg",
+          "DisplayName": "Pufferfish Egg",
+          "Description": "A small yellow egg. It has some tiny spikes on it.",
+          "Type": "Basic",
+          "Category": -5,
+          "Price": 75,
+          "Edibility": -300,
+          "Texture": "Mods/GZhynko.PufferfishChickens/PufferfishEgg",
+          "SpriteIndex": 0
+        },
+        "GZhynko.PufferfishChickens_LargePufferfishEgg": {
+          "Name": "Large Pufferfish Egg",
+          "DisplayName": "Large Pufferfish Egg",
+          "Description": "A large yellow egg. It has some spikes on it.",
+          "Type": "Basic",
+          "Category": -5,
+          "Price": 110,
+          "Edibility": -300,
+          "Texture": "Mods/GZhynko.PufferfishChickens/LargePufferfishEgg",
+          "SpriteIndex": 0
+        },
+        "GZhynko.PufferfishChickens_PufferfishMayonnaise": {
+          "Name": "Pufferfish Mayonnaise",
+          "DisplayName": "Pufferfish Mayonnaise",
+          "Description": "A thick yellow paste. Smells disgusting.",
+          "Type": "Basic",
+          "Category": -26,
+          "Price": 200,
+          "Edibility": -15,
+          "Texture": "Mods/GZhynko.PufferfishChickens/PufferfishMayonnaise",
+          "SpriteIndex": 0
+        }
+      }
+    },
+
+    // The chicken --
+    // note: as of 1.6.15, the game seems to expect unqualified item ids here
+    {
+      "Action": "EditData",
+      "Target": "Data/FarmAnimals",
+      "Entries": {
+        "Pufferfish Chicken": {
+          "DisplayName": "Pufferfish Chicken",
+          "House": "Coop",
+          "Gender": "Female",
+          "PurchasePrice": -1, // not sold at Marnies
+          "SellPrice": 1000,
+          "EggItemIds": [
+            "GZhynko.PufferfishChickens_PufferfishEgg",
+            "GZhynko.PufferfishChickens_LargePufferfishEgg"
+          ],
+          "IncubationTime": -1,
+          "DaysToMature": 3,
+          "DaysToProduce": 1,
+          "HarvestType": "DropOvernight",
+          "ProduceItemIds": [
+            {
+              "Id": "Default",
+              "ItemId": "GZhynko.PufferfishChickens_PufferfishEgg"
+            }
+          ],
+          "DeluxeProduceItemIds": [
+            {
+              "Id": "Default",
+              "ItemId": "GZhynko.PufferfishChickens_LargePufferfishEgg"
+            }
+          ],
+          "Texture": "Mods/GZhynko.PufferfishChickens/PufferChick",
+          "BabyTexture": "Mods/GZhynko.PufferfishChickens/BabyPufferChick",
+          "SpriteWidth": 16,
+          "SpriteHeight": 16,
+          "UseDoubleUniqueAnimationFrames": true,
+          "SleepFrame": 16,
+          "EmoteOffset": "0, -16",
+          "HappinessDrain": 7
+        }
+      }
+    },
+
+    // Mayo machine rules --
+    {
+      "Action": "EditData",
+      "Target": "Data/Machines",
+      "TargetField": [
+        "(BC)24",
+        "OutputRules"
+      ],
+      "Entries": {
+        "GZhynko.PufferfishChickens_Egg": {
+          "Id": "GZhynko.PufferfishChickens_Egg",
+          "Triggers": [
+            {
+              "Id": "ItemPlacedInMachine",
+              "Trigger": "ItemPlacedInMachine",
+              "RequiredItemId": "(O)GZhynko.PufferfishChickens_PufferfishEgg",
+              "RequiredCount": 1
+            }
+          ],
+          "OutputItem": [
+            {
+              "Id": "Default",
+              "ItemId": "(O)GZhynko.PufferfishChickens_PufferfishMayonnaise"
+            }
+          ],
+          "MinutesUntilReady": 180
+        },
+        "GZhynko.PufferfishChickens_LargeEgg": {
+          "Id": "GZhynko.PufferfishChickens_LargeEgg",
+          "Triggers": [
+            {
+              "Id": "ItemPlacedInMachine",
+              "Trigger": "ItemPlacedInMachine",
+              "RequiredItemId": "(O)GZhynko.PufferfishChickens_LargePufferfishEgg",
+              "RequiredCount": 1
+            }
+          ],
+          "OutputItem": [
+            {
+              "Id": "Default",
+              "ItemId": "(O)GZhynko.PufferfishChickens_PufferfishMayonnaise",
+              "Quality": 2
+            }
+          ],
+          "MinutesUntilReady": 180
+        }
+      }
+    },
+
+    // Gift tastes --
+    // universally hated, except the Wizard is neutral to it.
+    {
+      "Action": "EditData",
+      "Target": "Data/NPCGiftTastes",
+      "TextOperations": [
+        {
+          "Operation": "Append",
+          "Target": [
+            "Entries",
+            "Universal_Hate"
+          ],
+          "Value": "GZhynko.PufferfishChickens_PufferfishMayonnaise",
+          "Delimiter": " "
+        }
+      ]
+    },
+    {
+      "Action": "EditData",
+      "Target": "Data/NPCGiftTastes",
+      "TextOperations": [
+        {
+          "Operation": "Append",
+          "Target": [
+            "Fields",
+            "Wizard",
+            "9"
+          ], // field 9 = neutral item list
+          "Value": "GZhynko.PufferfishChickens_PufferfishMayonnaise",
+          "Delimiter": " "
+        }
+      ]
+    },
+
+    // Event --
     // Adds a new event featuring Willy, who gives player the Pufferfish egg.
     /* Trigger conditions: 
       Map: Farm;
@@ -11,14 +185,14 @@
       At least one free inventory slot available;
       At least 50 friendship points with Willy;
       Played for at least 42 days.
-    */ 
-	 
-     {
-       "Action": "EditData",
-       "Target": "Data/Events/Farm",
-       "Entries": {
-         "6162290/w sunny/c 1/j 42/f Willy 50":"continue/64 15/farmer 64 16 2 Willy 66 15 2/broadcastEvent/skippable/pause 1000/showFrame Willy 8/pause 1000/speak Willy \"Ahoy there, @! How's your farm goin'?\"/pause 1200/showFrame Willy 4/pause 1200/showFrame Willy 0/pause 1000/showFrame Willy 12/pause 1200/showFrame Willy 8/speak Willy \"Oh, you're doin' a great job here!$h#\"/pause 600/showFrame Willy 0/pause 1100/showFrame Willy 8/speak Willy \"Anyway, dropped by to say that I caught a strange egg while fishing this morning.$0#$b#Here, take a look.$b#[{{spacechase0.JsonAssets/ObjectId:Pufferfish Egg}}]\"/playSound reward/message \"Received a 'Pufferfish Egg'!\"/pause 1300/showFrame Willy 8/speak Willy \"As you can see, it's kinda strange. But I guess you can do something with it, right?\"/pause 1000/showFrame Willy 4/pause 1500/showFrame Willy 8/pause 600/speak Willy \"Gotta go and continue fishing now.#$b#See ya later, son.#$h#^See ya later, miss.#$h#\"/pause 800/end"
-       }
-     }
-   ]
+    */
+    {
+      "Action": "EditData",
+      "Target": "Data/Events/Farm",
+      "Entries": {
+        "6162290/w sunny/c 1/j 42/f Willy 50": "continue/64 15/farmer 64 16 2 Willy 66 15 2/broadcastEvent/skippable/setSkipActions AddItem (O)GZhynko.PufferfishChickens_PufferfishEgg/pause 1000/showFrame Willy 8/pause 1000/speak Willy \"Ahoy there, @! How's the farm goin'?\"/pause 1200/showFrame Willy 4/pause 1200/showFrame Willy 0/pause 1000/showFrame Willy 12/pause 1200/showFrame Willy 8/speak Willy \"Yer doin' a fine job with this place!$h#\"/pause 600/showFrame Willy 0/pause 1100/showFrame Willy 8/speak Willy \"Anyway, I stopped by to show ya somethin'. I hauled up a strange egg while fishin' this mornin'.$0#$b#Here, take a look.$b#[GZhynko.PufferfishChickens_PufferfishEgg]\"/playSound reward/message \"Received a 'Pufferfish Egg'!\"/setSkipActions Null/pause 1300/showFrame Willy 8/speak Willy \"Odd-lookin' thing, ain't it? I reckon you'll find some use for it.\"/pause 1000/showFrame Willy 4/pause 1500/showFrame Willy 8/pause 600/speak Willy \"Well, I'd best get back to my fishin'.#$b#See ya later, son.#$h#^See ya later, miss.#$h#\"/pause 800/end"
+      }
+    }
+
+  ]
 }
