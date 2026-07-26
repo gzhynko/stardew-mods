@@ -87,7 +87,7 @@ public class ThirstTracker
     {
         if (ModEntry.Data.IsAnimalFull(animal)) return true; // drank outside today
         if (animal.home == null || !ModEntry.BuildingWaterManager.IsWatered(animal.home)) return false;
-        bool insideHome = animal.currentLocation.Equals(animal.home.GetIndoors());
+        bool insideHome = Equals(animal.currentLocation, animal.home.GetIndoors());
         return insideHome || animal.home.animalDoorOpen.Value; // if outside  -> needs an open door
     }
 
