@@ -6,7 +6,7 @@
  -  Run the game using SMAPI.
 
 ## For mod authors
-- To make your mod compatible with ANW content-wise (map changes, recolors, etc.), see the example Content Patcher content pack in [examples](./docs/examples). 
+- To make your mod compatible with ANW content-wise (map changes, recolors, etc.), or add custom water sources or alter animal behavior, see the [author guide](./docs/author-guide.md).
 - To access ANW state at runtime from your SMAPI mod, see the [API docs](./docs/API-documentation.md).
 
 ## Translating
@@ -28,6 +28,7 @@
 Key: ✓ = full translation available, ~ = partial translation available, ✕ = no translation yet.
 
 **Contributing**
+
 If you'd like to help me translate the mod, here's how:
 
  1. Copy the `default.json` file from the `i18n` folder with one of the following names, depending on the language you choose to translate the mod to: 
