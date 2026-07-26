@@ -7,20 +7,21 @@
 
 ## For mod authors
 - To make your mod compatible with ANW content-wise (map changes, recolors, etc.), see the example Content Patcher content pack in [examples](./docs/examples). 
-- To access ANW state at runtime from your SMAPI mod, see the [API docs](./API-documentation.md).
+- To access ANW state at runtime from your SMAPI mod, see the [API docs](./docs/API-documentation.md).
 
 ## Translating
 | Language             | Status                                                                                                                                                                                                     |
 |----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Chinese              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam), [Kasakana](https://www.nexusmods.com/stardewvalley/users/171835688)) |
-| French               | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/fr.json) (credit to [Caranud](https://www.nexusmods.com/stardewvalley/users/745980))                                          |
+| Chinese              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/zh.json) (credit to [motiam](https://github.com/motiam), [Kasakana](https://www.nexusmods.com/stardewvalley/users/171835688)) |
+| French               | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/fr.json) (credit to [Caranud](https://www.nexusmods.com/stardewvalley/users/745980))                                          |
 | German               | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/de.json) (credit to [Makytar](https://www.nexusmods.com/stardewvalley/users/51740796))                                        |
-| Hungarian            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/hu.json) (credit to [szatoka](https://www.nexusmods.com/stardewvalley/users/47532583))                                        |
+| Hungarian            | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/hu.json) (credit to [szatoka](https://www.nexusmods.com/stardewvalley/users/47532583))                                        |
 | Italian              | ✕                                                                                                                                                                                                          |
 | Japanese             | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ja.json) (credit to [TinyCordelia](https://next.nexusmods.com/profile/TinyCordelia))                                          |
-| Korean            | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ko.json) (credit to seint_s)                                        |
+| Korean               | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ko.json) (credit to seint_s)                                                                                                  |
 | Brazilian Portuguese | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/pt-BR.json) (credit to [tramontina](https://www.nexusmods.com/stardewvalley/users/36215665))                                  |
 | Russian              | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/ru.json)                                                                                                                      |
+| Belarusian           | [✓](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/be.json)                                                                                                                      |
 | Spanish              | [~](https://github.com/gzhynko/StardewMods/blob/master/AnimalsNeedWater/i18n/es.json) (credit to [bpsys](https://www.nexusmods.com/users/72952373))                                                        |
 | Turkish              | ✕                                                                                                                                                                                                          |
 

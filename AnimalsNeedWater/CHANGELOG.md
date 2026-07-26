@@ -1,8 +1,16 @@
 # Version history for AnimalsNeedWater
 
-## 1.8.2
+## 1.9.0
 Upcoming.
+- Animals can now have different "settings", which allows mod creators to customize the ANW behavior of animals via CustomFields. This includes whether the animal needs water at all, the water interval (how often the animal needs water), whether it can drink outside, etc.
+- The water bowl is now considered a "water source", and any big craftable can now act as a water source if defined via CustomFields. This allows mod creators to add their own bowls, fountains or auto-waterers for ANW to use, including permanent ones that never need refilling.
+- The animal info window (the one you get when you right click an animal) now shows how long the animal has gone without water, or whether it was left thirsty yesterday. (configurable)
+- Fix the list of animals left thirsty not persisting through a save reload (this is mostly to support the feature right above).
+- API: DoesAnimalHaveAccessToWater now also accounts for the animal's location and whether its home's animal door is open, matching the logic used when deducting friendship.
 - Placement profile tiles are no longer locked to being in default map layers (Back, Buildings, Front...) and now support custom layers.
+- Add Belarusian translation.
+- Cache water tile lookups for better performance during water pathfinding.
+- Tiny performance improvements to per-building water state handling.
 
 ## 1.8.1
 Released July 21, 2026.

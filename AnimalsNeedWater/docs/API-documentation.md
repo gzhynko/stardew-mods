@@ -1,4 +1,5 @@
-# API Documentation
+<- [README.md](../README.md)
+
 **Animals Need Water** provides an API allowing modders to access some of its data.
 
 ## Interface
@@ -34,7 +35,7 @@ You can get the actual ```FarmAnimal``` instance with ```Utility.getAnimal(id)``
 bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
 ```
 
-Returns a ```bool``` defining whether the given animal was left thirsty yesterday.
+Returns a ```bool``` defining whether the given animal was left thirsty yesterday. The list of animals considered thirsty is computed during DayEnding, hence the safest place to access this is during an event later in the game loop, e.g. DayStarted.
 
 **GetBuildingsWithWateredTrough**
 
@@ -58,7 +59,8 @@ Returns a ```bool``` defining whether the given animal has drunk from an outside
 bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
 ```
 
-Returns a ```bool``` defining whether the given animal currently has access to water: it has drunk outside today, or its home building has a watered trough or a full water bowl. If the animal has no home, only the drank-outside check applies.
+Returns a ```bool``` defining whether the given animal currently has access to water. This is ```true``` if the animal has drunk outside today, or if its home building has a watered trough or a full water source and the animal can actually reach it - meaning the animal is either inside its home, or its home's animal door is open. If the animal has no home, only the drank-outside check applies.
+Note: this describes physical access to water, not whether the animal needs it. An animal with a multi-day water interval can have no access while still being fine, and an animal configured not to need water at all will still return ```false`` when there is no water nearby.
 
 **GetFullAnimals**
 
