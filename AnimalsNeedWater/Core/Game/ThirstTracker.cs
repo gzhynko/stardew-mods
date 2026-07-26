@@ -1,80 +1,60 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnimalsNeedWater.Core.Models;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Buildings;
-using StardewValley.Extensions;
-using Object = StardewValley.Object;
 
 namespace AnimalsNeedWater.Core.Game;
 
 public class ThirstTracker
 {
-    public List<ThirstyAnimalInfo> AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
-    
     public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
     {
-        return AnimalsLeftThirstyYesterday.Any(info => info.Id == animal.myID.Value);
+        return ModEntry.Data.AnimalsLeftThirstyYesterday.Any(info => info.Id == animal.myID.Value);
     }
-    
+
     public void FindThirstyAnimals()
-    { 
+    {
         // skip on farmhands to avoid double-deducting friendship points
         // host syncs this state with farmhands on day start
         if (!Context.IsMainPlayer) return;
-        
-        AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
+
+        ModEntry.Data.AnimalsLeftThirstyYesterday = new List<ThirstyAnimalInfo>();
         var added = new HashSet<long>();
 
         foreach (var locationGroup in ModEntry.BuildingTracker.AnimalBuildingGroups)
         {
-            GameLocation parentLocation = locationGroup.Key;
-            List<Building> buildingsInLocation = locationGroup.ToList();
-
-            // Look for all animals inside buildings and check whether their troughs are watered
-            // OR the building has a full Water Bowl inside it.
-            foreach (Building building in buildingsInLocation)
+            // look for animals in the location itself (outside) and inside buildings
+            foreach (var animal in locationGroup.Key.getAllFarmAnimals())
             {
-                if (ModEntry.TroughManager.IsWatered(building))
-                    continue;
-                if (building.GetIndoors() is not AnimalHouse animalHouse) continue;
-
-                foreach (var animal in animalHouse.animals.Values
-                    .Where(animal =>
-                        !ModEntry.Data.IsAnimalFull(animal) 
-                        && !added.Contains(animal.myID.Value)))
-                {
-                    added.Add(animal.myID.Value);
-
-                    animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
-                    animal.friendshipTowardFarmer.Value = Math.Clamp(animal.friendshipTowardFarmer.Value, 0, 1000);
-                    
-                    AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
-                    {
-                        Id = animal.myID.Value, 
-                        DisplayName = animal.displayName,
-                        IsMale = animal.isMale(),
-                    });
-                }
-            }
-
-            // Check for animals outside their buildings as well.
-            foreach (var animal in parentLocation.animals.Values)
-            {
-                if (ModEntry.Data.IsAnimalFull(animal) // drank outside, or
-                     || (animal.home != null && ModEntry.TroughManager.IsWatered(animal.home) && animal.home.animalDoorOpen.Value)) // has home + home watered + door open
-                    continue;
-            
                 if (!added.Add(animal.myID.Value)) continue;
 
-                animal.friendshipTowardFarmer.Value -= Math.Abs(ModEntry.Config.NegativeFriendshipPointsForNotWateredTrough);
-                animal.friendshipTowardFarmer.Value = Math.Clamp(animal.friendshipTowardFarmer.Value, 0, 1000);
+                var settings = ModEntry.AnimalSettings.For(animal);
+                if (!settings.NeedsWater) continue; // opts out of the whole system
 
-                AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
+                // had access today -> reset the clock, never thirsty
+                if (HasWaterAccess(animal))
                 {
-                    Id = animal.myID.Value, 
+                    SetLastWateredDay(animal);
+                    continue;
+                }
+
+                // first ever evaluation -> persist a grace day, no penalty this cycle
+                if (ReadLastWateredDay(animal) == int.MinValue)
+                {
+                    SetLastWateredDay(animal);
+                    continue;
+                }
+
+                if (!IntervalDue(animal)) continue;
+                
+                // no access and interval elapsed -> thirsty
+
+                ModEntry.AnimalFriendship.RemoveThirstyPenaltyFriendship(animal);
+
+                ModEntry.Data.AnimalsLeftThirstyYesterday.Add(new ThirstyAnimalInfo()
+                {
+                    Id = animal.myID.Value,
                     DisplayName = animal.displayName,
                     IsMale = animal.isMale(),
                 });
@@ -91,38 +71,71 @@ public class ThirstTracker
     {
         ModEntry.Data.FullAnimals.Add(animalId);
     }
-    
+
+    public int ReadLastWateredDay(FarmAnimal animal)
+    {
+        if (animal.modData.TryGetValue(ModConstants.ModDataLastWateredDayKey, out var raw)
+            && int.TryParse(raw, out var day))
+            return day;
+        return int.MinValue; // unseeded
+    }
+
+    private void SetLastWateredDay(FarmAnimal animal)
+        => animal.modData[ModConstants.ModDataLastWateredDayKey] = Game1.Date.TotalDays.ToString();
+
+    public bool HasWaterAccess(FarmAnimal animal)
+    {
+        if (ModEntry.Data.IsAnimalFull(animal)) return true; // drank outside today
+        if (animal.home == null || !ModEntry.BuildingWaterManager.IsWatered(animal.home)) return false;
+        bool insideHome = animal.currentLocation.Equals(animal.home.GetIndoors());
+        return insideHome || animal.home.animalDoorOpen.Value; // if outside  -> needs an open door
+    }
+
+    public bool IntervalDue(FarmAnimal animal)
+    {
+        int last = ReadLastWateredDay(animal);
+        if (last == int.MinValue) return false;
+        return (Game1.Date.TotalDays - last) >= ModEntry.AnimalSettings.For(animal).WaterIntervalDays;
+    }
+
+    public bool IsAnimalThirsty(FarmAnimal animal)
+    {
+        if (!ModEntry.AnimalSettings.For(animal).NeedsWater) return false;
+        return !HasWaterAccess(animal) && IntervalDue(animal);
+    }
+
     public void ShowLeftThirstyMessage()
     {
-        if (AnimalsLeftThirstyYesterday.Count == 0)
+        var animalsLeftThirsty = ModEntry.Data.AnimalsLeftThirstyYesterday;
+        if (animalsLeftThirsty.Count == 0)
             return;
-        
+
         string i18Key;
-        switch (AnimalsLeftThirstyYesterday.Count)
+        switch (animalsLeftThirsty.Count)
         {
             case 1 when ModEntry.ModHelper.ModRegistry.IsLoaded("Paritee.GenderNeutralFarmAnimals"):
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender";
                 break;
-            case 1 when AnimalsLeftThirstyYesterday[0].IsMale:
+            case 1 when animalsLeftThirsty[0].IsMale:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male";
                 break;
-            case 1 when !AnimalsLeftThirstyYesterday[0].IsMale:
+            case 1 when !animalsLeftThirsty[0].IsMale:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female";
                 break;
             case 2:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals";
                 break;
-            case 3:                    
+            case 3:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals";
                 break;
             default:
                 i18Key = "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals";
                 break;
         }
-        
-        var firstAnimalName = AnimalsLeftThirstyYesterday[0].DisplayName;
-        var secondAnimalName = AnimalsLeftThirstyYesterday.Count > 1 ? AnimalsLeftThirstyYesterday[1].DisplayName : "";
-        var thirdAnimalName = AnimalsLeftThirstyYesterday.Count > 2 ? AnimalsLeftThirstyYesterday[2].DisplayName : "";
+
+        var firstAnimalName = animalsLeftThirsty[0].DisplayName;
+        var secondAnimalName = animalsLeftThirsty.Count > 1 ? animalsLeftThirsty[1].DisplayName : "";
+        var thirdAnimalName = animalsLeftThirsty.Count > 2 ? animalsLeftThirsty[2].DisplayName : "";
         Game1.showGlobalMessage(ModEntry.ModHelper.Translation.Get(
             i18Key,
             new
@@ -130,7 +143,7 @@ public class ThirstTracker
                 firstAnimalName,
                 secondAnimalName,
                 thirdAnimalName,
-                totalAmountExcludingFirstThree = AnimalsLeftThirstyYesterday.Count - 3
+                totalAmountExcludingFirstThree = animalsLeftThirsty.Count - 3
             }));
     }
 }

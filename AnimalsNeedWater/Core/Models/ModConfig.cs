@@ -25,7 +25,12 @@ public class ModConfig
     /// were left thirsty last night. 
     /// </summary>
     public bool ShowAnimalsLeftThirstyMessage { get; set; } = true;
-        
+    
+    /// <summary>
+    /// Whether to show the current thirst status on an animal's mood screen (the one you get when you right click an animal). 
+    /// </summary>
+    public bool ShowMoodThirstyStatus { get; set; } = true;
+    
     [Obsolete("Use UseWateringSystems instead")]
     public bool? WateringSystemInDeluxeBuildings {
         get => null;
@@ -135,6 +140,7 @@ public class ModConfig
         api.AddSectionTitle(manifest, () => "Notifications");
         api.AddBoolOption(manifest, () => config.ShowLoveBubblesOverAnimalsWhenWateredTrough, val => config.ShowLoveBubblesOverAnimalsWhenWateredTrough = val, () => "Show Love Bubbles", () => "Whether to show \"love\" bubbles over animals inside the building when watered the trough.");
         api.AddBoolOption(manifest, () => config.ShowAnimalsLeftThirstyMessage, val => config.ShowAnimalsLeftThirstyMessage = val, () => "Show Number of Animals Left Thirsty Message", () => "Whether to show a message (bottom left corner of screen) in the morning telling how many animals (if any) were left thirsty last night.");
+        api.AddBoolOption(manifest, () => config.ShowMoodThirstyStatus, val => config.ShowMoodThirstyStatus = val, () => "Show Mood Thirsty Status", () => "Whether to show the current thirst status on an animal's mood screen (the one you get when you right click an animal).");
         api.AddBoolOption(manifest, () => config.ShowThirstyEmotes, val => config.ShowThirstyEmotes = val, () => "Show Thirsty Emotes", () => "Whether to indicate that an animal is still thirsty by periodically showing an emote above it.");
         api.AddNumberOption(manifest,
             () => config.ThirstyEmoteStartTime,

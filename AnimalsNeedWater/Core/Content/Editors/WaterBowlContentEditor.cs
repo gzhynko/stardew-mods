@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AnimalsNeedWater.Core.Models;
 using StardewModdingAPI.Events;
 using StardewValley.GameData.BigCraftables;
@@ -23,6 +24,17 @@ public class WaterBowlContentEditor
                     Description = $"[LocalizedText Strings\\\\BigCraftables:{ModEntry.ModHelper.ModContent.ModID}_Items.Water_Bowl.description]",
                     Texture = ModEntry.ModHelper.ModContent.GetInternalAssetName(AssetManager.WaterBowlTextureSpritesheet).Name,
                     Price = 0, // sells for 0
+                    
+                    CustomFields = new Dictionary<string, string>
+                    {
+                        [CustomFieldsReader.Key("IsWaterSource")] = "true",
+                        [CustomFieldsReader.Key("NeedsRefilling")] = "true",
+                        [CustomFieldsReader.Key("FillableByCan")] = "true",
+                        [CustomFieldsReader.Key("FillableBySprinkler")] = "true",
+                        [CustomFieldsReader.Key("EmptySpriteIndex")] = "0",
+                        [CustomFieldsReader.Key("FullSpriteIndex")] = "1",
+                    },
+
                 };
                 
                 editor.Data[ModConstants.WaterBowlItemId] = waterBowlAssetData;

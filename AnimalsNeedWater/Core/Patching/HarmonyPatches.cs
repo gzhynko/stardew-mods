@@ -41,6 +41,20 @@ internal class HarmonyPatches
             return true;
         }
     }
+    
+    /// <summary> Patch for the FarmAnimal.getMoodMessage method. </summary>
+    [HarmonyPriority(600)]
+    public static void AnimalGetMoodMessagePostfix(ref string __result, FarmAnimal __instance)
+    {
+        try
+        { 
+            HarmonyPatchExecutors.AnimalGetMoodMessagePostfix(ref __result, __instance);
+        }
+        catch (Exception e)
+        {
+            ModEntry.ModMonitor.Log($"Failed in { nameof(AnimalBehaviors) }:\n{ e }", LogLevel.Error);
+        }
+    }
 
     /// <summary> Patch for the GameLocation.performToolAction method. </summary>
     [HarmonyPriority(500)]

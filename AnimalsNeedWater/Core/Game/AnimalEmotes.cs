@@ -29,8 +29,7 @@ public class AnimalEmotes
         {
             if (animal.IsEmoting || animal.home == null) continue;
             if (Game1.random.NextDouble() >= ThirstyEmoteChancePerRoll) continue;
-            if (ModEntry.Data.IsAnimalFull(animal)) continue;
-            if (ModEntry.TroughManager.IsWatered(animal.home)) continue;
+            if (!ModEntry.ThirstTracker.IsAnimalThirsty(animal)) continue;
 
             EmoteThirsty(animal);
         }
@@ -38,16 +37,22 @@ public class AnimalEmotes
 
     public void EmoteBonus(FarmAnimal animal)
     {
-        animal.doEmote(LoveEmoteId);
+        var settings = ModEntry.AnimalSettings.For(animal);
+        var emoteId = settings.WaterBonusEmoteId ?? LoveEmoteId;
+        animal.doEmote(emoteId);
     }
     
     public void EmoteDrankOutside(FarmAnimal animal)
     {
-        animal.doEmote(HappyEmoteId);
+        var settings = ModEntry.AnimalSettings.For(animal);
+        var emoteId = settings.DrinkOutsideEmoteId ?? HappyEmoteId;
+        animal.doEmote(emoteId);
     }
 
     private void EmoteThirsty(FarmAnimal animal)
     {
-        animal.doEmote(SadEmoteId);
+        var settings = ModEntry.AnimalSettings.For(animal);
+        var emoteId = settings.ThirstyEmoteId ?? SadEmoteId;
+        animal.doEmote(emoteId);
     }
 }

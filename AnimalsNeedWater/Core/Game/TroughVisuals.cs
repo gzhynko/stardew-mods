@@ -93,7 +93,7 @@ public class TroughVisuals
         TileSheet tilesheet = indoorsGameLocation.Map.GetTileSheet("z_waterTroughTilesheet");
         if (tilesheet == null) return;
         
-        bool watered = ModEntry.TroughManager.BuildingHasTroughsWatered(building);
+        bool watered = ModEntry.BuildingWaterManager.BuildingHasTroughsWatered(building);
 
         foreach (TroughTile tile in buildingProfile.TroughTiles)
         {
@@ -186,7 +186,7 @@ public class TroughVisuals
         if (buildingProfile.ExteriorEmptyOverlay == null) 
             return;
         
-        if (ModEntry.TroughManager.BuildingHasTroughsWatered(building))
+        if (ModEntry.BuildingWaterManager.BuildingHasTroughsWatered(building))
             return;
 
         // should be handled by ReapplyVisuals normally

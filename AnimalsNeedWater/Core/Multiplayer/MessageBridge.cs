@@ -32,7 +32,7 @@ public class MessageBridge
                 string locationName = troughWateredMessage.BuildingUniqueName;
                 var location = Game1.getLocationFromName(locationName);
 
-                ModEntry.TroughManager.MarkWateredName(locationName);
+                ModEntry.BuildingWaterManager.MarkWateredName(locationName);
                 
                 var targetBuilding = location?.ParentBuilding;
                 if (targetBuilding == null)
@@ -52,7 +52,7 @@ public class MessageBridge
             
             case BonusAwardedMessageType:
                 BonusAwardedMessage bonusAwardedMessage = e.ReadAs<BonusAwardedMessage>();
-                ModEntry.TroughManager.MarkBonusAwardedName(bonusAwardedMessage.BuildingUniqueName);
+                ModEntry.BuildingWaterManager.MarkBonusAwardedName(bonusAwardedMessage.BuildingUniqueName);
                 
                 break;
             
@@ -80,7 +80,7 @@ public class MessageBridge
                 
                 ThirstyAnimalsMessage thirstyAnimalsMessage = e.ReadAs<ThirstyAnimalsMessage>();
 
-                ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday = thirstyAnimalsMessage.ThirstyAnimals;
+                ModEntry.Data.AnimalsLeftThirstyYesterday = thirstyAnimalsMessage.ThirstyAnimals;
 
                 if (ModEntry.Config.ShowAnimalsLeftThirstyMessage)
                 {

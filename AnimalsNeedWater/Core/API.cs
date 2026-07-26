@@ -22,7 +22,7 @@ public class API : IAnimalsNeedWaterAPI
 {
     public List<long> GetAnimalsLeftThirstyYesterday()
     {
-        return ModEntry.ThirstTracker.AnimalsLeftThirstyYesterday.ConvertAll(i => i.Id);
+        return ModEntry.Data.AnimalsLeftThirstyYesterday.ConvertAll(i => i.Id);
     }
 
     public bool WasAnimalLeftThirstyYesterday(FarmAnimal animal)
@@ -42,9 +42,7 @@ public class API : IAnimalsNeedWaterAPI
     
     public bool DoesAnimalHaveAccessToWater(FarmAnimal animal)
     {
-        if (animal.home == null) return ModEntry.Data.IsAnimalFull(animal);
-        
-        return ModEntry.TroughManager.IsWatered(animal.home) || ModEntry.Data.IsAnimalFull(animal);
+        return ModEntry.ThirstTracker.HasWaterAccess(animal);
     }
 
     public List<long> GetFullAnimals()

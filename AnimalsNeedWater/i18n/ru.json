@@ -1,11 +1,16 @@
 ﻿{
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "{{firstAnimalName}} остался вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "{{firstAnimalName}} осталась вчера без воды.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} осталась(-ся) вчера без воды.",
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} остался(-лась) вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} и {{secondAnimalName}} остались вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} и {{thirdAnimalName}} остались вчера без воды.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} и ещё {{totalAmountExcludingFirstThree}} животных остались вчера без воды.",
 
     "Items.Water_Bowl.name": "Миска для воды",
-    "Items.Water_Bowl.description": "Позволяет наливать воду животным, которые находятся в зданиях без системы полива."
+    "Items.Water_Bowl.description": "Разместите в зданиях чтобы давать воду животным, которые находятся в зданиях без корыта.",
+
+    "Animal.Status.Thirsty.today": "Сегодня пока без воды.",
+    "Animal.Status.Thirsty.multipleDays": "Дней без воды: {{days}}.",
+    "Animal.Status.NoWaterButNotThirstyYet": "Воды нет, но пока не хочет пить.",
+    "Animal.Status.WasLeftThirsty": "Вчера без воды."
 }

@@ -28,12 +28,17 @@ public class ModEntry : Mod
     public static PlacementRegistry PlacementRegistry = new PlacementRegistry();
     public static PlacementDiagnostics PlacementDiagnostics = new PlacementDiagnostics();
     
+    public static WaterSourceRegistry WaterSources = new WaterSourceRegistry();
+    public static AnimalSettingsRegistry AnimalSettings = new AnimalSettingsRegistry();
+    
     public static BuildingTracker BuildingTracker = new BuildingTracker();
-    public static TroughManager TroughManager = new TroughManager();
+    public static BuildingWaterManager BuildingWaterManager = new BuildingWaterManager();
     public static TroughVisuals TroughVisuals = new TroughVisuals();
     public static ThirstTracker ThirstTracker = new ThirstTracker();
     public static AnimalEmotes AnimalEmotes = new AnimalEmotes();
+    public static AnimalFriendship AnimalFriendship = new AnimalFriendship();
     public static MessageBridge MessageBridge = new MessageBridge();
+    public static OutsideDrinkingSpotCache OutsideDrinkingSpots = new OutsideDrinkingSpotCache();
 
     /// <summary> The mod entry point, called after the mod is first loaded. </summary>
     /// <param name="helper"> Provides simplified APIs for writing mods. </param>
@@ -56,6 +61,8 @@ public class ModEntry : Mod
         helper.Events.GameLoop.UpdateTicked += AnimalEmotes.OnUpdateTicked;
         
         helper.Events.World.BuildingListChanged += OnBuildingListChanged;
+        helper.Events.World.BuildingListChanged += OutsideDrinkingSpots.OnBuildingListChanged;
+        helper.Events.World.ObjectListChanged += OutsideDrinkingSpots.OnObjectListChanged;
         
         helper.Events.Multiplayer.ModMessageReceived += MessageBridge.OnModMessageReceived;
         
@@ -66,8 +73,11 @@ public class ModEntry : Mod
         helper.Events.Content.AssetsInvalidated += PlacementRegistry.OnAssetsInvalidated;
         helper.Events.Content.AssetsInvalidated += PlacementDiagnostics.OnAssetsInvalidated;
         helper.Events.Content.AssetsInvalidated += TroughVisuals.OnAssetsInvalidated;
-        
+        helper.Events.Content.AssetsInvalidated += WaterSources.OnAssetsInvalidated;
+        helper.Events.Content.AssetsInvalidated += AnimalSettings.OnAssetsInvalidated;
+
         helper.Events.Display.RenderedWorld += PlacementDiagnostics.OnRenderedWorld;
+        helper.Events.Display.MenuChanged += OutsideDrinkingSpots.OnMenuChanged;
 
         helper.Events.Player.Warped += TroughVisuals.OnWarped;
         
@@ -89,6 +99,7 @@ public class ModEntry : Mod
         Helper.GameContent.InvalidateCache("Data/Shops");
         foreach (var b in BuildingTracker.AnimalBuildings)
             TroughVisuals.ReapplyVisuals(b);
+        OutsideDrinkingSpots.Invalidate();
     }
 
     /// <summary> Get ANW's API </summary>
@@ -121,6 +132,12 @@ public class ModEntry : Mod
         harmony.Patch(
             AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.behaviors)),
             new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalBehaviors))
+        );
+        
+        ModMonitor.VerboseLog("Patching FarmAnimal.getMoodMessage.");
+        harmony.Patch(
+            AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.getMoodMessage)),
+            postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.AnimalGetMoodMessagePostfix))
         );
 
         ModMonitor.VerboseLog("Patching Building.draw.");
@@ -179,31 +196,33 @@ public class ModEntry : Mod
     private void OnDayStarted(object? sender, DayStartedEventArgs e)
     {
         BuildingTracker.Refresh();
-
+        OutsideDrinkingSpots.Invalidate();
+        
         if (Context.IsMainPlayer)
         {
             BuildingTracker.CheckHomeStatus();
-
-            // if today's a festival, give the player a treat by filling all water troughs (just like with animal food in vanilla)
-            if (!StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season))
-            {
-                TroughManager.EmptyWaterTroughs();
-            }
-            else
-            {
-                TroughManager.WaterAllBuildings();
-            }
-
+            
+            var isFestival = StardewValley.Utility.isFestivalDay(Game1.dayOfMonth, Game1.season);
             foreach (Building building in BuildingTracker.AnimalBuildings)
             {
-                TroughManager.FillSprinklerCoveredBowls(building);
+                // if today's a festival, give the player a treat by filling all water troughs (just like with animal food in vanilla)
+                if (isFestival)
+                {
+                    BuildingWaterManager.WaterBuilding(building);
+                }
+                else
+                {
+                    BuildingWaterManager.EmptyBuilding(building);
+                }
+                
+                BuildingWaterManager.FillSprinklerCoveredSources(building);
             }
 
             Data.BuildingsWithBonusAwardedToday.Clear();
             ThirstTracker.ResetFullAnimals();
             
             MessageBridge.SendStateSyncMessage(Data.BuildingsWithWateredTrough, Data.BuildingsWithBonusAwardedToday, Data.FullAnimals);
-            MessageBridge.SendThirstyAnimalsMessage(ThirstTracker.AnimalsLeftThirstyYesterday);
+            MessageBridge.SendThirstyAnimalsMessage(Data.AnimalsLeftThirstyYesterday);
             
             // notify player of any animals left thirsty.
             // farmhands, if any, do this when receiving the ThirstyAnimalsMessage sent above
@@ -247,8 +266,8 @@ public class ModEntry : Mod
         foreach (var removed in e.Removed)
         {
             if (removed.GetIndoors() is not AnimalHouse) continue;
-            TroughManager.ClearWatered(removed);
-            TroughManager.ClearBonus(removed);
+            BuildingWaterManager.ClearWatered(removed);
+            BuildingWaterManager.ClearBonus(removed);
         }
     }
 }
