@@ -1,7 +1,7 @@
 # Version history for AnimalsNeedWater
 
 ## 1.9.0
-Upcoming.
+Released July 26, 2026.
 - Animals can now have different "settings", which allows mod creators to customize the ANW behavior of animals via CustomFields. This includes whether the animal needs water at all, the water interval (how often the animal needs water), whether it can drink outside, etc.
 - The water bowl is now considered a "water source", and any big craftable can now act as a water source if defined via CustomFields. This allows mod creators to add their own bowls, fountains or auto-waterers for ANW to use, including permanent ones that never need refilling.
 - The animal info window (the one you get when you right click an animal) now shows how long the animal has gone without water, or whether it was left thirsty yesterday. (configurable)
