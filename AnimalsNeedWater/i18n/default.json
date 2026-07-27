@@ -1,14 +1,34 @@
 ﻿{
-    /*
-        {{firstAnimalName}} - Display name of the first animal on the list.
-        {{secondAnimalName}} - Display name of the second animal on the list.
-        {{thirdAnimalName}} - Display name of the third animal on the list.
-        {{totalAmountExcludingFirstThree}} - Total amount (number) of animals on the list, excluding first three.
-    */
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "{{firstAnimalName}} was left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "{{firstAnimalName}} was left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} were left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} and {{secondAnimalName}} were left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} and {{thirdAnimalName}} were left thirsty yesterday.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday."
+  /*
+    {{firstAnimalName}} - Display name of the first animal on the list.
+    {{secondAnimalName}} - Display name of the second animal on the list.
+    {{thirdAnimalName}} - Display name of the third animal on the list.
+    {{totalAmountExcludingFirstThree}} - Total amount (number) of animals on the list, excluding first three.
+  */
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "{{firstAnimalName}} was left thirsty yesterday.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "{{firstAnimalName}} was left thirsty yesterday.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} were left thirsty yesterday.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} and {{secondAnimalName}} were left thirsty yesterday.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} and {{thirdAnimalName}} were left thirsty yesterday.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} and {{totalAmountExcludingFirstThree}} more animals were left thirsty yesterday.",
+  
+  "Items.Water_Bowl.name": "Water Bowl",
+  "Items.Water_Bowl.description": "Can be placed inside animal buildings so animals can drink water even if the building does not come with a trough.",
+  
+  /*
+    {{days}} - The number of days (>1) that the animal hasn't had water.
+
+    Thirsty.today / Thirsty.multipleDays: the animal has no water AND is due for it.
+    Will lose friendship tonight unless the player provides water.
+    
+    NoWaterButNotThirstyYet: the animal has no water available, but its water interval has not elapsed yet, so it will NOT be penalized tonight. 
+    Just a heads up, not an alarm.
+    
+    WasLeftThirsty: the animal has water now, but was penalized last night. There to explain the friendship loss the player already took.
+    Note: only shows up if animal HAS HAD water today (either thru a trough/bowl or drank outside), since the statuses above have more priority.
+  */
+  "Animal.Status.Thirsty.today": "Hasn't yet had any water today.",
+  "Animal.Status.Thirsty.multipleDays": "Hasn't had water in {{days}} days.",
+  "Animal.Status.NoWaterButNotThirstyYet": "No water available, but not thirsty yet.",
+  "Animal.Status.WasLeftThirsty": "Was left without water yesterday."
 }

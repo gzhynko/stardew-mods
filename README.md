@@ -22,3 +22,6 @@ My mods for Stardew Valley.
    
  - [Pufferfish Chickens](https://www.nexusmods.com/stardewvalley/mods/6162) ([source](https://github.com/gzhynko/StardewMods/tree/master/Pufferfish%20Chickens))  
    Adds Pufferfish chicken as a new coop animal with a new Pufferfish mayonnaise, which is produced from the Pufferfish eggs.
+
+ - [Scythe Harvests More](https://www.nexusmods.com/stardewvalley/mods/29787) ([source](https://github.com/gzhynko/StardewMods/tree/master/ScytheHarvestsMore))  
+   Allows the iridium scythe to harvest more items.

@@ -1,0 +1,10 @@
+{
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Male": "{{firstAnimalName}} szomjas maradt tegnap.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_Female": "{{firstAnimalName}} szomjas maradt tegnap.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} szomjas maradt tegnap.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} és {{secondAnimalName}} szomjas maradt tegnap.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} és {{thirdAnimalName}} szomjas maradt tegnap.",
+  "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} és további {{totalAmountExcludingFirstThree}} állat szomjas maradt tegnap.",
+  "Items.Water_Bowl.name": "Itató",
+  "Items.Water_Bowl.description": "Elhelyezhető az állatok épületeiben, hogy vizet ihassanak, még akkor is, ha az épület nem rendelkezik itatóvályúval."
+}

@@ -1,5 +1,63 @@
 # Version history for AnimalsNeedWater
 
+## 1.9.0
+Released July 26, 2026.
+- Animals can now have different "settings", which allows mod creators to customize the ANW behavior of animals via CustomFields. This includes whether the animal needs water at all, the water interval (how often the animal needs water), whether it can drink outside, etc.
+- The water bowl is now considered a "water source", and any big craftable can now act as a water source if defined via CustomFields. This allows mod creators to add their own bowls, fountains or auto-waterers for ANW to use, including permanent ones that never need refilling.
+- The animal info window (the one you get when you right click an animal) now shows how long the animal has gone without water, or whether it was left thirsty yesterday. (configurable)
+- Fix the list of animals left thirsty not persisting through a save reload (this is mostly to support the feature right above).
+- API: DoesAnimalHaveAccessToWater now also accounts for the animal's location and whether its home's animal door is open, matching the logic used when deducting friendship.
+- Placement profile tiles are no longer locked to being in default map layers (Back, Buildings, Front...) and now support custom layers.
+- Add Belarusian translation.
+- Cache water tile lookups for better performance during water pathfinding.
+- Tiny performance improvements to per-building water state handling.
+
+## 1.8.1
+Released July 21, 2026.
+- Sprinklers can now fill water bowls on day start. (configurable)
+- Multiplayer: key animal emotes and per-building first watering bonus are now synced across all players; fixed some split-screen state handling.
+- Fix potential transient bugs with animal houses not having indoors locations.
+- Add Korean translation (thanks to @seint_s).
+
+## 1.8.0
+Released July 20, 2026.
+- Rewrite to make the mod content pipeline-native. This allows other creators to add compatibility profiles for their custom buildings or redesigns using Content Patcher, add custom sprites for ANW to use, etc.
+- Animals now have a chance to emote when it is 1. after 3 PM, 2. the animal has not drank outside yet, and 3. the animal's home hasn't been watered yet. (configurable)
+- Fix miscellaneous multiplayer bugs.
+- Empty trough state for buildings is now an overlay instead of a full texture replacement.
+- Play a "slosh" cue when watering an animal trough or a bowl.
+- Add command "anw_toggle_overlay" to toggle an overlay visualizing placements.
+- Various performance improvements.
+
+## 1.7.4
+Released January 5, 2025.
+- Add French translation (thanks to Caranud).
+- Update Chinese translation (thanks to Kasakana).
+- Make functionality added in 1.7.1 (troughs remain full if all animals drank outside) toggleable.
+
+## 1.7.3
+Released November 30, 2024.
+- Add profile for Stardew Valley Expanded.
+
+## 1.7.2
+Released November 25, 2024.
+- Fix troughs occasionally not auto-refilling in Deluxe buildings.
+- Data like full animals is now persistent across save loads.
+- Add Hungarian translation (thanks to szatoka).
+
+## 1.7.1
+Released November 22, 2024.
+- Troughs now remain full overnight if all animals inside the building were able to drink water during the day.
+
+## 1.7.0
+Released November 11, 2024.
+- Add a water bowl that can be placed inside animal houses to allow filling the trough even if there is no profile for the building. Sold for free at Marnie's animal shop.
+- Organize assets and put asset names as constants.
+
+## 1.6.2
+Released November 9, 2024.
+- Fixed errors with the latest SDV 1.6.9 release.
+
 ## 1.6.1
 Released August 25, 2024.
 - Add profile for Dwarven Expansion (thanks to Zairya).

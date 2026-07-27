@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalsNeedWater", "AnimalsNeedWater\AnimalsNeedWater.csproj", "{944C8530-211B-4660-BE73-6E883A12BD9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncubatePufferfishEggs", "Pufferfish Chickens\IncubatePufferfishEggs\IncubatePufferfishEggs.csproj", "{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FishExclusions", "FishExclusions\FishExclusions.csproj", "{771DAAF1-FEC1-41DD-B28E-F3F35EA12133}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBlackBars", "EventBlackBars\EventBlackBars.csproj", "{741A952A-D974-4206-A517-81CF50C05AD2}"
@@ -15,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueBoxRedesign", "Dial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropGrowthAdjustments", "CropGrowthAdjustments\CropGrowthAdjustments.csproj", "{041B9398-64A3-4D00-B156-A071D850D717}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{49C40E04-5A9F-47DA-8906-FA717816E772}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScytheHarvestsMore", "ScytheHarvestsMore\ScytheHarvestsMore.csproj", "{D7DD8A77-A42B-49ED-AC85-9FDD892F3BDA}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StardewUI", "external\StardewUI\StardewUI.shproj", "{D3DBB38B-79AF-4B84-B425-1CFFDEFA7A86}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{49C40E04-5A9F-47DA-8906-FA717816E772}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewElectricity", "StardewElectricity\StardewElectricity\StardewElectricity.csproj", "{5EE18971-349B-48D2-93F7-96A542A4BD53}"
 EndProject
@@ -31,10 +29,6 @@ Global
 		{944C8530-211B-4660-BE73-6E883A12BD9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{944C8530-211B-4660-BE73-6E883A12BD9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{944C8530-211B-4660-BE73-6E883A12BD9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{771DAAF1-FEC1-41DD-B28E-F3F35EA12133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{771DAAF1-FEC1-41DD-B28E-F3F35EA12133}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{771DAAF1-FEC1-41DD-B28E-F3F35EA12133}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +45,10 @@ Global
 		{041B9398-64A3-4D00-B156-A071D850D717}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{041B9398-64A3-4D00-B156-A071D850D717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7DD8A77-A42B-49ED-AC85-9FDD892F3BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7DD8A77-A42B-49ED-AC85-9FDD892F3BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7DD8A77-A42B-49ED-AC85-9FDD892F3BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7DD8A77-A42B-49ED-AC85-9FDD892F3BDA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EE18971-349B-48D2-93F7-96A542A4BD53}.Release|Any CPU.ActiveCfg = Release|Any CPU

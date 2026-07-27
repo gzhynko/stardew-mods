@@ -1,17 +1,12 @@
 {
    "Name": "[CP] Pufferfish Chickens",
    "Author": "GZhynko",
-   "Version": "1.0.4",
-   "Description": "Adds a new Farm event.",
+   "Version": "2.0.0",
+   "Description": "Adds the pufferfish chicken as a new coop animal, with its own eggs and mayonnaise.",
    "UniqueID": "GZhynko.CP.Pufferfish_Chickens",
-   "MinimumApiVersion": "3.12.0",
-   "UpdateKeys": [ "Nexus:???" ],
+   "MinimumApiVersion": "4.2.0",
+   "UpdateKeys": [ "Nexus:6162" ],
    "ContentPackFor": {
       "UniqueID": "Pathoschild.ContentPatcher"
-   },
-   "Dependencies": [
-    {
-      "UniqueID": "spacechase0.JsonAssets"
-    }
-   ]
+   }
 }

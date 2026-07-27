@@ -1,0 +1,47 @@
+{
+  "RequiredModId": "mytigio.dwarven_expansion",
+  "Entries": {
+    "mytigio.dwarven_expansion_CaveCoop": {
+      "TroughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ]
+    },
+    "mytigio.dwarven_expansion_BigCaveCoop": {
+      "TroughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ]
+    },
+    "mytigio.dwarven_expansion_DeluxeCaveCoop": {
+      "TroughTiles": [
+        {
+          "tileX": 13,
+          "tileY": 5,
+          "layer": "Buildings",
+          "emptyIndex": 0,
+          "fullIndex": 3
+        }
+      ],
+      "WateringSystemTiles": [
+        {
+          "tileX": 13,
+          "tileY": 4,
+          "layer": "Front",
+          "systemIndex": 1,
+          "tilesToRemove": []
+        }
+      ]
+    }
+  }
+}
