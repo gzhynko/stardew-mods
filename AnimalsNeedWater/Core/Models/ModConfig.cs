@@ -111,7 +111,13 @@ public class ModConfig
     /// The time cutoff in HHMM after which animals can start showing emotes indicating they are still thirsty. Defaults to 1500 (3pm).
     /// </summary>
     public int ThirstyEmoteStartTime { get; set; } = 1500;
-    
+
+    /// <summary>
+    /// Whether to show a tooltip when hovering over a water trough, watering system, or water source object,
+    /// indicating whether it needs refilling.
+    /// </summary>
+    public bool ShowWaterSourceTooltip { get; set; } = true;
+
     /// <summary>
     /// Whether sprinklers can fill water bowls on day start. Defaults to true.
     /// </summary>
@@ -149,7 +155,12 @@ public class ModConfig
             () => "Animals may start showing a thirsty emote after this time. Only applies if Show Thirsty Emotes is on.",
             min: 600f, max: 2600f, interval: 100f,
             formatValue: val => Game1.getTimeOfDayString((int)val));
-            
+        api.AddBoolOption(manifest,
+            () => config.ShowWaterSourceTooltip,
+            val => config.ShowWaterSourceTooltip = val,
+            () => ModEntry.ModHelper.Translation.Get("Config.ShowWaterSourceTooltip.name"),
+            () => ModEntry.ModHelper.Translation.Get("Config.ShowWaterSourceTooltip.tooltip"));
+
         api.AddSectionTitle(manifest, () => "Water Sources");
         api.AddBoolOption(manifest, () => config.UseWateringSystems, val => config.UseWateringSystems = val, () => "Use Watering Systems", () => "Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).");
         api.AddBoolOption(manifest, () => config.AnimalsCanDrinkOutside, val => config.AnimalsCanDrinkOutside = val, () => "Animals Can Drink Outside", () => "Whether animals can drink outside.");
