@@ -7,6 +7,7 @@ using AnimalsNeedWater.Core.Game;
 using AnimalsNeedWater.Core.Models;
 using AnimalsNeedWater.Core.Multiplayer;
 using AnimalsNeedWater.Core.Patching;
+using AnimalsNeedWater.Core.UI;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -77,6 +78,7 @@ public class ModEntry : Mod
         helper.Events.Content.AssetsInvalidated += AnimalSettings.OnAssetsInvalidated;
 
         helper.Events.Display.RenderedWorld += PlacementDiagnostics.OnRenderedWorld;
+        helper.Events.Display.RenderedHud += WaterSourceTooltip.OnRenderedHud;
         helper.Events.Display.MenuChanged += OutsideDrinkingSpots.OnMenuChanged;
 
         helper.Events.Player.Warped += TroughVisuals.OnWarped;

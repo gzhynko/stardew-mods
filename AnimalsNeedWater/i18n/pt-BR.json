@@ -4,5 +4,65 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} ficou sem água ontem.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} e {{secondAnimalName}} ficaram sem água ontem.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} e {{thirdAnimalName}} ficaram sem água ontem.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} e mais {{totalAmountExcludingFirstThree}} ficaram sem água ontem."
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} e mais {{totalAmountExcludingFirstThree}} ficaram sem água ontem.",
+
+    "Items.Water_Bowl.name": "Bebedouro",
+    "Items.Water_Bowl.description": "Pode ser colocado dentro de instalações de animais para que eles possam beber água mesmo que a construção não venha com um bebedouro.",
+
+    "Animal.Status.Thirsty.today": "Ainda não bebeu água hoje.",
+    "Animal.Status.Thirsty.multipleDays": "Está sem água há {{days}} dias.",
+    "Animal.Status.NoWaterButNotThirstyYet": "Sem água disponível, mas ainda não está com sede.",
+    "Animal.Status.WasLeftThirsty": "Ficou sem água ontem.",
+
+    "Tooltip.Building.Watered": "Fonte de água cheia.\nOs animais podem beber.",
+    "Tooltip.Building.NotWatered": "Fonte de água vazia.\nReabasteça para os animais beberem.",
+    "Tooltip.WaterSource.Full": "Cheio.\nOs animais podem beber.",
+    "Tooltip.WaterSource.Empty": "Vazio.\nPrecisa ser reabastecido.",
+
+    "Config.Section.Appearance": "Aparência",
+    "Config.Section.Notifications": "Notificações",
+    "Config.Section.WaterSources": "Fontes de Água",
+    "Config.Section.Friendship": "Amizade",
+    "Config.Section.Miscellaneous": "Diversos",
+
+    "Config.ChangeBuildingTextureIfTroughIsEmpty.name": "Trocar Textura da Construção Se o Bebedouro Estiver Vazio",
+    "Config.ChangeBuildingTextureIfTroughIsEmpty.tooltip": "Se deve trocar a textura da construção (ex.: galinheiro e galinheiro grande) quando os bebedouros dentro dela estiverem vazios.",
+    "Config.CleanerTroughs.name": "Bebedouros Mais Limpos",
+    "Config.CleanerTroughs.tooltip": "Se os bebedouros devem ter uma textura mais limpa.",
+
+    "Config.ShowLoveBubblesOverAnimalsWhenWateredTrough.name": "Mostrar Bolhas de Amor",
+    "Config.ShowLoveBubblesOverAnimalsWhenWateredTrough.tooltip": "Se deve mostrar bolhas de \"amor\" sobre os animais dentro da construção ao abastecer o bebedouro.",
+    "Config.ShowAnimalsLeftThirstyMessage.name": "Mostrar Mensagem de Animais Que Ficaram Com Sede",
+    "Config.ShowAnimalsLeftThirstyMessage.tooltip": "Se deve mostrar uma mensagem (no canto inferior esquerdo da tela) pela manhã informando quantos animais (se houver) ficaram sem água durante a noite.",
+    "Config.ShowMoodThirstyStatus.name": "Mostrar Status de Sede no Humor",
+    "Config.ShowMoodThirstyStatus.tooltip": "Se deve mostrar o status atual de sede na tela de humor do animal (a que aparece ao clicar com o botão direito em um animal).",
+    "Config.ShowThirstyEmotes.name": "Mostrar Emotes de Sede",
+    "Config.ShowThirstyEmotes.tooltip": "Se deve indicar que um animal ainda está com sede mostrando periodicamente um emote acima dele.",
+    "Config.ThirstyEmoteStartTime.name": "Horário de Início do Emote de Sede",
+    "Config.ThirstyEmoteStartTime.tooltip": "Os animais podem começar a mostrar um emote de sede depois deste horário. Só se aplica se \"Mostrar Emotes de Sede\" estiver ativado.",
+    "Config.ShowWaterSourceTooltip.name": "Mostrar Tooltip de Fontes de Água",
+    "Config.ShowWaterSourceTooltip.tooltip": "Se deve mostrar uma tooltip ao passar o mouse sobre bebedouros, sistemas de água ou Water Bowls, indicando se precisam ser reabastecidos.",
+
+    "Config.UseWateringSystems.name": "Usar Sistemas de Água",
+    "Config.UseWateringSystems.tooltip": "Se deve habilitar sistemas de água em certas construções (ex.: Celeiro Deluxe, Galinheiro Deluxe).",
+    "Config.AnimalsCanDrinkOutside.name": "Animais Podem Beber Fora",
+    "Config.AnimalsCanDrinkOutside.tooltip": "Se os animais podem beber água fora da construção.",
+    "Config.AnimalsCanOnlyDrinkFromWaterBodies.name": "Animais Só Bebem de Corpos D'Água",
+    "Config.AnimalsCanOnlyDrinkFromWaterBodies.tooltip": "Se os animais só podem beber de lagos/rios/mares etc. Se falso, os animais bebem em qualquer lugar onde você conseguiria encher o regador (poços, bebedouros, corpos d'água etc.).",
+    "Config.TroughsCanRemainFull.name": "Bebedouros Podem Continuar Cheios",
+    "Config.TroughsCanRemainFull.tooltip": "Se as fontes de água dentro da construção (bebedouros, Water Bowls) podem continuar cheias caso todos os animais que moram ali tenham conseguido beber fora durante o dia.",
+    "Config.SprinklersFillWaterBowls.name": "Aspersores Enchem os Bebedouros Portáteis",
+    "Config.SprinklersFillWaterBowls.tooltip": "Se os aspersores podem encher os Water Bowls no início do dia.",
+
+    "Config.FriendshipPointsForWateredTrough.name": "Bebedouro Abastecido",
+    "Config.FriendshipPointsForWateredTrough.tooltip": "A quantidade de pontos de amizade que o jogador ganha ao abastecer um bebedouro.",
+    "Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding.name": "Bebedouro Abastecido Com Animais Dentro",
+    "Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding.tooltip": "A quantidade de pontos de amizade que o jogador ganha ao abastecer um bebedouro com animais dentro da construção (ou seja, quando os animais veem o jogador abastecendo o bebedouro).",
+    "Config.NegativeFriendshipPointsForNotWateredTrough.name": "Bebedouro Não Abastecido",
+    "Config.NegativeFriendshipPointsForNotWateredTrough.tooltip": "A quantidade de pontos de amizade que o jogador perde por não abastecer um bebedouro.",
+
+    "Config.MarnieSellsWaterBowl.name": "Marnie Vende o Bebedouro Portátil",
+    "Config.MarnieSellsWaterBowl.tooltip": "Se a Marnie vende o Water Bowl na loja dela.",
+    "Config.MarnieWaterBowlPrice.name": "Preço do Bebedouro Portátil",
+    "Config.MarnieWaterBowlPrice.tooltip": "O preço do Water Bowl na loja de animais da Marnie."
 }

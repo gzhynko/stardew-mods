@@ -30,5 +30,57 @@
   "Animal.Status.Thirsty.today": "Hasn't yet had any water today.",
   "Animal.Status.Thirsty.multipleDays": "Hasn't had water in {{days}} days.",
   "Animal.Status.NoWaterButNotThirstyYet": "No water available, but not thirsty yet.",
-  "Animal.Status.WasLeftThirsty": "Was left without water yesterday."
+  "Animal.Status.WasLeftThirsty": "Was left without water yesterday.",
+
+  "Tooltip.Building.Watered": "Water source is full.\nAnimals can drink.",
+  "Tooltip.Building.NotWatered": "Water source is empty.\nRefill it so animals can drink.",
+  "Tooltip.WaterSource.Full": "Full.\nAnimals can drink.",
+  "Tooltip.WaterSource.Empty": "Empty.\nNeeds refilling.",
+
+  "Config.Section.Appearance": "Appearance",
+  "Config.Section.Notifications": "Notifications",
+  "Config.Section.WaterSources": "Water Sources",
+  "Config.Section.Friendship": "Friendship",
+  "Config.Section.Miscellaneous": "Miscellaneous",
+
+  "Config.ChangeBuildingTextureIfTroughIsEmpty.name": "Change Building Texture If Trough Is Empty",
+  "Config.ChangeBuildingTextureIfTroughIsEmpty.tooltip": "Whether to change building textures (e.g. coop and big coop) when troughs inside are empty.",
+  "Config.CleanerTroughs.name": "Cleaner Troughs",
+  "Config.CleanerTroughs.tooltip": "Whether troughs should have a cleaner texture.",
+
+  "Config.ShowLoveBubblesOverAnimalsWhenWateredTrough.name": "Show Love Bubbles",
+  "Config.ShowLoveBubblesOverAnimalsWhenWateredTrough.tooltip": "Whether to show \"love\" bubbles over animals inside the building when watered the trough.",
+  "Config.ShowAnimalsLeftThirstyMessage.name": "Show Number of Animals Left Thirsty Message",
+  "Config.ShowAnimalsLeftThirstyMessage.tooltip": "Whether to show a message (bottom left corner of screen) in the morning telling how many animals (if any) were left thirsty last night.",
+  "Config.ShowMoodThirstyStatus.name": "Show Mood Thirsty Status",
+  "Config.ShowMoodThirstyStatus.tooltip": "Whether to show the current thirst status on an animal's mood screen (the one you get when you right click an animal).",
+  "Config.ShowThirstyEmotes.name": "Show Thirsty Emotes",
+  "Config.ShowThirstyEmotes.tooltip": "Whether to indicate that an animal is still thirsty by periodically showing an emote above it.",
+  "Config.ThirstyEmoteStartTime.name": "Thirsty Emote Start Time",
+  "Config.ThirstyEmoteStartTime.tooltip": "Animals may start showing a thirsty emote after this time. Only applies if Show Thirsty Emotes is on.",
+  "Config.ShowWaterSourceTooltip.name": "Show Water Source Tooltips",
+  "Config.ShowWaterSourceTooltip.tooltip": "Whether to show a tooltip when hovering over water troughs, watering systems, or water bowls, indicating whether they need refilling.",
+
+  "Config.UseWateringSystems.name": "Use Watering Systems",
+  "Config.UseWateringSystems.tooltip": "Whether to enable watering systems in certain buildings (e.g. Deluxe Barn, Deluxe Coop).",
+  "Config.AnimalsCanDrinkOutside.name": "Animals Can Drink Outside",
+  "Config.AnimalsCanDrinkOutside.tooltip": "Whether animals can drink outside.",
+  "Config.AnimalsCanOnlyDrinkFromWaterBodies.name": "Animals Can Only Drink From Water Bodies",
+  "Config.AnimalsCanOnlyDrinkFromWaterBodies.tooltip": "Whether animals can only drink from lakes/rivers/seas etc. If set to false, animals will drink from any place you can refill your watering can at (well, troughs, water bodies etc.).",
+  "Config.TroughsCanRemainFull.name": "Troughs Can Remain Full",
+  "Config.TroughsCanRemainFull.tooltip": "Whether in-building water sources (troughs, bowls) can remain full if all animals living in that building were able to drink outside during the day.",
+  "Config.SprinklersFillWaterBowls.name": "Sprinklers Fill Water Bowls",
+  "Config.SprinklersFillWaterBowls.tooltip": "Whether sprinklers can fill water bowls on day start.",
+
+  "Config.FriendshipPointsForWateredTrough.name": "Watered Trough",
+  "Config.FriendshipPointsForWateredTrough.tooltip": "The amount of friendship points player gets for watering a trough.",
+  "Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding.name": "Watered Trough With Animals Inside",
+  "Config.AdditionalFriendshipPointsForWateredTroughWithAnimalsInsideBuilding.tooltip": "The amount of friendship points player gets for watering a trough with animals inside the building (i.e. when animals see the player watering the trough).",
+  "Config.NegativeFriendshipPointsForNotWateredTrough.name": "Negative; Not Watered Trough",
+  "Config.NegativeFriendshipPointsForNotWateredTrough.tooltip": "The amount of friendship points player loses for not watering a trough.",
+
+  "Config.MarnieSellsWaterBowl.name": "Marnie Sells Water Bowl",
+  "Config.MarnieSellsWaterBowl.tooltip": "Whether Marnie sells the water bowl at her shop.",
+  "Config.MarnieWaterBowlPrice.name": "Water Bowl Price",
+  "Config.MarnieWaterBowlPrice.tooltip": "The price of the water bowl object at Marnie's animal shop."
 }
