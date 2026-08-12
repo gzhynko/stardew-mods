@@ -4,5 +4,21 @@
     "AnimalsLeftWithoutWaterYesterday.globalMessage.oneAnimal_UnknownGender": "{{firstAnimalName}} ficou sem água ontem.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.twoAnimals": "{{firstAnimalName}} e {{secondAnimalName}} ficaram sem água ontem.",
     "AnimalsLeftWithoutWaterYesterday.globalMessage.threeAnimals": "{{firstAnimalName}}, {{secondAnimalName}} e {{thirdAnimalName}} ficaram sem água ontem.",
-    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} e mais {{totalAmountExcludingFirstThree}} ficaram sem água ontem."
+    "AnimalsLeftWithoutWaterYesterday.globalMessage.multipleAnimals": "{{firstAnimalName}}, {{secondAnimalName}}, {{thirdAnimalName}} e mais {{totalAmountExcludingFirstThree}} ficaram sem água ontem.",
+
+    "Items.Water_Bowl.name": "Bebedouro",
+    "Items.Water_Bowl.description": "Pode ser colocado dentro de instalações de animais para que eles possam beber água mesmo que a construção não venha com um bebedouro.",
+
+    "Animal.Status.Thirsty.today": "Ainda não bebeu água hoje.",
+    "Animal.Status.Thirsty.multipleDays": "Está sem água há {{days}} dias.",
+    "Animal.Status.NoWaterButNotThirstyYet": "Sem água disponível, mas ainda não está com sede.",
+    "Animal.Status.WasLeftThirsty": "Ficou sem água ontem.",
+
+    "Tooltip.Building.Watered": "A fonte de água desta construção está cheia — os animais podem beber.",
+    "Tooltip.Building.NotWatered": "A fonte de água desta construção está vazia — reabasteça para os animais poderem beber.",
+    "Tooltip.WaterSource.Full": "Cheio — os animais podem beber.",
+    "Tooltip.WaterSource.Empty": "Vazio — precisa ser reabastecido.",
+
+    "Config.ShowWaterSourceTooltip.name": "Mostrar Tooltip de Fontes de Água",
+    "Config.ShowWaterSourceTooltip.tooltip": "Se deve mostrar uma tooltip ao passar o mouse sobre bebedouros, sistemas de água ou Water Bowls, indicando se precisam ser reabastecidos."
 }

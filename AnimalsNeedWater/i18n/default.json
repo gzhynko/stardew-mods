@@ -30,5 +30,13 @@
   "Animal.Status.Thirsty.today": "Hasn't yet had any water today.",
   "Animal.Status.Thirsty.multipleDays": "Hasn't had water in {{days}} days.",
   "Animal.Status.NoWaterButNotThirstyYet": "No water available, but not thirsty yet.",
-  "Animal.Status.WasLeftThirsty": "Was left without water yesterday."
+  "Animal.Status.WasLeftThirsty": "Was left without water yesterday.",
+
+  "Tooltip.Building.Watered": "This building's water source is full — animals can drink.",
+  "Tooltip.Building.NotWatered": "This building's water source is empty — refill it so animals can drink.",
+  "Tooltip.WaterSource.Full": "Full — animals can drink.",
+  "Tooltip.WaterSource.Empty": "Empty — needs refilling.",
+
+  "Config.ShowWaterSourceTooltip.name": "Show Water Source Tooltips",
+  "Config.ShowWaterSourceTooltip.tooltip": "Whether to show a tooltip when hovering over water troughs, watering systems, or water bowls, indicating whether they need refilling."
 }
