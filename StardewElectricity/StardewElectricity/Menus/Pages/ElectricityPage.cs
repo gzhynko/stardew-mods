@@ -1,53 +1,93 @@
 using Microsoft.Xna.Framework;
-using StardewElectricity.Menus.UIComponents;
-using StardewModdingAPI;
-using StardewUI;
+using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
+using StardewValley.Menus;
 
 namespace StardewElectricity.Menus.Pages;
 
-public class ElectricityPageData
+public class ElectricityPage : IClickableMenu
 {
-    public int MenuPositionX { get; set; } = 0;
-    public int MenuPositionY { get; set; } = 0;
-    public int MenuWidth { get; set; }
-    public int MenuHeight { get; set; }
-}
+    private SpriteFont _textFont;
+    
+    private Point _kwhConsumedTextPos;
+    private Point _payBillsAreaPos;
+    
+    private string _noBillsTextString;
+    private Point _noBillsTextPos;
+    
+    private OptionsButton _payBillsButton;
+    private Point _payBillsButtonPos;
 
-public class ElectricityPage(ElectricityPageData viewData) 
-    : GameMenuPage<ElectricityPageView>(viewData.MenuPositionX, viewData.MenuPositionY, viewData.MenuWidth, viewData.MenuHeight)
-{
-    protected override ElectricityPageView CreateView()
+    private string _billsHintTextString = "";
+    private Point _billsHintTextPos;
+    
+    public ElectricityPage(int x, int y, int width, int height)
+        : base(x, y, width, height)
     {
-        return new ElectricityPageView(viewData);
-    }
-}
+        _textFont = Game1.dialogueFont;
+        
+        var basePos = new Point(xPositionOnScreen + 16 + 32, yPositionOnScreen + 80 + 4 + 32);
+        _payBillsAreaPos = new Point(xPositionOnScreen + width / 2, yPositionOnScreen + height - 128);
 
-public class ElectricityPageView(ElectricityPageData viewData) : WrapperView<Frame>
-{
-    protected override Frame CreateView()
+        _kwhConsumedTextPos = new Point(basePos.X, basePos.Y);
+
+        void PayBillsAction()
+        {
+            if (ModEntry.ElectricityManager.PayAllBills())
+            {
+                _payBillsButton!.label = "Pay bills";
+            }
+            else
+            {
+                _payBillsButton!.label = "Pay bills (" + ModEntry.ElectricityManager.GetTotalOwed() + "g)";
+                Game1.showRedMessage("Not Enough Funds Left");
+            }
+        }
+        
+        _payBillsButton = new OptionsButton("Pay bills (" + ModEntry.ElectricityManager.GetTotalOwed() + "g)", PayBillsAction);
+        _payBillsButtonPos = new Point(_payBillsAreaPos.X - _payBillsButton.bounds.Width / 2 - _payBillsButton.bounds.X, _payBillsAreaPos.Y - _payBillsButton.bounds.Height - _payBillsButton.bounds.Y);
+
+        _noBillsTextString = "No bills posted";
+        var noBillsTextSize = _textFont.MeasureString(_noBillsTextString);
+        _noBillsTextPos = new Point(_payBillsAreaPos.X - (int)noBillsTextSize.X / 2,
+            _payBillsAreaPos.Y - (int)noBillsTextSize.Y / 2);
+    }
+    
+    public override void receiveLeftClick(int x, int y, bool playSound = true)
+    {
+        base.receiveLeftClick(x, y, playSound);
+        _payBillsButton.receiveLeftClick(x - _payBillsButtonPos.X, y - _payBillsButtonPos.Y);
+    }
+
+    public override void draw(SpriteBatch b)
     {
         var kwhConsumedText =
             $"KWh consumed {Utility.Utility.GetBillingCycleContextString(ModEntry.ElectricityManager.GetBillingCycle())}: " +
             ModEntry.ElectricityManager.GetKwhConsumedThisCycle();
-        var content = new Lane
+        StardewValley.Utility.drawTextWithShadow(b, kwhConsumedText, _textFont,  _kwhConsumedTextPos.ToVector2(), Game1.textColor);
+
+        if (ModEntry.ElectricityManager.AreBillsPending())
         {
-            Layout = LayoutParameters.Fill(),
-            Orientation = Orientation.Vertical,
-            Children = [
-                Label.Simple(kwhConsumedText, Game1.dialogueFont),
-                new Image
-                {
-                    Layout = LayoutParameters.FixedSize(240, 68),
-                    Fit = ImageFit.Stretch,
-                    Sprite = new Sprite(Game1.mouseCursors, new Rectangle(432, 439, 9, 9), new Edges(2), new SliceSettings(Scale: 4)),
-                }
-            ]
-        };
-        return new Frame
+            _payBillsButton.draw(b, _payBillsButtonPos.X, _payBillsButtonPos.Y);
+            _billsHintTextString = "";
+        }
+        else
         {
-            Padding = new(32 + 16, 32 + 80 + 4),
-            Content = content
-        };
+            StardewValley.Utility.drawTextWithShadow(b, _noBillsTextString, _textFont, _noBillsTextPos.ToVector2(),
+                Game1.textColor);
+
+            var daysUntilBill = ModEntry.ElectricityManager.GetDaysUntilNextBill();
+            if (daysUntilBill != -1)
+            {
+                var daysText = daysUntilBill > 1 ? "in " + daysUntilBill + " days" : "tomorrow";
+                _billsHintTextString = "Next bill: " + daysText;
+                var billsHintTextSize = Game1.smallFont.MeasureString(_billsHintTextString);
+                _billsHintTextPos = new Point(_payBillsAreaPos.X - (int)billsHintTextSize.X / 2,
+                    _payBillsAreaPos.Y + 40 - (int)billsHintTextSize.Y / 2);
+            }
+        }
+        
+        StardewValley.Utility.drawTextWithShadow(b, _billsHintTextString, Game1.smallFont, _billsHintTextPos.ToVector2(),
+            Game1.textColor);
     }
 }

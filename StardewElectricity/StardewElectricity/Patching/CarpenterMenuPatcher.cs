@@ -43,7 +43,7 @@ public class CarpenterMenuPatcher : BasePatcher
             return;
         }
         if (!__instance.onFarm) return;
-        if (__instance.upgrading || __instance.demolishing || __instance.painting)
+        if (__instance.Action is CarpenterMenu.CarpentryAction.Upgrade or CarpenterMenu.CarpentryAction.Demolish or CarpenterMenu.CarpentryAction.Paint)
         {
             Game1.StartWorldDrawInUI(b);
             ModEntry.PoleManager.DrawWiring(b);
@@ -56,7 +56,7 @@ public class CarpenterMenuPatcher : BasePatcher
             (Game1.viewport.Y + Game1.getOldMouseY(false)) / 64);
         
         // move mode
-        if (__instance.moving)
+        if (__instance.Action == CarpenterMenu.CarpentryAction.Move)
         {
             if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Constants.UtilityPoleBuildingTypeName)
                 return;
@@ -125,9 +125,9 @@ public class CarpenterMenuPatcher : BasePatcher
     private static void ReceiveKeyPress_Prefix(CarpenterMenu __instance, Keys key)
     {
         if (Game1.IsFading() || !__instance.onFarm || __instance.freeze) return;
-        if (__instance.upgrading || __instance.demolishing || __instance.painting) return;
+        if (__instance.Action is CarpenterMenu.CarpentryAction.Upgrade or CarpenterMenu.CarpentryAction.Demolish or CarpenterMenu.CarpentryAction.Paint) return;
 
-        if (__instance.moving)
+        if (__instance.Action == CarpenterMenu.CarpentryAction.Move)
         {
             if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Constants.UtilityPoleBuildingTypeName) return;
             
@@ -166,10 +166,10 @@ public class CarpenterMenuPatcher : BasePatcher
             return true;
         if (__instance.cancelButton.containsPoint(x, y))
             return true;
-        if (__instance.upgrading || __instance.painting)
+        if (__instance.Action is CarpenterMenu.CarpentryAction.Upgrade or CarpenterMenu.CarpentryAction.Paint)
             return true;
 
-        if (__instance.moving)
+        if (__instance.Action == CarpenterMenu.CarpentryAction.Move)
         {
             // only affect poles
             if (__instance.buildingToMove == null || __instance.buildingToMove.buildingType.Value != Constants.UtilityPoleBuildingTypeName)
@@ -201,7 +201,7 @@ public class CarpenterMenuPatcher : BasePatcher
                 Game1.playSound("cancel");
             }
         }
-        else if (__instance.demolishing)
+        else if (__instance.Action == CarpenterMenu.CarpentryAction.Demolish)
         {
             GameLocation farm = __instance.TargetLocation;
             Building destroyed = farm.getBuildingAt(new Vector2((Game1.viewport.X + Game1.getOldMouseX(false)) / 64, (Game1.viewport.Y + Game1.getOldMouseY(false)) / 64));
@@ -217,7 +217,7 @@ public class CarpenterMenuPatcher : BasePatcher
                 return false;
             Game1.player.team.demolishLock.RequestLock(() =>
             {
-                if (!__instance.demolishing || !farm.buildings.Contains(destroyed))
+                if (__instance.Action != CarpenterMenu.CarpentryAction.Demolish || !farm.buildings.Contains(destroyed))
                     return;
                 destroyed.BeforeDemolish();
                 if (!farm.destroyStructure(destroyed))

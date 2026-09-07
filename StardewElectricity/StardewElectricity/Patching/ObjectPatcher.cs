@@ -42,8 +42,6 @@ public class ObjectPatcher : BasePatcher
             if (!ModEntry.PoleManager.IsTilePowered(__instance.Location, __instance.TileLocation))
                 return false;
 
-            ModEntry.ModMonitor.Log($"{__instance.name} ({__instance.DisplayName}): minutes elapsed: {minutes}; remaining: {__instance.MinutesUntilReady}", LogLevel.Alert);
-
             if (__instance.MinutesUntilReady <= 0) return true;
             var consumed = Utility.Utility.GetKwhConsumedPer10Minutes(__instance.QualifiedItemId);
             if (consumed != null)

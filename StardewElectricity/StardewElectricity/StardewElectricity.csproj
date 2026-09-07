@@ -15,5 +15,4 @@
   </PropertyGroup>
   
   <Import Project="..\..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\..\external\StardewUI\StardewUI.projitems" Label="Shared" />
 </Project>

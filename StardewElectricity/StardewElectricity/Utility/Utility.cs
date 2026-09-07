@@ -74,10 +74,7 @@ namespace StardewElectricity.Utility
 
 		public static WorldDate TotalDaysToWorldDate(int totalDays)
 		{
-			var year = totalDays % WorldDate.DaysPerYear;
-			var season = totalDays % WorldDate.DaysPerMonth % WorldDate.MonthsPerYear;
-			var dayOfMonth = totalDays % WorldDate.DaysPerMonth;
-			return new WorldDate(year, (Season)season, dayOfMonth);
+			return new WorldDate { TotalDays = totalDays };
 		}
 
 		private static Dictionary<string, string>? GetCustomFields(string qualifiedItemId)

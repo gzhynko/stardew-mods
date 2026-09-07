@@ -17,12 +17,6 @@ public static class Electricity
             tryDefaultIfNoDownNeighborExists = true,
             fullyImmutable = true
         });
-        menu.pages.Add(new ElectricityPage(new ElectricityPageData
-        {
-            MenuPositionX = menu.xPositionOnScreen, 
-            MenuPositionY = menu.yPositionOnScreen,
-            MenuWidth = menu.width - 64 - 16,
-            MenuHeight = menu.height
-        }));
+        menu.pages.Add(new ElectricityPage(menu.xPositionOnScreen, menu.yPositionOnScreen, menu.width - 64 - 16, menu.height));
     }
 }
